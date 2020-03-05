@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:RealH2InUserd;DB_CLOSE_DELAY=-1;MODE=MYSQL
+
+#can remove if using jdbc
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+swagger:
+  enable: true
