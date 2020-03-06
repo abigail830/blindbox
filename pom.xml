@@ -99,6 +99,11 @@
 			<artifactId>commons-codec</artifactId>
 			<version>${commons.codec.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>3.8.3</version>
+		</dependency>
 
 		<!--db unit to pre-load data when testing-->
 		<dependency>
