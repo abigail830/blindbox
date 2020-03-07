@@ -28,7 +28,7 @@ public class UserController {
         String code = request.getHeader("X-WX-Code");
         log.info("user trying to login wxchat with code: {}", code);
 
-        return userService.login(code);
+        return userService.login(code).getJwtToken();
     }
 
 //    @GetMapping("/decrypt")

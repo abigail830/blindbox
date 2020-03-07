@@ -9,10 +9,13 @@ import lombok.ToString;
 @NoArgsConstructor
 public class User {
 
-    private String token;
-    private Integer expiredIn;
+    private String id;
     private String status;
 
+    // Jws info
+    private String jwtToken;
+
+    // Wechat info
     private String openId;
     private String gender;
     private String nickName;
@@ -22,5 +25,12 @@ public class User {
     private String language;
     private String avatarUrl;
 
+    public User(String openId) {
+        this.openId = openId;
+    }
 
+    public void assignToken(String jwtToken) {
+        this.jwtToken = jwtToken;
+        this.status = UserStatus.LOGIN.name();
+    }
 }

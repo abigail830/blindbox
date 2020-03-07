@@ -6,5 +6,7 @@ public interface UserInfrastructure {
 
     Optional<String> getOpenId(String code);
 
-    String saveUserWithOpenId(String openId);
+    User saveUserWithOpenId(String openId);
+
+    String generateToken(User user);
 }

@@ -30,7 +30,7 @@ public class WxClient {
         String url = LOGIN_MP_URL
                 .replace(APPID, appId).replace(APPSECRET, appSecret).replace(CODE, code);
         String resultData = HttpClientUtil.instance().getData(url);
-        log.debug("Getting wxchat response for code[{}]: {}", code, resultData);
+        log.info("Getting wxchat response for code[{}]: {}", code, resultData);
 
         WxLoginResponse wxLoginResponse = JsonUtil.toObject(resultData, WxLoginResponse.class);
         return Optional.ofNullable(wxLoginResponse.getOpenid());
