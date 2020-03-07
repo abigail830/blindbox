@@ -3,7 +3,6 @@ package com.github.tuding.blindbox.api;
 import com.github.tuding.blindbox.domain.UserService;
 import io.swagger.annotations.ApiImplicitParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-
-    @Value("${app.appId}")
-    private String appId;
-
-    @Value("${app.appSecret}")
-    private String appSecret;
 
     @Resource
     private UserService userService;
