@@ -26,7 +26,8 @@ public class UserController {
             paramType = "header", dataTypeClass = String.class, example = "Bearer access_token")
     public String login(HttpServletRequest request) {
         String code = request.getHeader("X-WX-Code");
-        log.info(code);
+        log.info("user trying to login wxchat with code: {}", code);
+
         return userService.login(code);
     }
 
