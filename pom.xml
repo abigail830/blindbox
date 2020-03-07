@@ -20,6 +20,7 @@
 		<java.version>1.8</java.version>
 		<swagger.version>2.9.2</swagger.version>
 		<jasypt.version>2.1.0</jasypt.version>
+		<okhttp.version>3.10.0</okhttp.version>
 		<commons.lang.version>2.6</commons.lang.version>
 		<commons.codec.version>1.10</commons.codec.version>
 	</properties>
@@ -87,6 +88,12 @@
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
 			<version>1.55</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${okhttp.version}</version>
 		</dependency>
 
 		<dependency>

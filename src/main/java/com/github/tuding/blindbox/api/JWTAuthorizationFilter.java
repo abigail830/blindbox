@@ -18,7 +18,9 @@ import java.util.List;
 @Component
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-    final List<String> excludedPaths = Arrays.asList("css", "index.html", "login");
+    final List<String> excludedPaths = Arrays.asList("css", "index.html", "login",
+            "/swagger-ui.html", "/swagger-resources", "/webjars", "/v2/api-docs",
+            "/users/");
 
     public boolean isExcludedPath(String path) {
         for (String excludedPath : excludedPaths) {
@@ -34,6 +36,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         Cookie[] cookies = httpServletRequest.getCookies();
         System.out.println(httpServletRequest.getServletPath());
+
         if (!isExcludedPath(httpServletRequest.getServletPath())) {
             try {
                 for (Cookie cookie : cookies) {
