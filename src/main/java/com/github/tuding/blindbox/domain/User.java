@@ -22,6 +22,7 @@ public class User {
     private String province;
     private String lang;
     private String avatarUrl;
+    private String unionId;
 
     public User(String openId) {
         this.openId = openId;
@@ -30,5 +31,17 @@ public class User {
     public User(Long id, String openId) {
         this.id = id;
         this.openId = openId;
+    }
+
+    public User(String openId, String gender, String nickName,
+                String city, String country, String province, String avatarUrl, String unionId) {
+        this.openId = openId;
+        this.gender = gender;
+        this.nickName = nickName;
+        this.city = city;
+        this.country = country;
+        this.province = province;
+        this.avatarUrl = avatarUrl;
+        this.unionId = unionId;
     }
 }

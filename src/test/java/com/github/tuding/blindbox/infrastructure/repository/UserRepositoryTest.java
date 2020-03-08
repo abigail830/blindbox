@@ -2,6 +2,7 @@ package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
+import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.domain.User;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@DBRider
 class UserRepositoryTest {
 
     @Autowired
@@ -28,15 +30,19 @@ class UserRepositoryTest {
     }
 
     @Test
-    @DataSet("test-data/empty-user.yml")
+    @DataSet("test-data/user-service-wxauth.yml")
     void queryAllUser() throws SQLException {
-        //given
-        Toggle.TEST_MODE.setStatus(true);
-        userRepository.saveUserWithOpenId("oTA-N5rCXJmZsaDKxnB4vA1Tle8I");
         //when
-        final Optional<User> result = userRepository.getUserByOpenId("oTA-N5rCXJmZsaDKxnB4vA1Tle8I");
+        final Optional<User> result = userRepository.getUserByOpenId("oGZUI0egBJY1zhBYw2KhdUfwVJJE");
         //then
         assertTrue(result.isPresent());
+    }
+
+    @Test
+    @DataSet("test-data/user-service-wxauth.yml")
+    void updateWxInfo() {
+        final Optional<User> user = userRepository.getUserByOpenId("oGZUI0egBJY1zhBYw2KhdUfwVJJE");
+        assertTrue(user.isPresent());
     }
 
 

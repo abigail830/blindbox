@@ -2,7 +2,7 @@ package com.github.tuding.blindbox.api;
 
 
 import com.github.tuding.blindbox.filter.IgnoreWxVerifyToken;
-import com.github.tuding.blindbox.infrastructure.security.JwtTokenHandler;
+import com.github.tuding.blindbox.infrastructure.security.JWTTokenHandler;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.text.ParseException;
 public class AdminLoginHandler {
 
     @Autowired
-    JwtTokenHandler jwtTokenHandler;
+    JWTTokenHandler jwtTokenHandler;
 
     @PostMapping
     @IgnoreWxVerifyToken

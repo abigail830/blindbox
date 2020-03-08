@@ -8,5 +8,6 @@ create TABLE wx_user_tbl (
   province varchar(255) DEFAULT NULL,
   lang varchar(45) DEFAULT NULL,
   avatar_url varchar(255) DEFAULT NULL,
+  union_id varchar(255) DEFAULT NULL,
   PRIMARY KEY (ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

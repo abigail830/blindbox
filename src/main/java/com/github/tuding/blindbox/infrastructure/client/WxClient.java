@@ -1,8 +1,10 @@
 package com.github.tuding.blindbox.infrastructure.client;
 
 
+import com.github.tuding.blindbox.domain.User;
 import com.github.tuding.blindbox.infrastructure.util.HttpClientUtil;
 import com.github.tuding.blindbox.infrastructure.util.JsonUtil;
+import com.github.tuding.blindbox.infrastructure.util.WXBizDataCrypt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,7 @@ public class WxClient {
     private static final String APPID = "APPID";
     private static final String APPSECRET = "APPSECRET";
     private static final String CODE = "CODE";
+
     @Value("${app.appId}")
     private String appId;
 
@@ -37,4 +40,10 @@ public class WxClient {
     }
 
 
+    public User decrypt(String skey, String encryptedData, String iv) {
+        WXBizDataCrypt biz = new WXBizDataCrypt(appId, skey);
+        String resultDate = biz.decryptData(encryptedData, iv);
+        WxDecryptResponse response = JsonUtil.toObject(resultDate, WxDecryptResponse.class);
+        return response.toUser();
+    }
 }

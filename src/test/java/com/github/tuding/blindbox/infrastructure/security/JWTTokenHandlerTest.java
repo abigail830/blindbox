@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class JwtTokenHandlerTest {
+class JWTTokenHandlerTest {
 
     @Test
     void verifyWxToken() {
         //givne
-        final JwtTokenHandler jwtTokenHandler = new JwtTokenHandler();
+        final JWTTokenHandler jwtTokenHandler = new JWTTokenHandler();
         final String token = jwtTokenHandler.generateWxToken("openId");
         //when
         final String subject = jwtTokenHandler.verifyWxToken(token).getSubject();
@@ -20,7 +20,7 @@ class JwtTokenHandlerTest {
     @Test
     void verifyAdminToken() {
         //givne
-        final JwtTokenHandler jwtTokenHandler = new JwtTokenHandler();
+        final JWTTokenHandler jwtTokenHandler = new JWTTokenHandler();
         final String token = jwtTokenHandler.generateAdminToken("admin", "", 10);
         //when
         final String subject = jwtTokenHandler.verifyWxToken(token).getSubject();

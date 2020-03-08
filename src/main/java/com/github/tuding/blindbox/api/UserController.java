@@ -49,24 +49,12 @@ public class UserController {
     }
 
 
-    @GetMapping("/decrypt")
-    public String decrypt(HttpServletRequest request) {
-//        String skey = request.getHeader("skey");
-//        String encryptedData = request.getHeader("encryptedData");
-//        String iv = request.getHeader("iv");
-//        WXBizDataCrypt biz = new WXBizDataCrypt(appId, skey);
-//
-//        String resultDate = biz.decryptData(encryptedData, iv);
-//        WxDecryptResponse wxDecryptResponse = JsonUtil.toObject(resultDate, WxDecryptResponse.class);
-//        log.info("wxDecryptResponse: {}", wxDecryptResponse);
-//        if (wxDecryptResponse.getErrorCode() == null) {
-//            userService.updateUser(wxDecryptResponse.getUserInfo());
-//            log.info("Updated user info for user {}", wxDecryptResponse.getUserInfo().getOpenId());
-//        } else {
-//            log.error("Error occur during decrypt wechat message with error code: {}", wxDecryptResponse.getErrorCode());
-//        }
-//
-//        return resultDate;
-        return "Hello";
+    @GetMapping("/auth-wx")
+    public User decrypt(HttpServletRequest request) {
+        String skey = request.getHeader("skey");
+        String encryptedData = request.getHeader("encryptedData");
+        String iv = request.getHeader("iv");
+
+        return userService.wxAuth(skey, encryptedData, iv);
     }
 }

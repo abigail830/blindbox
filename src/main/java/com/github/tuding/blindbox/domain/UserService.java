@@ -27,4 +27,11 @@ public class UserService {
         log.info("Going to query user with openId: {}", openId);
         return userInfrastructure.getUserByOpenId(openId).orElse(null);
     }
+
+    public User wxAuth(String skey, String encryptedData, String iv) {
+        final User decryptUser = userInfrastructure.decrypt(skey, encryptedData, iv);
+        log.info("decryptUserInfo: {}", decryptUser);
+        return userInfrastructure.updateUser(decryptUser).orElse(null);
+
+    }
 }

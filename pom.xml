@@ -42,12 +42,7 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.github.database-rider</groupId>
-			<artifactId>rider-core</artifactId>
-			<version>1.10.0</version>
-			<scope>test</scope>
-		</dependency>
+
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -119,20 +114,27 @@
 			<version>1.1.10</version>
 		</dependency>
 
-		<!--db unit to pre-load data when testing-->
+		<!--&lt;!&ndash;db unit to pre-load data when testing&ndash;&gt;-->
+		<!--<dependency>-->
+		<!--<groupId>org.dbunit</groupId>-->
+		<!--<artifactId>dbunit</artifactId>-->
+		<!--<version>2.5.0</version>-->
+		<!--<type>jar</type>-->
+		<!--<scope>test</scope>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+		<!--<groupId>com.github.springtestdbunit</groupId>-->
+		<!--<artifactId>spring-test-dbunit</artifactId>-->
+		<!--<version>1.2.0</version>-->
+		<!--<scope>test</scope>-->
+		<!--</dependency>-->
 		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
-			<version>2.5.0</version>
-			<type>jar</type>
+			<groupId>com.github.database-rider</groupId>
+			<artifactId>rider-spring</artifactId>
+			<version>1.5.2</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>com.github.springtestdbunit</groupId>
-			<artifactId>spring-test-dbunit</artifactId>
-			<version>1.2.0</version>
-			<scope>test</scope>
-		</dependency>
+
 
 		<!--swagger-->
 		<dependency>

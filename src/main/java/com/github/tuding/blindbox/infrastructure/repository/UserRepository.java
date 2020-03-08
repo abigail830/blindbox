@@ -41,4 +41,22 @@ public class UserRepository {
     public List<User> getAllUser() {
         return jdbcTemplate.query("SELECT * FROM wx_user_tbl", rowMapper);
     }
+
+    public int updateWxDetailInfo(User decryptUser) {
+        log.info("Going to update wx_user_tbl for user : {}", decryptUser);
+
+        String updateSql = "UPDATE wx_user_tbl SET gender=?, nick_name=?, city=?, country=?, " +
+                "province=?, avatar_url=?, union_id=? WHERE open_id=?";
+
+        return jdbcTemplate.update(updateSql,
+                decryptUser.getGender(),
+                decryptUser.getNickName(),
+                decryptUser.getCity(),
+                decryptUser.getCountry(),
+                decryptUser.getProvince(),
+                decryptUser.getAvatarUrl(),
+                decryptUser.getUnionId(),
+                decryptUser.getOpenId()
+        );
+    }
 }

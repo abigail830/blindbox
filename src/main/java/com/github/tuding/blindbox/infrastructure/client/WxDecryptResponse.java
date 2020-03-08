@@ -1,7 +1,7 @@
 package com.github.tuding.blindbox.infrastructure.client;
 
+import com.github.tuding.blindbox.domain.User;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,14 +14,17 @@ import lombok.ToString;
 @ApiModel("微信信息解密返回结果")
 public class WxDecryptResponse {
 
-    @ApiModelProperty(value = "解密错误代码", example = "ErrorCode::$IllegalIv;")
-    private String errorCode;
+    private String openId;
+    private String gender;
+    private String nickName;
+    private String city;
+    private String country;
+    private String province;
+    private String avatarUrl;
+    private String unionId;
 
-    @ApiModelProperty(value = "执行代码", example = "0000")
-    private String code;
-
-    private String msg;
-
-//    private UserInfo userInfo;
-
+    public User toUser() {
+        return new User(this.openId, this.gender, this.nickName,
+                this.city, this.country, this.province, this.avatarUrl, this.unionId);
+    }
 }
