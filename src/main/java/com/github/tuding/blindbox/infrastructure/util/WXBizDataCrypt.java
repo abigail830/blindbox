@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.util;
 
+import com.github.tuding.blindbox.infrastructure.security.AESUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.codec.binary.Base64;

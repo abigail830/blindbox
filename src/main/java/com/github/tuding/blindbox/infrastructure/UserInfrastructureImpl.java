@@ -3,7 +3,7 @@ package com.github.tuding.blindbox.infrastructure;
 import com.github.tuding.blindbox.domain.User;
 import com.github.tuding.blindbox.domain.UserInfrastructure;
 import com.github.tuding.blindbox.infrastructure.client.WxClient;
-import com.github.tuding.blindbox.infrastructure.security.JWTTokenHandler;
+import com.github.tuding.blindbox.infrastructure.security.JwtTokenHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class UserInfrastructureImpl implements UserInfrastructure {
     WxClient wxClient;
 
     @Autowired
-    JWTTokenHandler jwtTokenHandler;
+    JwtTokenHandler jwtTokenHandler;
 
     @Override
     public Optional<String> getOpenId(String code) {
@@ -33,6 +33,6 @@ public class UserInfrastructureImpl implements UserInfrastructure {
 
     @Override
     public String generateToken(User user) {
-        return jwtTokenHandler.generateToken(user);
+        return jwtTokenHandler.generateWxToken(user);
     }
 }

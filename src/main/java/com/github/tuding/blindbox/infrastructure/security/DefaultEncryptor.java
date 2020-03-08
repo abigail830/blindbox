@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.infrastructure.util;
+package com.github.tuding.blindbox.infrastructure.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;

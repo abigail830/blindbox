@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.configuration;
 
-import com.github.tuding.blindbox.infrastructure.util.DefaultEncryptor;
+import com.github.tuding.blindbox.infrastructure.security.DefaultEncryptor;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

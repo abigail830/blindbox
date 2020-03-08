@@ -13,14 +13,13 @@ public class UserService {
     @Autowired
     UserInfrastructure userInfrastructure;
 
-    public User login(String code) {
+    public String login(String code) {
         final String openId = userInfrastructure.getOpenId(code)
                 .orElseThrow(() -> new BizException(ErrorCode.FAIL_TO_GET_OPENID));
 
         User user = userInfrastructure.saveUserWithOpenId(openId);
-        user.assignToken(userInfrastructure.generateToken(user));
         log.info("{}", user);
 
-        return user;
+        return userInfrastructure.generateToken(user);
     }
 }

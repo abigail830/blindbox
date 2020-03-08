@@ -10,10 +10,6 @@ import lombok.ToString;
 public class User {
 
     private String id;
-    private String status;
-
-    // Jws info
-    private String jwtToken;
 
     // Wechat info
     private String openId;
@@ -29,8 +25,4 @@ public class User {
         this.openId = openId;
     }
 
-    public void assignToken(String jwtToken) {
-        this.jwtToken = jwtToken;
-        this.status = UserStatus.LOGIN.name();
-    }
 }

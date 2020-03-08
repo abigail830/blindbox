@@ -1,14 +1,18 @@
 package com.github.tuding.blindbox.api;
 
 import com.github.tuding.blindbox.domain.UserService;
+import com.github.tuding.blindbox.filter.IgnoreWxVerifyToken;
+import com.github.tuding.blindbox.infrastructure.util.JsonUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 小程序相关登录和解密接口
@@ -18,21 +22,27 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class UserController {
 
-    @Resource
+    @Autowired
     private UserService userService;
 
+    @IgnoreWxVerifyToken
     @GetMapping("/login-wx")
     @ApiImplicitParam(name = "X-WX-Code", value = "wechat code for get openId", required = true,
-            paramType = "header", dataTypeClass = String.class, example = "Bearer access_token")
+            paramType = "header", dataTypeClass = String.class)
     public String login(HttpServletRequest request) {
+
         String code = request.getHeader("X-WX-Code");
         log.info("user trying to login wxchat with code: {}", code);
+        final String token = userService.login(code);
 
-        return userService.login(code).getJwtToken();
+        Map<String, String> result = new HashMap<>();
+        result.put("token", token);
+        return JsonUtil.toJson(result);
     }
 
-//    @GetMapping("/decrypt")
-//    public String decrypt(HttpServletRequest request) {
+
+    @GetMapping("/decrypt")
+    public String decrypt(HttpServletRequest request) {
 //        String skey = request.getHeader("skey");
 //        String encryptedData = request.getHeader("encryptedData");
 //        String iv = request.getHeader("iv");
@@ -49,5 +59,6 @@ public class UserController {
 //        }
 //
 //        return resultDate;
-//    }
+        return "Hello";
+    }
 }
