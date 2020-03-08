@@ -1,7 +1,7 @@
 package com.github.tuding.blindbox.api;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.github.tuding.blindbox.infrastructure.security.JWTTokenHandler;
+import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,7 +20,7 @@ import java.util.List;
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     @Autowired
-    JWTTokenHandler jwtTokenHandler;
+    Jwt jwt;
 
     final List<String> excludedPaths = Arrays.asList("css", "index.html", "login",
             "/swagger-ui.html", "/swagger-resources", "/webjars", "/v2/api-docs",
@@ -46,7 +46,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 for (Cookie cookie : cookies) {
                     if ("adminToken".equals(cookie.getName())) {
                         String token = cookie.getValue();
-                        DecodedJWT verify = jwtTokenHandler.verifyWxToken(token);
+                        DecodedJWT verify = jwt.verifyWxToken(token);
                         System.out.println("Login in with " + verify.getClaim("user").asString());
                         filterChain.doFilter(httpServletRequest, httpServletResponse);
                         return;

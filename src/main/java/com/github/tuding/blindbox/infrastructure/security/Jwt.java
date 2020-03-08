@@ -1,6 +1,5 @@
 package com.github.tuding.blindbox.infrastructure.security;
 
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -13,7 +12,7 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-public class JWTTokenHandler {
+public class Jwt {
 
     /**
      * 1 hour

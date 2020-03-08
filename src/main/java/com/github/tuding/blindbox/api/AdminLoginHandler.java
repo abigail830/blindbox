@@ -2,7 +2,7 @@ package com.github.tuding.blindbox.api;
 
 
 import com.github.tuding.blindbox.filter.IgnoreWxVerifyToken;
-import com.github.tuding.blindbox.infrastructure.security.JWTTokenHandler;
+import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.text.ParseException;
 public class AdminLoginHandler {
 
     @Autowired
-    JWTTokenHandler jwtTokenHandler;
+    Jwt jwt;
 
     @PostMapping
     @IgnoreWxVerifyToken
@@ -31,7 +31,7 @@ public class AdminLoginHandler {
             @RequestParam("password") String pwd,
             HttpServletResponse response) throws ParseException {
         //TODO: check pwd
-        String token = jwtTokenHandler.generateAdminToken(secret, "", 10);
+        String token = jwt.generateAdminToken(secret, "", 10);
         response.addCookie(new Cookie("adminToken", token));
         return new RedirectView("/main.html");
     }

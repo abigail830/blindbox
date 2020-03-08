@@ -3,7 +3,7 @@ package com.github.tuding.blindbox.filter;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.github.tuding.blindbox.infrastructure.Constant;
-import com.github.tuding.blindbox.infrastructure.security.JWTTokenHandler;
+import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import com.github.tuding.blindbox.infrastructure.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class WxAuthorizationInterceptor implements HandlerInterceptor {
     final List<String> excludedPaths = Arrays.asList(
             "/swagger-ui.html", "/swagger-resources", "/webjars", "/v2/api-docs");
     @Autowired
-    JWTTokenHandler jwtTokenHandler;
+    Jwt jwt;
 
     public boolean isExcludedPath(String path) {
         for (String excludedPath : excludedPaths) {
@@ -55,7 +55,7 @@ public class WxAuthorizationInterceptor implements HandlerInterceptor {
                 return verificationFail(response, "No Token, please login first.");
             } else {
                 try {
-                    jwtTokenHandler.verifyWxToken(token);
+                    jwt.verifyWxToken(token);
                 } catch (TokenExpiredException tokenExpiredException) {
                     return verificationFail(response, "Token expired");
                 } catch (JWTVerificationException exception) {
