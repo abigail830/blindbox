@@ -51,7 +51,7 @@ public class HttpClientUtil {
 
         if (headers != null) {
             for (Map.Entry<String, String> header : headers.entrySet()) {
-                if (header.getKey() != null && header.getValue() != null) {
+                if (keyValueBothNotNull(header)) {
                     requestBuilder.addHeader(header.getKey(), header.getValue());
                 }
             }
@@ -111,7 +111,7 @@ public class HttpClientUtil {
                 requestBuilder.addHeader("Content-Type", "text/plain; charset=utf-8");
             }
             for (Map.Entry<String, String> header : headers.entrySet()) {
-                if (header.getKey() != null && header.getValue() != null) {
+                if (keyValueBothNotNull(header)) {
                     requestBuilder.addHeader(header.getKey(), header.getValue());
                 }
             }
@@ -130,10 +130,14 @@ public class HttpClientUtil {
 
     private void setUrlParam(Map<String, String> parameters, HttpUrl.Builder urlBuilder) {
         for (Map.Entry<String, String> param : parameters.entrySet()) {
-            if (param.getKey() != null && param.getValue() != null) {
+            if (keyValueBothNotNull(param)) {
                 urlBuilder.addQueryParameter(param.getKey(), param.getValue());
             }
         }
+    }
+
+    private boolean keyValueBothNotNull(Map.Entry<String, String> param) {
+        return param.getKey() != null && param.getValue() != null;
     }
 
     public OkHttpClient buildHttpClient(String urlString, long connectTimeout, long readTimeOut) {
