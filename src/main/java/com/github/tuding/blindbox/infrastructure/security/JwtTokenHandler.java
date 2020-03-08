@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.security;
 
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -26,21 +27,24 @@ public class JwtTokenHandler {
     private static final String ENV_SECRET_KEY = "ENCRYPTION_KEY_WL";
     private static final String ISSUER = "blindbox";
 
-    String getSecret() {
-        return Optional.ofNullable(System.getenv(ENV_SECRET_KEY))
+    Algorithm getAlgorithm() {
+        String secret = Optional.ofNullable(System.getenv(ENV_SECRET_KEY))
                 .orElse(DEFAULT_SECRET);
+        return Algorithm.HMAC512(secret);
     }
 
     public String generateAdminToken(String username, String key, long age) {
         Date today = new Date();
         Date expiresAt = new Date(today.getTime() + EXPIRATION_TIME);
 
-        return JWT.create()
+        String token = JWT.create()
                 .withIssuer("blindbox")
                 .withSubject("admin")
                 .withClaim("user", username)
                 .withExpiresAt(expiresAt)
-                .sign(Algorithm.HMAC256(getSecret()));
+                .sign(getAlgorithm());
+
+        return token;
 
     }
 
@@ -53,12 +57,12 @@ public class JwtTokenHandler {
                 .withIssuer(ISSUER)
                 .withIssuedAt(today)
                 .withExpiresAt(expiresAt)
-                .sign(Algorithm.HMAC512(getSecret()));
+                .sign(getAlgorithm());
     }
 
     public DecodedJWT verifyWxToken(String token) {
-        Algorithm algorithm = Algorithm.HMAC512(getSecret());
-        JWTVerifier verifier = JWT.require(algorithm).withIssuer(ISSUER).build();
+        JWTVerifier verifier = JWT.require(getAlgorithm())
+                .withIssuer(ISSUER).build();
         return verifier.verify(token);
     }
 }

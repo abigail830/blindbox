@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class JwtTokenHandlerTest {
 
     @Test
-    void verifyToken() {
+    void verifyWxToken() {
         //givne
         final User user = new User("openId");
         final JwtTokenHandler jwtTokenHandler = new JwtTokenHandler();
@@ -17,5 +17,16 @@ class JwtTokenHandlerTest {
         final String subject = jwtTokenHandler.verifyWxToken(token).getSubject();
         //then
         assertEquals("openId", subject);
+    }
+
+    @Test
+    void verifyAdminToken() {
+        //givne
+        final JwtTokenHandler jwtTokenHandler = new JwtTokenHandler();
+        final String token = jwtTokenHandler.generateAdminToken("admin", "", 10);
+        //when
+        final String subject = jwtTokenHandler.verifyWxToken(token).getSubject();
+        //then
+        assertEquals("admin", subject);
     }
 }
