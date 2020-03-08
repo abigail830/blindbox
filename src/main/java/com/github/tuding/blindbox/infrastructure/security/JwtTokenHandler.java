@@ -35,14 +35,12 @@ public class JwtTokenHandler {
         Date today = new Date();
         Date expiresAt = new Date(today.getTime() + EXPIRATION_TIME);
 
-        String token = JWT.create()
+        return JWT.create()
                 .withIssuer("blindbox")
                 .withSubject("admin")
                 .withClaim("user", username)
                 .withExpiresAt(expiresAt)
                 .sign(Algorithm.HMAC256(getSecret()));
-
-        return token;
 
     }
 
