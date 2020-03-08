@@ -1,7 +1,9 @@
 package com.github.tuding.blindbox.api;
 
+import com.github.tuding.blindbox.domain.User;
 import com.github.tuding.blindbox.domain.UserService;
 import com.github.tuding.blindbox.filter.IgnoreWxVerifyToken;
+import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.util.JsonUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +40,12 @@ public class UserController {
         Map<String, String> result = new HashMap<>();
         result.put("token", token);
         return JsonUtil.toJson(result);
+    }
+
+    @GetMapping("/token")
+    public User getUserByToken(HttpServletRequest request) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        return userService.getUserByToken(token);
     }
 
 

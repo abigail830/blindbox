@@ -17,9 +17,14 @@ public class UserService {
         final String openId = userInfrastructure.getOpenId(code)
                 .orElseThrow(() -> new BizException(ErrorCode.FAIL_TO_GET_OPENID));
 
-        User user = userInfrastructure.saveUserWithOpenId(openId);
-        log.info("{}", user);
+        userInfrastructure.saveUserWithOpenId(openId);
 
-        return userInfrastructure.generateToken(user);
+        return userInfrastructure.generateToken(openId);
+    }
+
+    public User getUserByToken(String token) {
+        String openId = userInfrastructure.getOpenIdFromToken(token);
+        log.info("Going to query user with openId: {}", openId);
+        return userInfrastructure.getUserByOpenId(openId).orElse(null);
     }
 }
