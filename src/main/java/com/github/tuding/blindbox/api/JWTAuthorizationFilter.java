@@ -2,6 +2,7 @@ package com.github.tuding.blindbox.api;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,6 +18,7 @@ import java.util.List;
 
 
 @Component
+@Slf4j
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -39,7 +41,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
             throws ServletException, IOException {
         Cookie[] cookies = httpServletRequest.getCookies();
-        System.out.println(httpServletRequest.getServletPath());
+        log.debug("{}", httpServletRequest.getServletPath());
 
         if (!isExcludedPath(httpServletRequest.getServletPath())) {
             try {
@@ -47,17 +49,17 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                     if ("adminToken".equals(cookie.getName())) {
                         String token = cookie.getValue();
                         DecodedJWT verify = jwt.verifyWxToken(token);
-                        System.out.println("Login in with " + verify.getClaim("user").asString());
+                        log.info("Login in with user: {}", verify.getClaim("user").asString());
                         filterChain.doFilter(httpServletRequest, httpServletResponse);
                         return;
                     }
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
-                System.out.println("redirect to login page");
+                log.info("redirect to login page");
                 httpServletResponse.sendRedirect("/index.html");
             }
-            System.out.println("redirect to login page");
+            log.info("redirect to login page");
             httpServletResponse.sendRedirect("/index.html");
         } else {
             filterChain.doFilter(httpServletRequest, httpServletResponse);

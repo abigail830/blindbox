@@ -15,26 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 @Slf4j
 public class WxAuthorizationInterceptor implements HandlerInterceptor {
 
-    final List<String> excludedPaths = Arrays.asList(
-            "/swagger-ui.html", "/swagger-resources", "/webjars", "/v2/api-docs");
     @Autowired
     Jwt jwt;
-
-    public boolean isExcludedPath(String path) {
-        for (String excludedPath : excludedPaths) {
-            if (path.contains(excludedPath)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -47,9 +34,7 @@ public class WxAuthorizationInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
 
-        if (method.isAnnotationPresent(IgnoreWxVerifyToken.class) || isExcludedPath(request.getServletPath())) {
-            return true;
-        } else {
+        if (method.isAnnotationPresent(NeedWxVerifyToken.class)) {
             String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
             if (token == null) {
                 return verificationFail(response, "No Token, please login first.");
@@ -63,6 +48,8 @@ public class WxAuthorizationInterceptor implements HandlerInterceptor {
                 }
                 return true;
             }
+        } else {
+            return true;
         }
     }
 

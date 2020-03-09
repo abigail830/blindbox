@@ -22,22 +22,11 @@
     font-weight: bolder;
     text-align:left;
     padding: 10px 20px;
-
 }
 
-.main-welcome-title {
-    text-align: center;
-    margin: 50px auto;
-    color: #2F2E41;
-}
-.welcome-img {
-    text-align:center;
-    width: 50%;
-    margin: 50px auto;
-}
-
-.welcome-img > img {
-    width: 100%;
+.big-title a {
+    text-decoration: none;
+    color: #ffffff;
 }
 
 .title {
