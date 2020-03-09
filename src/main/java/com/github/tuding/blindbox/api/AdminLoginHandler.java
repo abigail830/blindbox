@@ -1,7 +1,6 @@
 package com.github.tuding.blindbox.api;
 
 
-import com.github.tuding.blindbox.filter.IgnoreWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.repository.AdminUserRepository;
 import com.github.tuding.blindbox.infrastructure.security.DefaultEncryptor;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
@@ -34,7 +33,6 @@ public class AdminLoginHandler {
 
 
     @PostMapping
-    @IgnoreWxVerifyToken
     @ApiResponses(value = {@ApiResponse(code = 200, message = "请求成功")})
     public RedirectView login(
             @RequestParam("username") String username,
