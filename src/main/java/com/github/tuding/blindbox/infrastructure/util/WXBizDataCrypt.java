@@ -5,6 +5,7 @@ import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.security.AESUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 
@@ -13,6 +14,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class WXBizDataCrypt {
 
     private String appid;
@@ -62,6 +64,7 @@ public class WXBizDataCrypt {
         if (!StringUtils.equals(id, appid)) {
             throw new BizException(ErrorCode.ILLEGAL_BUFFER);
         } else {
+            log.info("User info decrypted: {}", userInfo);
             return userInfo;
         }
     }

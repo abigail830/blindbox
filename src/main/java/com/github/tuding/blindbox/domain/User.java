@@ -15,6 +15,7 @@ public class User {
 
     // Wechat info
     private String openId;
+    private String sessionKey;
     private String gender;
     private String nickName;
     private String city;
@@ -24,14 +25,11 @@ public class User {
     private String avatarUrl;
     private String unionId;
 
-    public User(String openId) {
+    public User(String openId, String sessionKey) {
         this.openId = openId;
+        this.sessionKey = sessionKey;
     }
 
-    public User(Long id, String openId) {
-        this.id = id;
-        this.openId = openId;
-    }
 
     public User(String openId, String gender, String nickName,
                 String city, String country, String province, String avatarUrl, String unionId) {

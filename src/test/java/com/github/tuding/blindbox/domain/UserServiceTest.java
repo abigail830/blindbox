@@ -3,12 +3,16 @@ package com.github.tuding.blindbox.domain;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.infrastructure.client.WxClient;
+import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @DBRider
@@ -19,6 +23,9 @@ class UserServiceTest {
 
     @Autowired
     WxClient wxClient;
+
+    @Autowired
+    Jwt jwt;
 
     @Test
     @DataSet("test-data/user-service-wxauth.yml")
@@ -45,11 +52,15 @@ class UserServiceTest {
         ReflectionTestUtils.setField(wxClient, "appId", appId);
 
         // when
-        User user = userService.wxAuth(sessionKey, encryptedData, iv);
+        final String token = jwt.generateWxToken(new User("oGZUI0egBJY1zhBYw2KhdUfwVJJE", sessionKey));
+        userService.wxAuth(token, encryptedData, iv);
+
+        final Optional<User> user = userService.getUserByToken(token);
 
         //then
         System.out.println(user);
-        assertEquals("oGZUI0egBJY1zhBYw2KhdUfwVJJE", user.getOpenId());
-        assertEquals("Band", user.getNickName());
+        assertTrue(user.isPresent());
+        assertEquals("oGZUI0egBJY1zhBYw2KhdUfwVJJE", user.get().getOpenId());
+        assertEquals("Band", user.get().getNickName());
     }
 }

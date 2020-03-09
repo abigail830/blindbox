@@ -29,14 +29,17 @@ public class WxClient {
     @Value("${app.appSecret}")
     private String appSecret;
 
-    public Optional<String> getOpenId(String code) {
-        String url = LOGIN_MP_URL
-                .replace(APPID, appId).replace(APPSECRET, appSecret).replace(CODE, code);
-        String resultData = HttpClientUtil.instance().getData(url);
-        log.info("Getting wxchat response for code[{}]: {}", code, resultData);
+    public Optional<User> getUerWithOpenIdAndSKey(String code) {
+        String url = LOGIN_MP_URL.replace(APPID, appId).replace(APPSECRET, appSecret).replace(CODE, code);
+        try {
+            String resultData = HttpClientUtil.instance().getData(url);
+            log.info("Getting wxchat response for code[{}]: {}", code, resultData);
+            final WxLoginResponse wxLoginResponse = JsonUtil.toObject(resultData, WxLoginResponse.class);
+            return Optional.ofNullable(wxLoginResponse.toUser());
+        } catch (Exception ex) {
+            return Optional.empty();
+        }
 
-        WxLoginResponse wxLoginResponse = JsonUtil.toObject(resultData, WxLoginResponse.class);
-        return Optional.ofNullable(wxLoginResponse.getOpenid());
     }
 
 

@@ -21,15 +21,15 @@ public class UserRepository {
 
     private RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
 
-    public void saveUserWithOpenId(String openId) {
-        log.info("Going to insert wx_user_tbl with openId: {}", openId);
+    public void saveUserWithOpenId(User user) {
+        log.info("Going to insert wx_user_tbl with openId: {}", user.getOpenId());
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO wx_user_tbl (open_id) VALUES (?)";
-            jdbcTemplate.update(insertSql, openId);
+            jdbcTemplate.update(insertSql, user.getOpenId());
         } else {
             String insertSql = "INSERT ignore INTO wx_user_tbl (open_id) VALUES (?)";
-            jdbcTemplate.update(insertSql, openId);
+            jdbcTemplate.update(insertSql, user.getOpenId());
         }
     }
 

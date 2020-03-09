@@ -9,6 +9,6 @@ public enum ErrorCode {
     ILLEGAL_BUFFER,
     FAIL_TO_DECRYPT,
 
-    FAIL_TO_UPDATE_USER
+    FAIL_TO_UPDATE_USER_INFO
 
 }

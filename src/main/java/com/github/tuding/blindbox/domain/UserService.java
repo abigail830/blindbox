@@ -2,36 +2,52 @@ package com.github.tuding.blindbox.domain;
 
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
+import com.github.tuding.blindbox.infrastructure.client.WxClient;
+import com.github.tuding.blindbox.infrastructure.repository.UserRepository;
+import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class UserService {
 
     @Autowired
-    UserInfrastructure userInfrastructure;
+    UserRepository userRepository;
+
+    @Autowired
+    WxClient wxClient;
+
+    @Autowired
+    Jwt jwt;
 
     public String login(String code) {
-        final String openId = userInfrastructure.getOpenId(code)
+        final User user = wxClient.getUerWithOpenIdAndSKey(code)
                 .orElseThrow(() -> new BizException(ErrorCode.FAIL_TO_GET_OPENID));
-
-        userInfrastructure.saveUserWithOpenId(openId);
-
-        return userInfrastructure.generateToken(openId);
+        userRepository.saveUserWithOpenId(user);
+        return jwt.generateWxToken(user);
     }
 
-    public User getUserByToken(String token) {
-        String openId = userInfrastructure.getOpenIdFromToken(token);
+    public Optional<User> getUserByToken(String token) {
+        String openId = jwt.getOpenIdFromToken(token);
         log.info("Going to query user with openId: {}", openId);
-        return userInfrastructure.getUserByOpenId(openId).orElse(null);
+        return userRepository.getUserByOpenId(openId);
     }
 
-    public User wxAuth(String skey, String encryptedData, String iv) {
-        final User decryptUser = userInfrastructure.decrypt(skey, encryptedData, iv);
+    public void wxAuth(String token, String encryptedData, String iv) {
+        String sKey = jwt.getSKeyFromToken(token);
+        final User decryptUser = wxClient.decrypt(sKey, encryptedData, iv);
         log.info("decryptUserInfo: {}", decryptUser);
-        return userInfrastructure.updateUser(decryptUser).orElse(null);
+
+        int updatedRow = userRepository.updateWxDetailInfo(decryptUser);
+        if (updatedRow == 0) {
+            throw new BizException(ErrorCode.FAIL_TO_UPDATE_USER_INFO);
+        } else {
+            log.info("User updated for {}", decryptUser);
+        }
 
     }
 }

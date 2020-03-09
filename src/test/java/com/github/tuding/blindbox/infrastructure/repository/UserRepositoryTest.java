@@ -26,7 +26,7 @@ class UserRepositoryTest {
     @ExpectedDataSet("expect-data/save-user-with-openId.yml")
     void saveUserWithOpenId() throws SQLException {
         Toggle.TEST_MODE.setStatus(true);
-        userRepository.saveUserWithOpenId("openId");
+        userRepository.saveUserWithOpenId(new User("openId", "sessionKey"));
     }
 
     @Test
