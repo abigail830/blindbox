@@ -24,7 +24,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
     Jwt jwt;
 
-    final List<String> excludedPaths = Arrays.asList("css", "index.html", "login",
+    final List<String> excludedPaths = Arrays.asList("css", "index", "login",
             "/swagger-ui.html", "/swagger-resources", "/webjars", "/v2/api-docs",
             "/users");
 
@@ -57,10 +57,12 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             } catch (Exception ex) {
                 ex.printStackTrace();
                 log.info("redirect to login page");
-                httpServletResponse.sendRedirect("/index.html");
+                httpServletResponse.sendRedirect("/index");
+                return;
             }
             log.info("redirect to login page");
-            httpServletResponse.sendRedirect("/index.html");
+            httpServletResponse.sendRedirect("/index");
+            return;
         } else {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         }
