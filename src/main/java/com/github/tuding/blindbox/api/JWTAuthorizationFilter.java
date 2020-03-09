@@ -39,7 +39,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
             throws ServletException, IOException {
         Cookie[] cookies = httpServletRequest.getCookies();
-        System.out.println(httpServletRequest.getServletPath());
 
         if (!isExcludedPath(httpServletRequest.getServletPath())) {
             try {
@@ -53,11 +52,11 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                     }
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
-                System.out.println("redirect to login page");
+                logger.warn("Failed to verify token. ", ex);
+                logger.info("redirect to login page");
                 httpServletResponse.sendRedirect("/index.html");
             }
-            System.out.println("redirect to login page");
+            logger.info("redirect to login page");
             httpServletResponse.sendRedirect("/index.html");
         } else {
             filterChain.doFilter(httpServletRequest, httpServletResponse);

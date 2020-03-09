@@ -1,0 +1,5 @@
+admin_user_tbl:
+  - id: 1
+    name: "admin"
+    encrypted_password: "sLzVcYC/jbgww9OVbP17dn47rwsXdMvw"
+
