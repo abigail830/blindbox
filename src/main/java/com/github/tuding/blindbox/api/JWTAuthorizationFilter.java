@@ -49,7 +49,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                     if ("adminToken".equals(cookie.getName())) {
                         String token = cookie.getValue();
                         DecodedJWT verify = jwt.verifyWxToken(token);
-                        log.info("Login in with user: {}", verify.getClaim("user").asString());
+                        log.info("Logged in with user: {}", verify.getClaim("user").asString());
                         filterChain.doFilter(httpServletRequest, httpServletResponse);
                         return;
                     }

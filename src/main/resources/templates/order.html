@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <link rel="stylesheet" th:href="@{/style/semantic.css}">
+    <link rel="stylesheet" th:href="@{/style/style.css}">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <style>
+        .empty-block {
+            text-align: center;
+            margin: 60 auto;
+        }
+        .empty-block > img {
+            width: 50%;
+            margin-top: 60px;
+        }
+
+
+    </style>
+</head>
+<body>
+<body>
+<div class="big-title"><a href="main.html"><h1>BlindBox 管理后台</h1></a></div>
+<div class="ui grid main">
+    <div class="four wide column">
+        <div class="ui vertical menu">
+            <a class="item" th:href="@{/admin-ui/activities/}">
+                <!--<a class="active teal item">-->
+                活动管理
+            </a>
+            <a class="item" th:href="@{/admin-ui/products/}">
+                产品管理
+                <!--<div class="ui label">51</div>-->
+            </a>
+            <a class="active teal item" th:href="@{/admin-ui/orders/}">
+                订单管理
+                <!--<div class="ui label">1</div>-->
+            </a>
+        </div>
+    </div>
+    <div class="twelve wide column">
+        <div class="title"><h1>订单管理</h1></div>
+
+        <div th:if="${orders ==null or orders.empty}" class="empty-block">
+            <img th:src="@{/images/empty.png}">
+            <h3>暂时还没有订单...</h3>
+        </div>
+
+        <div th:if="${orders!=null or !orders.empty}">
+            <!--this is going to show list-->
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+
+</body>
+</html>
