@@ -9,6 +9,7 @@ public enum ErrorCode {
     ILLEGAL_BUFFER,
     FAIL_TO_DECRYPT,
 
-    FAIL_TO_UPDATE_USER_INFO
+    FAIL_TO_UPDATE_USER_INFO,
+    WX_USER_NOT_FOUND
 
 }

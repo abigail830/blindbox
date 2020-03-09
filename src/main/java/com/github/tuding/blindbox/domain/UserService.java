@@ -9,8 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @Slf4j
 public class UserService {
@@ -31,10 +29,11 @@ public class UserService {
         return jwt.generateWxToken(user);
     }
 
-    public Optional<User> getUserByToken(String token) {
+    public User getUserByToken(String token) {
         String openId = jwt.getOpenIdFromToken(token);
         log.info("Going to query user with openId: {}", openId);
-        return userRepository.getUserByOpenId(openId);
+        return userRepository.getUserByOpenId(openId)
+                .orElseThrow(() -> new BizException(ErrorCode.WX_USER_NOT_FOUND));
     }
 
     public void wxAuth(String token, String encryptedData, String iv) {

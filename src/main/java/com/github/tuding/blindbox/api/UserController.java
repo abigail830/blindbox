@@ -9,8 +9,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 小程序相关登录和解密接口
@@ -48,14 +45,9 @@ public class UserController {
     }
 
     @GetMapping("/token")
-    public ResponseEntity<User> getUserByToken(HttpServletRequest request) {
+    public User getUserByToken(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        final Optional<User> userByToken = userService.getUserByToken(token);
-        if (userByToken.isPresent()) {
-            return new ResponseEntity<>(userByToken.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
+        return userService.getUserByToken(token);
     }
 
 
