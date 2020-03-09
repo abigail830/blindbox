@@ -2,7 +2,7 @@ package com.github.tuding.blindbox.api;
 
 import com.github.tuding.blindbox.domain.User;
 import com.github.tuding.blindbox.domain.UserService;
-import com.github.tuding.blindbox.filter.IgnoreWxVerifyToken;
+import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.util.JsonUtil;
 import io.swagger.annotations.ApiImplicitParam;
@@ -29,7 +29,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @IgnoreWxVerifyToken
     @PostMapping("/login/wx")
     @ApiImplicitParam(name = "X-WX-Code", value = "wechat code for get openId", required = true,
             paramType = "header", dataTypeClass = String.class)
@@ -45,6 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/token")
+    @NeedWxVerifyToken
     public User getUserByToken(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return userService.getUserByToken(token);
@@ -52,6 +52,7 @@ public class UserController {
 
 
     @PostMapping("/auth/wx")
+    @NeedWxVerifyToken
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "encryptedData", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "header", name = "iv", required = true, dataType = "String")})
