@@ -13,7 +13,7 @@
             margin: 60 auto;
         }
         .empty-block > img {
-            width: 50%;
+            width: 40%;
             margin-top: 60px;
         }
 
@@ -22,7 +22,10 @@
 </head>
 <body>
 <body>
-<div class="big-title"><a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a></div>
+<div class="big-title">
+    <a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
+    <!--<a th:text="'欢迎 ' +  ${user}"></a>-->
+</div>
 <div class="ui grid main">
     <div class="four wide column">
         <div class="ui vertical menu">

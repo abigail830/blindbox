@@ -27,8 +27,11 @@
 </head>
 <body>
 <body>
-<div class="big-title"><a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a><a th:text="'欢迎 ' +  ${user}"></a></div>
 
+<div class="big-title">
+    <a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
+    <a th:text="'欢迎 ' +  ${user}"></a>
+</div>
 <div class="ui grid">
     <div class="three wide column">
         <div class="ui vertical menu">
@@ -50,7 +53,7 @@
         <div>
             <div class="main-welcome-title"><h2>欢迎进入管理后台</h2></div>
             <div class="welcome-img">
-                <img th:src="@{/images/empty.png}">
+                <img th:src="@{/images/welcome.png}">
             </div>
         </div>
     </div>
