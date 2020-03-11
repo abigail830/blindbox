@@ -3,8 +3,6 @@ package com.github.tuding.blindbox.api;
 import com.github.tuding.blindbox.api.dto.RoleDTO;
 import com.github.tuding.blindbox.exception.RolesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,14 +31,11 @@ public class RolesHandler {
     @Value("${app.imagePath}")
     private String imagePath;
 
-
-    @PostMapping("/{name}")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "请求成功")})
-    public void uploadRoles(@PathVariable("name") String name,
-                            @RequestParam("category") String category,
-                            @RequestParam("description") String description,
-                            @RequestParam("image")MultipartFile file) throws IOException {
-
+    @PostMapping("/")
+    public RedirectView handleForm(@RequestParam("name") String name,
+                           @RequestParam("description") String description,
+                           @RequestParam("category") String category,
+                           @RequestParam("image") MultipartFile file) throws IOException {
         log.info("handle role creation as name {} category {} description {}", name, category, description);
         //TODO: image format/size check
 
@@ -52,6 +48,8 @@ public class RolesHandler {
         roleDTO.setDescription(description);
         roleDTO.setRoleImage(storeFile.getCanonicalPath());
         rolesRepository.saveUserWithOpenId(roleDTO);
+        return new RedirectView("/admin-ui/products");
+
     }
 
     @DeleteMapping("/{name}")

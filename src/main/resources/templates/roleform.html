@@ -1,31 +1,16 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>main</title>
+    <title>blindbox</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-    <style>
-        .empty-block {
-            text-align: center;
-            margin: 60 auto;
-        }
-        .empty-block > img {
-            width: 40%;
-            margin-top: 60px;
-        }
 
-        .role-name {
-            text-align: center;
-        }
-
-    </style>
 </head>
 <body>
 <div class="big-title"><a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
-    <!--<a th:text="'欢迎 ' +  ${user}"></a>-->
 </div>
 <div class="ui grid main">
     <div class="four wide column">
@@ -44,30 +29,27 @@
             </a>
         </div>
     </div>
-    <div class="twelve wide column">
-        <div class="title"><h1>角色管理</h1></div>
-        <div th:if="${roles==null or roles.empty}" class="empty-block">
-            <img th:src="@{/images/empty.png}">
-            <h3>暂时还没有角色，现在来<a th:href="@{/admin-ui/roleform/}">添加</a>吧！</h3>
+    <form class="ui form three wide column" enctype="multipart/form-data" action="/roles/" method="POST">
+        <div class="field">
+            <label>角色名称</label>
+            <input type="text" name="name">
         </div>
+        <div class="field">
+            <label>角色简介</label>
+            <input type="text" name="description">
+        </div>
+        <div class="field">
+            <label>角色类别</label>
+            <input type="text" name="category">
+        </div>
+        <div class="field">
+            <label>角色图片</label>
+            <input type="file" name="image">
+        </div>
+        <button class="ui button">提交</button>
+    </form>
 
-        <div th:if="${!roles.empty}">
-            <div class="ui grid horizontal" >
-                <div class="four wide column" th:each="role : ${roles}">
-                    <img class="ui medium circular image" th:src="'/roles/' + ${role.name} + '/images'">
-                    <div class="role-name" th:text="${role.name}"></div><i class="trash icon"></i>
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <a th:href="@{/admin-ui/roleform/}">添加</a>
-        </div>
-    </div>
 </div>
-
-
-
 
 </body>
 </html>

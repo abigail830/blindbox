@@ -28,11 +28,13 @@ public class RolesRepository {
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO roles_tbl (name, category, description, role_image) " +
                     "VALUES (?, ?, ?, ?)";
-            jdbcTemplate.update(insertSql, roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
+            int update = jdbcTemplate.update(insertSql, roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
+            log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO roles_tbl (name, category, description, role_image) " +
                     "VALUES (?, ?, ?, ?)";
-            jdbcTemplate.update(insertSql, roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
+            int update = jdbcTemplate.update(insertSql, roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
+            log.info("update row {} ", update);
         }
     }
 
