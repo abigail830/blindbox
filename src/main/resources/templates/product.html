@@ -22,6 +22,7 @@
         }
 
     </style>
+
 </head>
 <body>
 <div class="big-title"><a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
@@ -55,7 +56,7 @@
             <div class="ui grid horizontal" >
                 <div class="four wide column" th:each="role : ${roles}">
                     <img class="ui medium circular image" th:src="'/roles/' + ${role.name} + '/images'">
-                    <div class="role-name" th:text="${role.name}"></div><i class="trash icon"></i>
+                    <div class="role-name" th:text="${role.name}"></div><i class="trash alternate outline icon" th:attr="onclick=|delItem('${role.name}')|"></i>
                 </div>
             </div>
         </div>
@@ -67,7 +68,18 @@
 </div>
 
 
-
+<script type="text/javascript">
+    function delItem (test){
+        $.ajax({
+            url: "/roles/" + test,
+            type: "DELETE",
+            success: function (data, status) {
+                console.info("Got delete status " + status);
+                location.reload();
+            }
+        })
+    }
+</script>
 
 </body>
 </html>
