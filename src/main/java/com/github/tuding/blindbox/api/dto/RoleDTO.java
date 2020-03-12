@@ -13,6 +13,7 @@ public class RoleDTO {
     String name;
     String category;
     String description;
+    //Image c
     String roleImage;
 
 
