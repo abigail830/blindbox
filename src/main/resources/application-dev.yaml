@@ -32,6 +32,6 @@ swagger:
   enable: true
 
 app:
-  appId: "wx7bd98b0c17d22c3e"
-  appSecret: "ec92fc66664da96895b4e96cfb2e5a13"
+    appId: "wx6603c6d1c018bfd1"
+    appSecret: "39ee24b5832f4f68649df87f1bcb0110"
   imagePath: "/opt/apps/blindbox"

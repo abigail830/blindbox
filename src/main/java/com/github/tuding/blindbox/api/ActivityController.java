@@ -18,4 +18,9 @@ public class ActivityController {
         model.addAttribute("activities", new ArrayList<>());
         return "activity";
     }
+
+    @GetMapping("/form")
+    public String addAcvitityPage() {
+        return "activityForm";
+    }
 }

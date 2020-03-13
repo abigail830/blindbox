@@ -17,7 +17,7 @@ public class ActivityDetailDTO {
     String description;
     String headerImage;
     List<String> contentImages;
-    Boolean showAsAd;
+    Boolean showInAd;
 
     Date activityStartDate;
     Date activityEndDate;

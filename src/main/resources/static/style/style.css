@@ -24,18 +24,34 @@
     padding: 10px 20px;
 }
 
-.big-title a {
-    text-decoration: none;
-    color: #ffffff;
-}
-
 .title {
     font-weight: bolder;
     color: #d8d8d8;
     text-align: right;
-    margin: 10px;
 }
 
 .main {
     width: 95%;
+}
+
+.right-box {
+    margin: 10px 0px;
+    text-align: center;
+}
+
+.right-box a {
+    text-decoration: none;
+}
+
+.big-title > a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.theme-text * {
+    color: #3AAFAE;
+}
+
+.white-text * {
+    color: #ffffff;
 }

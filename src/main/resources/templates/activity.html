@@ -18,9 +18,12 @@
         }
 
 
+
+
+
+
     </style>
 </head>
-<body>
 <body>
 <div class="big-title">
     <a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
@@ -43,8 +46,16 @@
             </a>
         </div>
     </div>
-    <div class="twelve wide column">
-        <div class="title"><h1>活动管理</h1></div>
+    <div class="twelve wide column right-box">
+        <div class="ui grid main">
+            <div class="ten wide column left-btn">
+                <a th:href="@{/admin-ui/activities/form}" class="ui button primary white-text">添加活动</a>
+            </div>
+            <div class="six wide column">
+                <div class="title"><h2>活动管理</h2></div>
+            </div>
+        </div>
+        <div class="ui divider"></div>
 
         <div th:if="${activities==null or activities.empty}" class="empty-block">
             <img th:src="@{/images/empty.png}">
@@ -55,10 +66,9 @@
             <!--this is going to show list-->
         </div>
     </div>
+
+
 </div>
-
-
-</body>
 
 
 </body>

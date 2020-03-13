@@ -13,7 +13,6 @@
         }
 
 
-
     </style>
 
 </head>
@@ -24,11 +23,11 @@
 <div class="ui grid main">
     <div class="four wide column">
         <div class="ui vertical menu">
-            <a class="item" th:href="@{/admin-ui/activities/}">
+            <a class="active teal item" th:href="@{/admin-ui/activities/}">
                 <!--<a class="active teal item">-->
                 活动管理
             </a>
-            <a class="active teal item" th:href="@{/admin-ui/products/}">
+            <a class="item" th:href="@{/admin-ui/products/}">
                 产品管理
                 <!--<div class="ui label">51</div>-->
             </a>
@@ -41,29 +40,31 @@
     <div class="twelve wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
-                <a th:href="@{/admin-ui/products/}" class="ui button primary basic theme-text">
-                    <i class="angle left icon"></i>返回</a>
+                <button class="ui button primary basic">
+                    <a th:href="@{/admin-ui/activities/}" class="theme-text">
+                        <i class="angle left icon"></i>返回</a>
+                </button>
             </div>
             <div class="six wide column">
-                <div class="title"><h2>添加角色</h2></div>
+                <div class="title"><h2>添加活动</h2></div>
             </div>
         </div>
         <div class="ui divider"></div>
-        <form class="ui form three wide column" enctype="multipart/form-data" action="/roles/" method="POST">
+        <form class="ui form" enctype="multipart/form-data" action="/roles/" method="POST">
             <div class="field">
-                <label>角色名称</label>
+                <label>活动名称</label>
                 <input type="text" name="name">
             </div>
             <div class="field">
-                <label>角色简介</label>
+                <label>活动简介</label>
                 <input type="text" name="description">
             </div>
             <div class="field">
-                <label>角色类别</label>
+                <label>活动类别</label>
                 <input type="text" name="category">
             </div>
             <div class="field">
-                <label>角色图片</label>
+                <label>活动首页图</label>
                 <input type="file" name="image">
             </div>
             <button class="ui button">提交</button>
