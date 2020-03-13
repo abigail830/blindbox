@@ -12,15 +12,18 @@ import java.util.Date;
 @Getter
 public class SeriesDTO {
     Long id;
+    Long roleId;
     String name;
-    Date releaseDate;
+    String releaseDate;
     boolean isNewSeries;
+    boolean isPresale;
+    BigDecimal price;
+
     //image b
     String seriesImage;
     //image d
     String matrixHeaderImage;
     //image e
     String matrixCellImage;
-    BigDecimal price;
 
 }

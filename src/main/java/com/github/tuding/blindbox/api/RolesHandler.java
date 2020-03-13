@@ -47,7 +47,7 @@ public class RolesHandler {
         roleDTO.setCategory(category);
         roleDTO.setDescription(description);
         roleDTO.setRoleImage(storeFile.getCanonicalPath());
-        rolesRepository.saveUserWithOpenId(roleDTO);
+        rolesRepository.saveRole(roleDTO);
         return new RedirectView("/admin-ui/products/");
 
     }

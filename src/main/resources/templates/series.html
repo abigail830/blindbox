@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BlindBox</title>
+    <link rel="stylesheet" th:href="@{/style/semantic.css}">
+    <link rel="stylesheet" th:href="@{/style/style.css}">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+</head>
+<body>
+
+<div class="ui grid main">
+    <div class="four wide column">
+        <div class="ui vertical menu">
+            <a class="item" th:href="@{/admin-ui/activities/}">
+                <!--<a class="active teal item">-->
+                活动管理
+            </a>
+            <a class="active teal item" th:href="@{/admin-ui/products/}">
+                产品管理
+                <!--<div class="ui label">51</div>-->
+            </a>
+            <a class="item" th:href="@{/admin-ui/orders/}">
+                订单管理
+                <!--<div class="ui label">1</div>-->
+            </a>
+        </div>
+    </div>
+    <div class="twelve wide column">
+        <div class="title"><h1>角色系列管理</h1></div>
+        <div class="four wide column">
+            <h2 th:text="${role.name}"></h2>
+            <p th:text="${role.description}"></p>
+            <img class="ui small circular image" th:src="'/roles/' + ${role.name} + '/images'">
+        </div>
+        <div>
+            <a th:href="@{/admin-ui/roleform/}">添加产品系列</a>
+        </div>
+    </div>
+
+
+</div>
+
+</body>
+</html>

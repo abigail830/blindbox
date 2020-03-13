@@ -8,12 +8,15 @@ import lombok.*;
 @Setter
 @Getter
 public class ProductDTO {
+    Long id;
+    Long seriesID;
     String name;
     boolean isSpecial;
+    long stock;
+    long probability;
     //Image f
     String productImage;
     String postCardImage;
-    long stock;
-    long probability;
+
 
 }

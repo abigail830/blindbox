@@ -1,0 +1,12 @@
+series_tbl:
+- id: 1
+  roleID: 1
+  name: "testSeries"
+  releaseDate: "2020-03-13"
+  isNewSeries: false
+  isPresale: false
+  price: 25.5
+  seriesImage: "/app/data/series/testSeries.png"
+  matrixHeaderImage: "/app/data/series/header/testSeries.png"
+  matrixCellImage: "/app/data/series/cell/testSeries.png"
+#  update_time: redex:.*

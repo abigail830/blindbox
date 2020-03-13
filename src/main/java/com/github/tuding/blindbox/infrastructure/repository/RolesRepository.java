@@ -22,7 +22,7 @@ public class RolesRepository {
     private RowMapper<RoleDTO> rowMapper = new BeanPropertyRowMapper<>(RoleDTO.class);
 
 
-    public void saveUserWithOpenId(RoleDTO roleDTO) {
+    public void saveRole(RoleDTO roleDTO) {
         log.info("Going to insert roles_tbl with name: {}", roleDTO.getName());
 
         if (Toggle.TEST_MODE.isON()) {
