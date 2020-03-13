@@ -1,37 +1,37 @@
 spring:
-    datasource:
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://47.115.81.12:3306/testdb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
-        username: unittest
-        password: blindboxtest
-    druid:
-        initial-size: 10
-        max-active: 100
-        min-idle: 10
-        max-wait: 60000
-        pool-prepared-statements: true
-        max-pool-prepared-statement-per-connection-size: 20
-        time-between-eviction-runs-millis: 60000
-        min-evictable-idle-time-millis: 300000
-        validation-query: SELECT 1 FROM DUAL
-        test-while-idle: true
-        test-on-borrow: false
-        test-on-return: false
-        filter:
-            stat:
-                log-slow-sql: true
-                slow-sql-millis: 1000
-                merge-sql: true
-                enabled: true
-            wall:
-                config:
-                    multi-statement-allow: true
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.115.81.12:3306/testdb?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: unittest
+    password: blindboxtest
+  druid:
+    initial-size: 10
+    max-active: 100
+    min-idle: 10
+    max-wait: 60000
+    pool-prepared-statements: true
+    max-pool-prepared-statement-per-connection-size: 20
+    time-between-eviction-runs-millis: 60000
+    min-evictable-idle-time-millis: 300000
+    validation-query: SELECT 1 FROM DUAL
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    filter:
+      stat:
+        log-slow-sql: true
+        slow-sql-millis: 1000
+        merge-sql: true
+        enabled: true
+      wall:
+        config:
+          multi-statement-allow: true
 
 swagger:
   enable: true
 
 app:
-  appId: "wx7bd98b0c17d22c3e"
-  appSecret: "ec92fc66664da96895b4e96cfb2e5a13"
+  appId: "wx6603c6d1c018bfd1"
+  appSecret: "39ee24b5832f4f68649df87f1bcb0110"
   imagePath: "/opt/apps/blindbox"

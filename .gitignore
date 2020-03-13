@@ -4,6 +4,8 @@ target/
 !**/src/main/**
 !**/src/test/**
 
+.blindbox
+
 **/.DS_Store/**
 .DS_Store
 

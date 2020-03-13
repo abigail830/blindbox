@@ -25,7 +25,8 @@
 
 </head>
 <body>
-<div class="big-title"><a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
+<div class="big-title">
+    <a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
     <!--<a th:text="'欢迎 ' +  ${user}"></a>-->
 </div>
 <div class="ui grid main">
@@ -45,20 +46,26 @@
             </a>
         </div>
     </div>
-    <div class="twelve wide column">
-        <div class="title"><h1>角色管理</h1></div>
+    <div class="twelve wide column right-box">
+        <div class="ui grid main">
+            <div class="ten wide column left-btn">
+                <a th:href="@{/admin-ui/roleform/}" class="ui button primary white-text">添加角色</a>
+            </div>
+            <div class="six wide column">
+                <div class="title"><h2>产品管理</h2></div>
+            </div>
+        </div>
+        <div class="ui divider"></div>
+
         <div th:if="${roles==null or roles.empty}" class="empty-block">
             <img th:src="@{/images/empty.png}">
             <h3>暂时还没有角色，现在来<a th:href="@{/admin-ui/roleform/}">添加</a>吧！</h3>
         </div>
 
         <div th:if="${!roles.empty}">
-            <div class="ui grid horizontal" >
+            <div class="ui grid horizontal">
                 <div class="four wide column" th:each="role : ${roles}">
-                    <a th:href="@{'/admin-ui/series/?rolename=' + ${role.name}}">
-                        <img class="ui medium circular image"
-                             th:src="'/roles/' + ${role.name} + '/images'">
-                    </a>
+                    <img class="ui medium circular image" th:src="'/roles/' + ${role.name} + '/images'">
                     <div class="role-name" th:text="${role.name}"></div>
                     <i class="trash alternate outline icon" th:attr="onclick=|delItem('${role.name}')|"></i>
                 </div>
@@ -83,6 +90,10 @@
             }
         })
     }
+
+
+
+
 </script>
 
 </body>

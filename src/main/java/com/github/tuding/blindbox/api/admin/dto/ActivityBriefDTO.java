@@ -1,22 +1,19 @@
-package com.github.tuding.blindbox.api.dto;
+package com.github.tuding.blindbox.api.admin.dto;
 
 import lombok.*;
 
 import java.util.Date;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Setter
 @Getter
-public class ActivityDetailDTO {
+public class ActivityBriefDTO {
 
     Long id;
     String name;
     String description;
-    String headerImage;
-    List<String> contentImages;
     Boolean showAsAd;
 
     Date activityStartDate;

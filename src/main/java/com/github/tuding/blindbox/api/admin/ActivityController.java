@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.api;
+package com.github.tuding.blindbox.api.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,5 +17,10 @@ public class ActivityController {
 
         model.addAttribute("activities", new ArrayList<>());
         return "activity";
+    }
+
+    @GetMapping("/form")
+    public String addAcvitityPage() {
+        return "activityForm";
     }
 }

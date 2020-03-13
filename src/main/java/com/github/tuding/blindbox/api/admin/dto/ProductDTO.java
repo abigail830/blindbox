@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.api.dto;
+package com.github.tuding.blindbox.api.admin.dto;
 
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.api;
+package com.github.tuding.blindbox.api.admin;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
@@ -26,7 +26,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     final List<String> excludedPaths = Arrays.asList("css", "index", "login",
             "/swagger-ui.html", "/swagger-resources", "/webjars", "/v2/api-docs",
-            "/users");
+            "/wx-users");
 
     public boolean isExcludedPath(String path) {
         for (String excludedPath : excludedPaths) {
