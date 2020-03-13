@@ -14,7 +14,7 @@ public class SeriesDTO {
     Long id;
     Long roleId;
     String name;
-    String releaseDate;
+    Date releaseDate;
     boolean isNewSeries;
     boolean isPresale;
     BigDecimal price;

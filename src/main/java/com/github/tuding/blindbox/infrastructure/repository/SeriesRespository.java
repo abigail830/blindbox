@@ -18,7 +18,7 @@ public class SeriesRespository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private RowMapper<SeriesDTO> rowMapper = new BeanPropertyRowMapper<SeriesDTO>();
+    private RowMapper<SeriesDTO> rowMapper = new BeanPropertyRowMapper<>(SeriesDTO.class);
 
     public void saveSeries(SeriesDTO seriesDTO) {
         log.info("handle series creation as {}", seriesDTO);
@@ -62,6 +62,12 @@ public class SeriesRespository {
 
         List<SeriesDTO> seriesDTOs = jdbcTemplate.query("SELECT * FROM series_tbl WHERE name = ?", rowMapper, name);
         return seriesDTOs.stream().findFirst();
+    }
+
+    public List<SeriesDTO> queryByRoleID(long roleID) {
+        log.info("Going to query series with role id: {}", roleID);
+        return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
+
     }
 
     public List<SeriesDTO> queryRoles() {

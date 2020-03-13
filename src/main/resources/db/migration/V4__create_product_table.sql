@@ -2,7 +2,7 @@ create TABLE series_tbl (
   ID bigint NOT NULL AUTO_INCREMENT,
   roleID bigint NOT NULL,
   name varchar(100) unique NOT NULL,
-  releaseDate varchar(20) NOT NULL,
+  releaseDate TIMESTAMP NOT NULL,
   isNewSeries boolean NOT NULL,
   isPresale boolean NOT NULL,
   price double NOT NULL,
