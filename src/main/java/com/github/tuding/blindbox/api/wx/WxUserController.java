@@ -22,7 +22,7 @@ import java.util.Map;
  * 小程序相关登录和解密接口
  */
 @RestController
-@RequestMapping("/wx-users")
+@RequestMapping("/wx/users")
 @Slf4j
 public class WxUserController {
 
@@ -43,7 +43,7 @@ public class WxUserController {
         return JsonUtil.toJson(result);
     }
 
-    @GetMapping("/token")
+    @GetMapping("/by-token")
     @NeedWxVerifyToken
     public User getUserByToken(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
@@ -63,4 +63,5 @@ public class WxUserController {
 
         userService.wxAuth(token, encryptedData, iv);
     }
+
 }
