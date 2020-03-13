@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.api;
 
-import com.github.tuding.blindbox.api.dto.RoleDTO;
+import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
