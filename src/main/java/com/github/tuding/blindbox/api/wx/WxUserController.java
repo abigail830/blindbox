@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.api;
+package com.github.tuding.blindbox.api.wx;
 
 import com.github.tuding.blindbox.domain.User;
 import com.github.tuding.blindbox.domain.UserService;
@@ -22,14 +22,14 @@ import java.util.Map;
  * 小程序相关登录和解密接口
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/wx-users")
 @Slf4j
 public class WxUserController {
 
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login/wx")
+    @PostMapping("/login")
     @ApiImplicitParam(name = "X-WX-Code", value = "wechat code for get openId", required = true,
             paramType = "header", dataTypeClass = String.class)
     public String login(HttpServletRequest request) {
@@ -51,7 +51,7 @@ public class WxUserController {
     }
 
 
-    @PostMapping("/auth/wx")
+    @PostMapping("/auth")
     @NeedWxVerifyToken
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "encryptedData", required = true, dataType = "String"),

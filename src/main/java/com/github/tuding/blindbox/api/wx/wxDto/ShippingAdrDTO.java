@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.api.wxDto;
+package com.github.tuding.blindbox.api.wx.wxDto;
 
 import lombok.*;
 

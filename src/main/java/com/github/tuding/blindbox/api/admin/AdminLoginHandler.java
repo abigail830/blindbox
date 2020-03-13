@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.api;
+package com.github.tuding.blindbox.api.admin;
 
 
 import com.auth0.jwt.interfaces.DecodedJWT;

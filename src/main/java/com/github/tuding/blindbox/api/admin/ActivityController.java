@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.api;
+package com.github.tuding.blindbox.api.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
