@@ -63,9 +63,8 @@ public class ShippingAddressRepository {
 
     public void removeDefaultForOther(ShippingAddress shippingAddress) {
         String sql = "UPDATE shipping_addr_tbl set is_default_address = false " +
-                "WHERE open_id = \'" + shippingAddress.getOpenId() +
-                "\' AND id != " + shippingAddress.getId();
-        jdbcTemplate.update(sql);
+                "WHERE open_id = ? AND id != ?";
+        jdbcTemplate.update(sql, shippingAddress.getOpenId(), shippingAddress.getId());
     }
 
     public List<ShippingAddress> getAllAddress() {

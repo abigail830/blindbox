@@ -42,7 +42,7 @@ public class ShippingAddressService {
 
     @Transactional
     public void deleteAddress(String token, String addrId) {
-        final String openIdFromToken = jwt.getOpenIdFromToken(token);
-        shippingAddressRepository.deleteAddressByOpenIdAndAddrId(openIdFromToken, addrId);
+        final String openId = jwt.getOpenIdFromToken(token);
+        shippingAddressRepository.deleteAddressByOpenIdAndAddrId(openId, addrId);
     }
 }
