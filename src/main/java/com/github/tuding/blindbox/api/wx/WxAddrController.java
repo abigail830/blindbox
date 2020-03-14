@@ -42,4 +42,12 @@ public class WxAddrController {
                 .map(ShippingAddrDTO::new)
                 .collect(Collectors.toList());
     }
+
+    @DeleteMapping("/{addrId}")
+    public void deleteAddress(HttpServletRequest request,
+                              @PathVariable String addrId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        shippingAddressService.deleteAddress(token, addrId);
+    }
+
 }

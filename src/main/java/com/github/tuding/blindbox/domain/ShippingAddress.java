@@ -2,12 +2,14 @@ package com.github.tuding.blindbox.domain;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShippingAddress {
+public class ShippingAddress implements Serializable {
 
     Long id;
     String receiver;
@@ -32,4 +34,5 @@ public class ShippingAddress {
     public void setOpenId(String openId) {
         this.openId = openId;
     }
+
 }

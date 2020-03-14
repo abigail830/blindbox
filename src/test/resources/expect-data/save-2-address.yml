@@ -1,0 +1,20 @@
+shipping_addr_tbl:
+- id: 1
+  receiver: 'receiver'
+  mobile: '12345678901'
+  area: 'area'
+  associate_code: 'associateCode'
+  detail_address: 'detailAddress'
+  is_default_address: false
+  open_id: 'openId'
+- id: 2
+  receiver: 'receiver2'
+  mobile: '12345678902'
+  area: 'area2'
+  associate_code: 'associateCode2'
+  detail_address: 'detailAddress2'
+  is_default_address: true
+  open_id: 'openId'
+
+
+

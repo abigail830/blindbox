@@ -26,10 +26,11 @@ class ShippingAddressRepositoryTest {
                 "associateCode", "detailAddress", Boolean.TRUE);
         shippingAddress.setOpenId("openId");
         //when
-        shippingAddressRepository.saveAddress(shippingAddress);
+        final ShippingAddress address = shippingAddressRepository.saveAddress(shippingAddress);
         //then
         assertEquals(1, shippingAddressRepository.getAllAddress().size());
         assertEquals(1, shippingAddressRepository.getAddressByOpenId("openId").size());
+        assertEquals(1L, address.getId());
 
     }
 }
