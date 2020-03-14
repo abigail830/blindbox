@@ -34,6 +34,16 @@ public class WxAddrController {
         shippingAddressService.addAddress(token, shippingAddress);
     }
 
+    @PutMapping
+    @NeedWxVerifyToken
+    public void updateShippingAddress(HttpServletRequest request,
+                                      @RequestBody ShippingAddrDTO shippingAddrDTO) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        final ShippingAddress shippingAddress = shippingAddrDTO.toDomainObj();
+
+        shippingAddressService.updateAddress(token, shippingAddress);
+    }
+
     @GetMapping
     @NeedWxVerifyToken
     public List<ShippingAddrDTO> getAddressByToken(HttpServletRequest request) {

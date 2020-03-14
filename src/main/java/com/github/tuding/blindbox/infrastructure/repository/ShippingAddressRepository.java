@@ -86,4 +86,20 @@ public class ShippingAddressRepository {
         jdbcTemplate.update(sql, openId);
         log.info("Update latest address(if there is any) as default for user [{}]", openId);
     }
+
+    public ShippingAddress updateAddress(ShippingAddress shippingAddress) {
+        String sql = "UPDATE shipping_addr_tbl set receiver = ?, mobile = ?, area = ?, " +
+                "associate_code = ?, detail_address = ?, is_default_address = ? " +
+                "WHERE id = ? and open_id = ?";
+        int rowUpdated = jdbcTemplate.update(sql,
+                shippingAddress.getReceiver(), shippingAddress.getMobile(), shippingAddress.getArea(),
+                shippingAddress.getAssociateCode(), shippingAddress.getDetailAddress(),
+                shippingAddress.getIsDefaultAddress(), shippingAddress.getId(), shippingAddress.getOpenId());
+        if (rowUpdated == 1) {
+            log.info("Updated shipping_addr_tbl with [{}]", shippingAddress);
+            return shippingAddress;
+        } else {
+            throw new BizException(ErrorCode.FAIL_TO_MODIFY_SHIPPING_ADDRESS);
+        }
+    }
 }

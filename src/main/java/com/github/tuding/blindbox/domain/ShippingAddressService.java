@@ -47,4 +47,14 @@ public class ShippingAddressService {
 
         shippingAddressRepository.updateLastAddrAsDefault(openId);
     }
+
+    public void updateAddress(String token, ShippingAddress shippingAddress) {
+        final String openIdFromToken = jwt.getOpenIdFromToken(token);
+        shippingAddress.setOpenId(openIdFromToken);
+        final ShippingAddress addressSaved = shippingAddressRepository.updateAddress(shippingAddress);
+
+        if (shippingAddress.getIsDefaultAddress()) {
+            shippingAddressRepository.removeDefaultForOther(addressSaved);
+        }
+    }
 }
