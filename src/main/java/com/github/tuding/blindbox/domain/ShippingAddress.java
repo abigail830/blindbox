@@ -2,14 +2,12 @@ package com.github.tuding.blindbox.domain;
 
 import lombok.*;
 
-import java.io.Serializable;
-
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShippingAddress implements Serializable {
+public class ShippingAddress {
 
     Long id;
     String receiver;
