@@ -47,7 +47,7 @@ public class WxAddrController {
     public void deleteAddress(HttpServletRequest request,
                               @PathVariable String addrId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        shippingAddressService.deleteAddress(token, addrId);
+        shippingAddressService.deleteAddress(token, Long.valueOf(addrId));
     }
 
 }

@@ -37,7 +37,6 @@ class ShippingAddressServiceTest {
 
     @Test
     @DataSet(value = "test-data/save-1-address.yml")
-    @ExpectedDataSet("expect-data/save-2-address.yml")
     void addAddress_when_have_default() {
         //given
         final String token = jwt.generateWxToken(new User("openId", "skey"));
@@ -45,6 +44,33 @@ class ShippingAddressServiceTest {
                 "area2", "associateCode2", "detailAddress2", Boolean.TRUE);
         //when
         shippingAddressService.addAddress(token, shippingAddress);
-        assertEquals(2, shippingAddressService.getAddressByToken(token).size());
+
+        final long count = shippingAddressService.getAddressByToken(token)
+                .stream().filter(addr -> addr.getIsDefaultAddress() == Boolean.TRUE).count();
+        assertEquals(1, count);
+    }
+
+    @Test
+    @DataSet(value = "test-data/save-2-address.yml")
+    @ExpectedDataSet("expect-data/save-address-openId3.yml")
+    void deleteDefaultAddress() {
+        //given
+        final String token = jwt.generateWxToken(new User("openId3", "skey"));
+        //when
+        shippingAddressService.deleteAddress(token, 2);
+
+        System.out.println(shippingAddressService.getAllAddress());
+    }
+
+    @Test
+    @DataSet(value = "test-data/save-1-address.yml")
+    void deleteDefaultAddress_when_its_the_only_1() {
+        //given
+        final String token = jwt.generateWxToken(new User("openId", "skey"));
+        //when
+        shippingAddressService.deleteAddress(token, 1);
+
+        System.out.println(shippingAddressService.getAllAddress());
+        assertEquals(0, shippingAddressService.getAddressByToken(token).size());
     }
 }

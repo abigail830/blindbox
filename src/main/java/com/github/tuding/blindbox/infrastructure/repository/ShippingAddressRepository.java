@@ -75,9 +75,15 @@ public class ShippingAddressRepository {
         return jdbcTemplate.query("SELECT * FROM shipping_addr_tbl WHERE open_id = ?", rowMapper, openId);
     }
 
-    public void deleteAddressByOpenIdAndAddrId(String openId, String addrId) {
+    public void deleteAddressByOpenIdAndAddrId(String openId, long addrId) {
         log.info("delete address[{}] for user {}", addrId, openId);
         jdbcTemplate.update("DELETE FROM shipping_addr_tbl WHERE id = ? and open_id=?", addrId, openId);
     }
 
+    public void updateLastAddrAsDefault(String openId) {
+        String sql = "UPDATE shipping_addr_tbl set is_default_address = true " +
+                "WHERE id = (SELECT ID from shipping_addr_tbl WHERE open_id = ? ORDER BY ID DESC LIMIT 1)";
+        jdbcTemplate.update(sql, openId);
+        log.info("Update latest address(if there is any) as default for user [{}]", openId);
+    }
 }

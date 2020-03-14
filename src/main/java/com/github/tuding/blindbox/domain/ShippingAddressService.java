@@ -41,8 +41,10 @@ public class ShippingAddressService {
     }
 
     @Transactional
-    public void deleteAddress(String token, String addrId) {
+    public void deleteAddress(String token, long addrId) {
         final String openId = jwt.getOpenIdFromToken(token);
         shippingAddressRepository.deleteAddressByOpenIdAndAddrId(openId, addrId);
+
+        shippingAddressRepository.updateLastAddrAsDefault(openId);
     }
 }
