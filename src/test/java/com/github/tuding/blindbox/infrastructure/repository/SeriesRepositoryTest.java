@@ -5,7 +5,6 @@ import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,10 +25,10 @@ class SeriesRepositoryTest {
     @Autowired
     SeriesRespository seriesRespository;
 
+    @Test
     @DataSet("test-data/empty-series.yml")
     @ExpectedDataSet("expect-data/save-series.yml")
-    //TODO: this is not stable when within the whole test suite
-    void saveSeries() {
+    void saveSeries1() {
         Toggle.TEST_MODE.setStatus(true);
         seriesRespository.saveSeries(new SeriesDTO(1L, 1L,
                 "testSeries", new Date(), false, false, BigDecimal.valueOf(25.5),
@@ -37,16 +36,17 @@ class SeriesRepositoryTest {
                 "/app/data/series/cell/testSeries.png"));
     }
 
+
     @Test
     @DataSet("test-data/series-data.yml")
-    void querySeriesByName() {
+    void getSeriesByID() {
         final Optional<SeriesDTO> result = seriesRespository.querySeriesByName("testSeries2");
         assertTrue(result.isPresent());
     }
 
     @Test
     @DataSet("test-data/series-data.yml")
-    void querySeriesByRoleID() {
+    void getSeries() {
         final List<SeriesDTO> result = seriesRespository.queryByRoleID(1L);
         assertThat(result.size(), is(2));
     }

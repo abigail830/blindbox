@@ -8,4 +8,3 @@ series_tbl:
     seriesImage: "/app/data/series/testSeries.png"
     matrixHeaderImage: "/app/data/series/header/testSeries.png"
     matrixCellImage: "/app/data/series/cell/testSeries.png"
-#  update_time: redex:.*

@@ -1,0 +1,11 @@
+product_tbl:
+  - ID: 1
+    seriesID: 1
+    name: "product1"
+    isSpecial: false
+    isPresale: false
+    stock: 200
+    probability: 0.2
+    productImage: "/app/data/product/image/product1.png"
+    postCardImage: "/app/data/product/postcard/product1.png"
+

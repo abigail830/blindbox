@@ -2,6 +2,8 @@ package com.github.tuding.blindbox.api.admin.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -12,8 +14,9 @@ public class ProductDTO {
     Long seriesID;
     String name;
     boolean isSpecial;
+    boolean isPresale;
     long stock;
-    long probability;
+    BigDecimal probability;
     //Image f
     String productImage;
     String postCardImage;
