@@ -28,7 +28,11 @@ public class ShippingAddrDTO {
         this.isDefaultAddress = shippingAddress.getIsDefaultAddress();
     }
 
-    public ShippingAddress toDomainObj() {
+    public ShippingAddress toDomainObjWithoutId() {
         return new ShippingAddress(receiver, mobile, area, associateCode, detailAddress, isDefaultAddress);
+    }
+
+    public ShippingAddress toDomainObjWithId() {
+        return new ShippingAddress(id, receiver, mobile, area, associateCode, detailAddress, isDefaultAddress);
     }
 }

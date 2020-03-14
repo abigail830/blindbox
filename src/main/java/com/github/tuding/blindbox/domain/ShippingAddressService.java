@@ -1,5 +1,7 @@
 package com.github.tuding.blindbox.domain;
 
+import com.github.tuding.blindbox.exception.BizException;
+import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.repository.ShippingAddressRepository;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +27,8 @@ public class ShippingAddressService {
         shippingAddress.setOpenId(openIdFromToken);
         final ShippingAddress addressSaved = shippingAddressRepository.saveAddress(shippingAddress);
 
-        if (shippingAddress.getIsDefaultAddress()) {
-            shippingAddressRepository.removeDefaultForOther(addressSaved);
+        if (shippingAddress.getIsDefaultAddress() && shippingAddress.getId() != null) {
+            shippingAddressRepository.removeDefaultFlagForOther(addressSaved);
         }
 
     }
@@ -43,18 +45,26 @@ public class ShippingAddressService {
     @Transactional
     public void deleteAddress(String token, long addrId) {
         final String openId = jwt.getOpenIdFromToken(token);
-        shippingAddressRepository.deleteAddressByOpenIdAndAddrId(openId, addrId);
-
-        shippingAddressRepository.updateLastAddrAsDefault(openId);
+        int rowUpdated = shippingAddressRepository.deleteAddressByOpenIdAndAddrId(openId, addrId);
+        if (rowUpdated == 1) {
+            shippingAddressRepository.updateLastAddrAsDefault(openId);
+        } else {
+            log.warn("No qualify address entry[id={}] for remove under user [{}]", addrId, openId);
+            throw new BizException(ErrorCode.FAIL_TO_MODIFY_SHIPPING_ADDRESS);
+        }
     }
 
     public void updateAddress(String token, ShippingAddress shippingAddress) {
         final String openIdFromToken = jwt.getOpenIdFromToken(token);
         shippingAddress.setOpenId(openIdFromToken);
-        final ShippingAddress addressSaved = shippingAddressRepository.updateAddress(shippingAddress);
+        final int rowUpdated = shippingAddressRepository.updateAddress(shippingAddress);
 
-        if (shippingAddress.getIsDefaultAddress()) {
-            shippingAddressRepository.removeDefaultForOther(addressSaved);
+        if (rowUpdated == 1 && shippingAddress.getIsDefaultAddress()) {
+            shippingAddressRepository.removeDefaultFlagForOther(shippingAddress);
+        } else {
+            log.warn("No qualify address entry[id={}] for update under user [{}]",
+                    shippingAddress.getId(), shippingAddress.getOpenId());
+            throw new BizException(ErrorCode.FAIL_TO_MODIFY_SHIPPING_ADDRESS);
         }
     }
 }

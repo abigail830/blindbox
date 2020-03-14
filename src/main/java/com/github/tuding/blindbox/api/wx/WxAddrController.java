@@ -29,7 +29,7 @@ public class WxAddrController {
     public void addShippingAddress(HttpServletRequest request,
                                    @RequestBody ShippingAddrDTO shippingAddrDTO) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        final ShippingAddress shippingAddress = shippingAddrDTO.toDomainObj();
+        final ShippingAddress shippingAddress = shippingAddrDTO.toDomainObjWithoutId();
 
         shippingAddressService.addAddress(token, shippingAddress);
     }
@@ -39,7 +39,7 @@ public class WxAddrController {
     public void updateShippingAddress(HttpServletRequest request,
                                       @RequestBody ShippingAddrDTO shippingAddrDTO) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        final ShippingAddress shippingAddress = shippingAddrDTO.toDomainObj();
+        final ShippingAddress shippingAddress = shippingAddrDTO.toDomainObjWithId();
 
         shippingAddressService.updateAddress(token, shippingAddress);
     }
@@ -53,7 +53,7 @@ public class WxAddrController {
                 .collect(Collectors.toList());
     }
 
-    @DeleteMapping("/{addrId}")
+    @DeleteMapping("/id/{addrId}")
     public void deleteAddress(HttpServletRequest request,
                               @PathVariable String addrId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);

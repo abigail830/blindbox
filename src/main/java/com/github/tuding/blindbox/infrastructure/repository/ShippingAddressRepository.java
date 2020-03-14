@@ -32,7 +32,7 @@ public class ShippingAddressRepository {
         String sql = "INSERT INTO shipping_addr_tbl " +
                 "(receiver, mobile, area, associate_code, detail_address, is_default_address, open_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        int update = jdbcTemplate.update(
+        jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
                     ps.setString(1, shippingAddress.getReceiver());
@@ -45,23 +45,24 @@ public class ShippingAddressRepository {
                     return ps;
                 }, keyHolder);
 
-        final long id = extractID(keyHolder);
+        final long id = extractID(keyHolder, shippingAddress.getOpenId());
         shippingAddress.setId(id);
         log.info("Inserted {} into DB.", shippingAddress);
 
         return shippingAddress;
     }
 
-    private long extractID(KeyHolder keyHolder) {
+    private long extractID(KeyHolder keyHolder, String openId) {
         final Number key = keyHolder.getKey();
         if (key != null) {
             return key.longValue();
         } else {
+            log.warn("Fail to add address for user [{}]", openId);
             throw new BizException(ErrorCode.FAIL_TO_MODIFY_SHIPPING_ADDRESS);
         }
     }
 
-    public void removeDefaultForOther(ShippingAddress shippingAddress) {
+    public void removeDefaultFlagForOther(ShippingAddress shippingAddress) {
         String sql = "UPDATE shipping_addr_tbl set is_default_address = false " +
                 "WHERE open_id = ? AND id != ?";
         jdbcTemplate.update(sql, shippingAddress.getOpenId(), shippingAddress.getId());
@@ -75,9 +76,9 @@ public class ShippingAddressRepository {
         return jdbcTemplate.query("SELECT * FROM shipping_addr_tbl WHERE open_id = ?", rowMapper, openId);
     }
 
-    public void deleteAddressByOpenIdAndAddrId(String openId, long addrId) {
+    public int deleteAddressByOpenIdAndAddrId(String openId, long addrId) {
         log.info("delete address[{}] for user {}", addrId, openId);
-        jdbcTemplate.update("DELETE FROM shipping_addr_tbl WHERE id = ? and open_id=?", addrId, openId);
+        return jdbcTemplate.update("DELETE FROM shipping_addr_tbl WHERE id = ? and open_id=?", addrId, openId);
     }
 
     public void updateLastAddrAsDefault(String openId) {
@@ -87,19 +88,13 @@ public class ShippingAddressRepository {
         log.info("Update latest address(if there is any) as default for user [{}]", openId);
     }
 
-    public ShippingAddress updateAddress(ShippingAddress shippingAddress) {
+    public int updateAddress(ShippingAddress shippingAddress) {
         String sql = "UPDATE shipping_addr_tbl set receiver = ?, mobile = ?, area = ?, " +
                 "associate_code = ?, detail_address = ?, is_default_address = ? " +
                 "WHERE id = ? and open_id = ?";
-        int rowUpdated = jdbcTemplate.update(sql,
+        return jdbcTemplate.update(sql,
                 shippingAddress.getReceiver(), shippingAddress.getMobile(), shippingAddress.getArea(),
                 shippingAddress.getAssociateCode(), shippingAddress.getDetailAddress(),
                 shippingAddress.getIsDefaultAddress(), shippingAddress.getId(), shippingAddress.getOpenId());
-        if (rowUpdated == 1) {
-            log.info("Updated shipping_addr_tbl with [{}]", shippingAddress);
-            return shippingAddress;
-        } else {
-            throw new BizException(ErrorCode.FAIL_TO_MODIFY_SHIPPING_ADDRESS);
-        }
     }
 }
