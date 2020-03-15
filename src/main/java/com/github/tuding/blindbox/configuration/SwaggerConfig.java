@@ -38,7 +38,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.github.tuding.blindbox.api"))
+                .apis(RequestHandlerSelectors.basePackage("com.github.tuding.blindbox.api.wx"))
                 .paths(PathSelectors.any())
                 .build()
                 .globalOperationParameters(pars)
