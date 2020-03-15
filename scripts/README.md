@@ -41,4 +41,7 @@ yum install docker-ce-18.03.1.ce-1.el7.centos.x86_64.rpm
 systemctl enable docker
 systemctl start docker
 ```
+## BlindBox
 
+App deploy path: /var/www/blindbox
+Image: /opt/apps/blindbox
