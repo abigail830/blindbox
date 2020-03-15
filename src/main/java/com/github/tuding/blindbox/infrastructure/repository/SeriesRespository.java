@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
+import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +19,9 @@ import java.util.Optional;
 public class SeriesRespository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private RolesRepository rolesRepository;
 
     private RowMapper<SeriesDTO> rowMapper = new BeanPropertyRowMapper<>(SeriesDTO.class);
 
@@ -64,6 +69,13 @@ public class SeriesRespository {
         return seriesDTOs.stream().findFirst();
     }
 
+    public Optional<SeriesDTO> querySeriesByID(Long id) {
+        log.info("Going to query series with id: {}", id);
+
+        List<SeriesDTO> seriesDTOs = jdbcTemplate.query("SELECT * FROM series_tbl WHERE id = ?", rowMapper, id);
+        return seriesDTOs.stream().findFirst();
+    }
+
     public List<SeriesDTO> queryByRoleID(long roleID) {
         log.info("Going to query series with role id: {}", roleID);
         return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
@@ -75,4 +87,12 @@ public class SeriesRespository {
         return jdbcTemplate.query("SELECT * FROM series_tbl", rowMapper);
     }
 
+    public void createSeries(SeriesDTO seriesDTO) {
+        Optional<RoleDTO> roleDTO = rolesRepository.queryRolesByName(seriesDTO.getRoleId());
+        if (roleDTO.isPresent()) {
+            saveSeries(seriesDTO);
+        } else {
+            throw new RuntimeException("Role id " + seriesDTO.getRoleId() + " is not existed");
+        }
+    }
 }

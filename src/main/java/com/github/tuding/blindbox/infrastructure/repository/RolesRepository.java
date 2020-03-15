@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,4 +54,9 @@ public class RolesRepository {
         log.info("Delete role for {}", name);
         jdbcTemplate.update("DELETE FROM roles_tbl WHERE name = ?", name);
     }
-}
+
+    public Optional<RoleDTO> queryRolesByName(Long id) {
+        log.info("Going to query roles with id: {}", id);
+        List<RoleDTO> roleDTOs = jdbcTemplate.query("SELECT * FROM roles_tbl WHERE id = ?", rowMapper, id);
+        return roleDTOs.stream().findFirst();
+    }}

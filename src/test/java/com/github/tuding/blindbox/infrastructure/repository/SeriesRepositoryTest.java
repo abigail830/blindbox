@@ -25,29 +25,20 @@ class SeriesRepositoryTest {
     @Autowired
     SeriesRespository seriesRespository;
 
-    @Test
-    @DataSet("test-data/empty-series.yml")
-    @ExpectedDataSet("expect-data/save-series.yml")
-    void saveSeries1() {
-        Toggle.TEST_MODE.setStatus(true);
-        seriesRespository.saveSeries(new SeriesDTO(1L, 1L,
-                "testSeries", new Date(), false, false, BigDecimal.valueOf(25.5),
-                "/app/data/series/testSeries.png", "/app/data/series/header/testSeries.png",
-                "/app/data/series/cell/testSeries.png"));
-    }
-
 
     @Test
-    @DataSet("test-data/series-data.yml")
+    @DataSet("expect-data/save-product.yml")
     void getSeriesByID() {
         final Optional<SeriesDTO> result = seriesRespository.querySeriesByName("testSeries2");
         assertTrue(result.isPresent());
     }
 
     @Test
-    @DataSet("test-data/series-data.yml")
+    @DataSet("expect-data/save-product.yml")
     void getSeries() {
         final List<SeriesDTO> result = seriesRespository.queryByRoleID(1L);
         assertThat(result.size(), is(2));
     }
+
+
 }

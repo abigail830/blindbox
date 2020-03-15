@@ -19,9 +19,12 @@ public class ProductRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private SeriesRespository seriesRespository;
+
     private RowMapper<ProductDTO> rowMapper = new BeanPropertyRowMapper<>(ProductDTO.class);
 
-    public void saveProduct(ProductDTO productDTO) {
+    private void saveProduct(ProductDTO productDTO) {
         log.info("Going to insert product_tbl for {}", productDTO);
 
         if (Toggle.TEST_MODE.isON()) {
@@ -52,5 +55,13 @@ public class ProductRepository {
     public List<ProductDTO> getProductBySeries(Long id) {
         log.info("Going to query product with product series: {}", id);
         return jdbcTemplate.query("SELECT * FROM product_tbl WHERE seriesID = ?", rowMapper, id);
+    }
+
+    public void createProduct(ProductDTO productDTO) {
+        if (seriesRespository.querySeriesByID(productDTO.getSeriesID()).isPresent()) {
+            saveProduct(productDTO);
+        } else {
+            throw new RuntimeException("Series id " + productDTO.getSeriesID() + " is not existed");
+        }
     }
 }

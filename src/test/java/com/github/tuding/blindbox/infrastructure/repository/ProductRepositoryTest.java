@@ -35,7 +35,7 @@ public class ProductRepositoryTest {
     @DataSet("expect-data/save-product.yml")
     void queryProductBySeriesID () {
         List<ProductDTO> productBySeries = productRepository.getProductBySeries(1L);
-        assertThat(productBySeries.size(), is(1));
+        assertThat(productBySeries.size(), is(3));
     }
 
 

@@ -1,6 +1,0 @@
-roles_tbl:
-  - id: 1
-    name: testRole1
-    category: test
-    description: test
-    role_image: "/app/data/role/testRole1/testRole1.png"
