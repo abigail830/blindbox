@@ -1,0 +1,30 @@
+---
+- hosts: blindbox.saraqian.cn
+  remote_user: root
+  vars:
+    version: 0.1
+  tasks:
+  - name: Download package from jitpack
+    get_url:
+      url: https://jitpack.io/com/github/abigail830/blindbox/{{version}}/blindbox-{{version}}.jar
+      dest: /var/www/blindbox/blindbox-{{version}}.jar
+      mode: 0744
+
+  - name: Remove existing softlink
+    file:
+      state: absent
+      path: /var/www/blindbox/blindbox.jar
+
+  - name: Create new softlink to deploy file
+    file:
+      src: /var/www/blindbox/blindbox-{{version}}.jar
+      dest: /var/www/blindbox/blindbox.jar
+      state: link
+      mode: 0744
+
+  - name: Stop current process
+    command: /var/www/blindbox/stop.sh
+
+  - name: Start new process
+    command: /var/www/blindbox/start.sh
+
