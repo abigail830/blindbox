@@ -23,7 +23,7 @@ public class Jwt {
      * JWT密码
      */
     private static final String DEFAULT_SECRET = "secret";
-    private static final String ENV_SECRET_KEY = "ENCRYPTION_KEY_WL";
+    private static final String ENV_SECRET_KEY = "ENCRYPTION_KEY";
     private static final String ISSUER = "blindbox";
     public static final String S_KEY = "sKey";
 
