@@ -43,5 +43,5 @@ systemctl start docker
 ```
 ## BlindBox
 
-App deploy path: /var/www/blindbox
-Image: /opt/apps/blindbox
+- App deploy path: /var/www/blindbox
+- Image: /opt/apps/blindbox
