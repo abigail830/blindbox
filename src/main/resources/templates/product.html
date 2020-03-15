@@ -65,15 +65,14 @@
         <div th:if="${!roles.empty}">
             <div class="ui grid horizontal">
                 <div class="four wide column" th:each="role : ${roles}">
-                    <img class="ui medium circular image" th:src="'/roles/' + ${role.name} + '/images'">
+                    <a th:href="@{'/admin-ui/series/?roleID=' + ${role.id}}">
+                        <img class="ui medium circular image"
+                             th:src="'/roles/' + ${role.name} + '/images'">
+                    </a>
                     <div class="role-name" th:text="${role.name}"></div>
                     <i class="trash alternate outline icon" th:attr="onclick=|delItem('${role.name}')|"></i>
                 </div>
             </div>
-        </div>
-
-        <div>
-            <a th:href="@{/admin-ui/roleform/}">添加</a>
         </div>
     </div>
 </div>

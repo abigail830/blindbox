@@ -46,7 +46,7 @@ public class SeriesRespository {
         } else {
             String insertSql = "INSERT ignore INTO series_tbl " +
                     " (roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage) " +
-                    " VALUES (?, ?, ?, ?)";
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)¡";
             int update = jdbcTemplate.update(insertSql,
                     seriesDTO.getRoleId(),
                     seriesDTO.getName(),
@@ -94,5 +94,12 @@ public class SeriesRespository {
         } else {
             throw new RuntimeException("Role id " + seriesDTO.getRoleId() + " is not existed");
         }
+    }
+
+    public void deleteSeries(String name) {
+        log.info("Delete series for {}", name);
+        jdbcTemplate.update("DELETE FROM series_tbl where name = ?", name);
+
+
     }
 }

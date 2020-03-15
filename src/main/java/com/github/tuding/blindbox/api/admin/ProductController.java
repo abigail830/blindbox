@@ -25,7 +25,6 @@ public class ProductController {
         List<RoleDTO> roleDTOS = rolesRepository.queryRoles();
         log.info(roleDTOS.toString());
         model.addAttribute("roles", roleDTOS);
-        model.addAttribute("products", new ArrayList<>());
         return "product";
     }
 }

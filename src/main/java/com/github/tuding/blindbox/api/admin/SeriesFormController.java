@@ -4,20 +4,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin-ui/roleform")
-public class RoleFormController {
-
+@RequestMapping("/admin-ui/seriesform")
+public class SeriesFormController {
     @GetMapping("/")
-    public String createForm(Model model) {
-
-        return "roleform";
+    public String createForm(Model model,
+                             @RequestParam("roleName") String roleName) {
+        model.addAttribute("roleName", roleName);
+        return "seriesform";
     }
+
 
 }
