@@ -2,6 +2,7 @@ package com.github.tuding.blindbox.filter;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.github.tuding.blindbox.exception.ErrorResponse;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import com.github.tuding.blindbox.infrastructure.util.JsonUtil;
@@ -55,7 +56,7 @@ public class WxAuthorizationInterceptor implements HandlerInterceptor {
 
     private boolean verificationFail(HttpServletResponse response, String reason) throws IOException {
         log.error(reason);
-        response.getWriter().write(JsonUtil.toJson(reason));
+        response.getWriter().write(JsonUtil.toJson(new ErrorResponse(reason)));
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         return false;

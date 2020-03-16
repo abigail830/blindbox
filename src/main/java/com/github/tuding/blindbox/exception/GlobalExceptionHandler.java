@@ -21,7 +21,8 @@ public class GlobalExceptionHandler {
         if (e.getErrorCode().equals(ErrorCode.WX_USER_NOT_FOUND)) {
             return new ResponseEntity<>(JsonUtil.toJson(new Object()), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(e.getErrorCode().name(), HttpStatus.BAD_REQUEST);
+            final ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode().name());
+            return new ResponseEntity<>(JsonUtil.toJson(errorResponse), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -29,6 +30,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public ResponseEntity<?> genericExceptionHandler(Exception e) {
         log.warn("{}", e);
-        return new ResponseEntity<>("UNKNOWN", HttpStatus.UNPROCESSABLE_ENTITY);
+        final ErrorResponse errorResponse = new ErrorResponse("UNKNOWN");
+        return new ResponseEntity<>(JsonUtil.toJson(errorResponse), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }
