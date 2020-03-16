@@ -7,13 +7,15 @@
     <link rel="stylesheet" th:href="@{/style/style.css}">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script>
+        $('.ui.checkbox')
+         .checkbox();
+
+    </script>
     <style>
         form {
             text-align: left;
         }
-
-
-
     </style>
 
 </head>
@@ -55,25 +57,25 @@
               action="#" th:action="@{/admin-ui/activities/form}" th:object="${activityForm}">
             <div class="field">
                 <label>活动名称</label>
-                <input type="text" name="name" placeholder="Name" th:field="*{name}">
+                <input type="text" placeholder="Name" th:field="*{name}">
             </div>
             <div class="field">
                 <label>活动简介</label>
-                <input type="text" name="description" placeholder="description" th:field="*{description}">
+                <input type="text" placeholder="Description" th:field="*{description}">
             </div>
             <div class="field">
                 <div class="ui checkbox">
-                    <input type="checkbox" tabindex="0" class="hidden" name="shownInAd" th:field="*{shownInAd}">
-                    <label>是否展示在首页banner？</label>
+                    <input id="showInAd-box" type="checkbox" th:field="*{shownInAd}">
+                    <label for="showInAd-box">是否展示在首页banner？</label>
                 </div>
             </div>
             <div class="field">
                 <label>活动主图</label>
-                <input type="file" name="mainImg" th:field="*{mainImg}">
+                <input type="file" th:field="*{mainImg}">
             </div>
             <div class="field">
                 <label>活动详细内容图</label>
-                <input type="file" name="contentImg" th:field="*{contentImg}">
+                <input type="file" th:field="*{contentImg}">
             </div>
             <button class="ui button">提交</button>
         </form>

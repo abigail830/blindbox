@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 public class ActivityService {
@@ -17,14 +19,20 @@ public class ActivityService {
     ActivityRepository activityRepository;
 
     public void saveActivity(Activity activity) {
+        UUID uuid = UUID.randomUUID();
+        activity.setId(uuid.toString());
 
-        final String mainImgAddr = imageRepository.saveImage(activity.getName(),
-                ImageCategory.ACTIVITY, activity.getMainImg());
-        activity.setMainImgAddr(mainImgAddr);
+        if (!activity.getMainImg().isEmpty()) {
+            final String mainImgAddr = imageRepository.saveImage(uuid.toString() + "-main",
+                    ImageCategory.ACTIVITY, activity.getMainImg());
+            activity.setMainImgAddr(mainImgAddr);
+        }
 
-        final String contentImgAddr = imageRepository.saveImage(activity.getName(),
-                ImageCategory.ACTIVITY, activity.getContentImg());
-        activity.setContentImgAddr(contentImgAddr);
+        if (!activity.getContentImg().isEmpty()) {
+            final String contentImgAddr = imageRepository.saveImage(uuid.toString() + "-content",
+                    ImageCategory.ACTIVITY, activity.getContentImg());
+            activity.setContentImgAddr(contentImgAddr);
+        }
 
         activityRepository.saveActivity(activity);
     }

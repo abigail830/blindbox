@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 public class ActivityFormDTO {
 
-    Long id;
+    String id;
     String name;
     String description;
     MultipartFile mainImg;
