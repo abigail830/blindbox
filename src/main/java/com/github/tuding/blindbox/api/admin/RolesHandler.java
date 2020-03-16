@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -36,13 +37,15 @@ public class RolesHandler {
                            @RequestParam("description") String description,
                            @RequestParam("category") String category,
                            @RequestParam("image") MultipartFile file) throws IOException {
-        log.info("handle role creation as name {} category {} description {}", name, category, description);
+        UUID roleID = UUID.randomUUID();
+        log.info("handle role creation as id {} name {} category {} description {}",
+                roleID.toString(), name, category, description);
         //TODO: image format/size check
-
-        File storeFile = new File( getRolesFolder() + name + ".png");
+        File storeFile = new File( getRolesFolder() + roleID.toString() + ".png");
         file.transferTo(storeFile);
 
         RoleDTO roleDTO = new RoleDTO();
+        roleDTO.setId(roleID.toString());
         roleDTO.setName(name);
         roleDTO.setCategory(category);
         roleDTO.setDescription(description);

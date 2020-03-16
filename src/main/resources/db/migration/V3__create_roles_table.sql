@@ -1,5 +1,5 @@
 create TABLE roles_tbl (
-  ID bigint NOT NULL AUTO_INCREMENT,
+  ID varchar(100) NOT NULL unique,
   name varchar(100) unique NOT NULL,
   category varchar(1000) NOT NULL,
   description varchar(1000) NOT NULL,

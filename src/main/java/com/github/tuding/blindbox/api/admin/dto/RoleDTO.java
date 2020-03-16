@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 public class RoleDTO {
 
-    Long id;
+    String id;
     String name;
     String category;
     String description;

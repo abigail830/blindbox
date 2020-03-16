@@ -36,7 +36,7 @@ class SeriesRepositoryTest {
     @Test
     @DataSet("expect-data/save-product.yml")
     void getSeries() {
-        final List<SeriesDTO> result = seriesRespository.queryByRoleID(1L);
+        final List<SeriesDTO> result = seriesRespository.queryByRoleID("roleid1");
         assertThat(result.size(), is(2));
     }
 

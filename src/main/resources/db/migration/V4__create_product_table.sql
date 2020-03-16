@@ -1,6 +1,6 @@
 create TABLE series_tbl (
-  ID bigint NOT NULL AUTO_INCREMENT,
-  roleID bigint NOT NULL,
+  ID varchar(100) NOT NULL unique,
+  roleID varchar(100) NOT NULL,
   name varchar(100) unique NOT NULL,
   releaseDate TIMESTAMP NOT NULL,
   isNewSeries boolean NOT NULL,
@@ -15,8 +15,8 @@ create TABLE series_tbl (
 
 
 create TABLE product_tbl (
-  ID bigint NOT NULL AUTO_INCREMENT,
-  seriesID bigint NOT NULL,
+  ID varchar(100) NOT NULL unique,
+  seriesID varchar(100) NOT NULL,
   name varchar(100) unique NOT NULL,
   isSpecial boolean NOT NULL,
   isPresale boolean NOT NULL,

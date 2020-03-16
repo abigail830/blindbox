@@ -30,9 +30,10 @@ public class SeriesRespository {
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO series_tbl " +
-                    " (roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql,
+                    seriesDTO.getId(),
                     seriesDTO.getRoleId(),
                     seriesDTO.getName(),
                     seriesDTO.getReleaseDate(),
@@ -45,9 +46,10 @@ public class SeriesRespository {
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO series_tbl " +
-                    " (roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql,
+                    seriesDTO.getId(),
                     seriesDTO.getRoleId(),
                     seriesDTO.getName(),
                     seriesDTO.getReleaseDate(),
@@ -69,14 +71,14 @@ public class SeriesRespository {
         return seriesDTOs.stream().findFirst();
     }
 
-    public Optional<SeriesDTO> querySeriesByID(Long id) {
+    public Optional<SeriesDTO> querySeriesByID(String id) {
         log.info("Going to query series with id: {}", id);
 
         List<SeriesDTO> seriesDTOs = jdbcTemplate.query("SELECT * FROM series_tbl WHERE id = ?", rowMapper, id);
         return seriesDTOs.stream().findFirst();
     }
 
-    public List<SeriesDTO> queryByRoleID(long roleID) {
+    public List<SeriesDTO> queryByRoleID(String roleID) {
         log.info("Going to query series with role id: {}", roleID);
         return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
 
@@ -88,7 +90,7 @@ public class SeriesRespository {
     }
 
     public void createSeries(SeriesDTO seriesDTO) {
-        Optional<RoleDTO> roleDTO = rolesRepository.queryRolesByName(seriesDTO.getRoleId());
+        Optional<RoleDTO> roleDTO = rolesRepository.queryRolesByID(seriesDTO.getRoleId());
         if (roleDTO.isPresent()) {
             saveSeries(seriesDTO);
         } else {

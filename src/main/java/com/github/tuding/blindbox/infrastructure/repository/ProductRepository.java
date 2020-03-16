@@ -28,18 +28,18 @@ public class ProductRepository {
         log.info("Going to insert product_tbl for {}", productDTO);
 
         if (Toggle.TEST_MODE.isON()) {
-            String insertSql = "INSERT INTO product_tbl (seriesID, name, isSpecial, isPresale, stock, " +
+            String insertSql = "INSERT INTO product_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
                     " probability, productImage, postCardImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, productDTO.getSeriesID(), productDTO.getName(),
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            int update = jdbcTemplate.update(insertSql, productDTO.getId(), productDTO.getSeriesID(), productDTO.getName(),
                     productDTO.isSpecial(), productDTO.isPresale(), productDTO.getStock(), productDTO.getProbability(),
                     productDTO.getProductImage(), productDTO.getPostCardImage());
             log.info("update row {} ", update);
         } else {
-            String insertSql = "INSERT ignore INTO product_tbl (seriesID, name, isSpecial, isPresale, stock, " +
+            String insertSql = "INSERT ignore INTO product_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
                     " probability, productImage, postCardImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, productDTO.getSeriesID(), productDTO.getName(),
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            int update = jdbcTemplate.update(insertSql, productDTO.getId(), productDTO.getSeriesID(), productDTO.getName(),
                     productDTO.isSpecial(), productDTO.isPresale(), productDTO.getStock(), productDTO.getProbability(),
                     productDTO.getProductImage(), productDTO.getPostCardImage());
             log.info("update row {} ", update);
@@ -52,7 +52,7 @@ public class ProductRepository {
         return productDTOs.stream().findFirst();
     }
 
-    public List<ProductDTO> getProductBySeries(Long id) {
+    public List<ProductDTO> getProductBySeries(String id) {
         log.info("Going to query product with product series: {}", id);
         return jdbcTemplate.query("SELECT * FROM product_tbl WHERE seriesID = ?", rowMapper, id);
     }

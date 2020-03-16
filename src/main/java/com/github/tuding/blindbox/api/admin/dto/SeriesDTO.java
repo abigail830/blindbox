@@ -11,8 +11,8 @@ import java.util.Date;
 @Setter
 @Getter
 public class SeriesDTO {
-    Long id;
-    Long roleId;
+    String id;
+    String roleId;
     String name;
     Date releaseDate;
     boolean isNewSeries;

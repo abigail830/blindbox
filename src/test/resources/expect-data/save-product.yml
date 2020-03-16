@@ -1,17 +1,17 @@
 roles_tbl:
-  - id: 1
+  - id: roleid1
     name: testRole1
     category: test
     description: test
     role_image: "/app/data/role/testRole1/testRole1.png"
-  - id: 2
+  - id: roleid2
     name: testRole2
     category: test
     description: test
     role_image: "/app/data/role/testRole2/testRole2.png"
 series_tbl:
-  - id: 1
-    roleID: 1
+  - id: seriesid1
+    roleID: roleid1
     name: "testSeries"
     isNewSeries: false
     isPresale: false
@@ -20,8 +20,8 @@ series_tbl:
     seriesImage: "/app/data/series/testSeries.png"
     matrixHeaderImage: "/app/data/series/header/testSeries.png"
     matrixCellImage: "/app/data/series/cell/testSeries.png"
-  - id: 2
-    roleID: 1
+  - id: seriesid2
+    roleID: roleid1
     name: "testSeries2"
     isNewSeries: false
     isPresale: false
@@ -31,8 +31,8 @@ series_tbl:
     matrixHeaderImage: "/app/data/series/header/testSeries2.png"
     matrixCellImage: "/app/data/series/cell/testSeries2.png"
 product_tbl:
-  - ID: 1
-    seriesID: 1
+  - ID: productid1
+    seriesID: seriesid1
     name: "product1"
     isSpecial: false
     isPresale: false
@@ -40,8 +40,8 @@ product_tbl:
     probability: 0.2
     productImage: "/app/data/product/image/product1.png"
     postCardImage: "/app/data/product/postcard/product1.png"
-  - ID: 2
-    seriesID: 1
+  - ID: productid2
+    seriesID: seriesid1
     name: "product2"
     isSpecial: false
     isPresale: false
@@ -49,8 +49,8 @@ product_tbl:
     probability: 0.2
     productImage: "/app/data/product/image/product2.png"
     postCardImage: "/app/data/product/postcard/product2.png"
-  - ID: 3
-    seriesID: 1
+  - ID: productid3
+    seriesID: seriesid1
     name: "product3"
     isSpecial: true
     isPresale: false

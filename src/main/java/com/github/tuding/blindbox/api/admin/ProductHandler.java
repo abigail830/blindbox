@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -49,17 +50,19 @@ public class ProductHandler {
                                    @RequestParam("probability") BigDecimal probability,
                                    @RequestParam("productImage") MultipartFile productImage,
                                    @RequestParam("postCardImage") MultipartFile postCardImage) throws IOException {
-        log.info("Handle product creation as series name {} product name {} isSpecial {} " +
-                " stock {} probability {}", seriesName, name, isSpecial, stock, probability);
+        UUID productID = UUID.randomUUID();
+        log.info("Handle product creation as id {} series name {} product name {} isSpecial {} " +
+                " stock {} probability {}", productID.toString(), seriesName, name, isSpecial, stock, probability);
 
         Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByName(seriesName);
         if (seriesDTOOptional.isPresent()) {
-            File productImageFile = new File(getProductFolder(name) + "image" + ".png");
+            File productImageFile = new File(getProductFolder(productID.toString()) + "image" + ".png");
             productImage.transferTo(productImageFile);
-            File postCardImageFile = new File(getProductFolder(name) + "postcard" + ".png");
+            File postCardImageFile = new File(getProductFolder(productID.toString()) + "postcard" + ".png");
             postCardImage.transferTo(postCardImageFile);
 
             ProductDTO productDTO = new ProductDTO();
+            productDTO.setId(productID.toString());
             productDTO.setSeriesID(seriesDTOOptional.get().getId());
             productDTO.setName(name);
             productDTO.setSpecial(isSpecial);

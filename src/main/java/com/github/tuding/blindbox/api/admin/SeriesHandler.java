@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -54,18 +55,20 @@ public class SeriesHandler {
                                    @RequestParam("seriesImage") MultipartFile seriesImage,
                                    @RequestParam("matrixHeaderImage") MultipartFile matrixHeaderImage,
                                    @RequestParam("matrixCellImage") MultipartFile matrixCellImage) throws IOException, ParseException {
-        log.info("handle series creation as role name {} series name {} release date {} " +
-                " isNewSeries {} isPresale {} price {} ", roleName, name, releaseDate, isNewSeries, isPresale, price);
+        UUID seriesID = UUID.randomUUID();
+        log.info("handle series creation as id {} role name {} series name {} release date {} " +
+                " isNewSeries {} isPresale {} price {} ", seriesID.toString(), roleName, name, releaseDate, isNewSeries, isPresale, price);
         Optional<RoleDTO> roleDTO = rolesRepository.queryRolesByName(roleName);
         if(roleDTO.isPresent()) {
-            File seriesImageFile = new File(getSeriesFolder(name) + "image" + ".png");
+            File seriesImageFile = new File(getSeriesFolder(seriesID.toString()) + "image" + ".png");
             seriesImage.transferTo(seriesImageFile);
-            File matrixHeaderImageFile = new File(getSeriesFolder(name) + "matrixHeaderImage" + ".png");
+            File matrixHeaderImageFile = new File(getSeriesFolder(seriesID.toString()) + "matrixHeaderImage" + ".png");
             matrixHeaderImage.transferTo(matrixHeaderImageFile);
-            File matrixCellImageFile = new File(getSeriesFolder(name) + "matrixCellImage" + ".png");
+            File matrixCellImageFile = new File(getSeriesFolder(seriesID.toString()) + "matrixCellImage" + ".png");
             matrixCellImage.transferTo(matrixCellImageFile);
 
             SeriesDTO seriesDTO = new SeriesDTO();
+            seriesDTO.setId(seriesID.toString());
             seriesDTO.setRoleId(roleDTO.get().getId());
             seriesDTO.setName(name);
             seriesDTO.setReleaseDate(simpleDateFormatter.get().parse(releaseDate));

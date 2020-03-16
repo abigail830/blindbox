@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,14 +26,14 @@ public class RolesRepository {
         log.info("Going to insert roles_tbl with name: {}", roleDTO.getName());
 
         if (Toggle.TEST_MODE.isON()) {
-            String insertSql = "INSERT INTO roles_tbl (name, category, description, role_image) " +
-                    "VALUES (?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
+            String insertSql = "INSERT INTO roles_tbl (id, name, category, description, role_image) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+            int update = jdbcTemplate.update(insertSql, roleDTO.getId(), roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
             log.info("update row {} ", update);
         } else {
-            String insertSql = "INSERT ignore INTO roles_tbl (name, category, description, role_image) " +
-                    "VALUES (?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
+            String insertSql = "INSERT ignore INTO roles_tbl (id, name, category, description, role_image) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+            int update = jdbcTemplate.update(insertSql, roleDTO.getId(), roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
             log.info("update row {} ", update);
         }
     }
@@ -55,7 +54,7 @@ public class RolesRepository {
         jdbcTemplate.update("DELETE FROM roles_tbl WHERE name = ?", name);
     }
 
-    public Optional<RoleDTO> queryRolesByName(Long id) {
+    public Optional<RoleDTO> queryRolesByID(String id) {
         log.info("Going to query roles with id: {}", id);
         List<RoleDTO> roleDTOs = jdbcTemplate.query("SELECT * FROM roles_tbl WHERE id = ?", rowMapper, id);
         return roleDTOs.stream().findFirst();

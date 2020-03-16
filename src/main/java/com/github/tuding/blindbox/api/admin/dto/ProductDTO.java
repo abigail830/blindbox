@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 public class ProductDTO {
-    Long id;
-    Long seriesID;
+    String id;
+    String seriesID;
     String name;
     boolean isSpecial;
     boolean isPresale;
