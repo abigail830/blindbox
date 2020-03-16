@@ -13,4 +13,6 @@ public enum ErrorCode {
     WX_USER_NOT_FOUND,
     FAIL_TO_MODIFY_SHIPPING_ADDRESS,
 
+    FAIL_TO_STORE_FILE,
+
 }

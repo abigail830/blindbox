@@ -13,6 +13,7 @@
         }
 
 
+
     </style>
 
 </head>
@@ -50,25 +51,33 @@
             </div>
         </div>
         <div class="ui divider"></div>
-        <form class="ui form" enctype="multipart/form-data" action="/roles/" method="POST">
+        <form class="ui form" enctype="multipart/form-data" method="POST"
+              action="#" th:action="@{/admin-ui/activities/form}" th:object="${activityForm}">
             <div class="field">
                 <label>活动名称</label>
-                <input type="text" name="name">
+                <input type="text" name="name" placeholder="Name" th:field="*{name}">
             </div>
             <div class="field">
                 <label>活动简介</label>
-                <input type="text" name="description">
+                <input type="text" name="description" placeholder="description" th:field="*{description}">
             </div>
             <div class="field">
-                <label>活动类别</label>
-                <input type="text" name="category">
+                <div class="ui checkbox">
+                    <input type="checkbox" tabindex="0" class="hidden" name="shownInAd" th:field="*{shownInAd}">
+                    <label>是否展示在首页banner？</label>
+                </div>
             </div>
             <div class="field">
-                <label>活动首页图</label>
-                <input type="file" name="image">
+                <label>活动主图</label>
+                <input type="file" name="mainImg" th:field="*{mainImg}">
+            </div>
+            <div class="field">
+                <label>活动详细内容图</label>
+                <input type="file" name="contentImg" th:field="*{contentImg}">
             </div>
             <button class="ui button">提交</button>
         </form>
+
     </div>
 </div>
 
