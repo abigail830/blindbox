@@ -51,20 +51,17 @@
                 <input type="date" name="releaseDate">
             </div>
             <div class="field">
-                <label class="switch">新发布系列
-                    <input type="checkbox" name="isNewSeries">
-                    <span class="slider round"></span>
-                </label>
+                <input type="radio" name="isNewSeries" value="true" checked>新系列<br>
+                <input type="radio" name="isNewSeries" value="false" >已有系列<br>
             </div>
+
             <div class="field">
-                <label class="switch">预售
-                    <input type="checkbox" name="isPresale">
-                    <span class="slider round"></span>
-                </label>
+                <input type="radio" name="isPresale" value="true" >预售<br>
+                <input type="radio" name="isPresale" value="false" checked>非预售<br>
             </div>
             <div class="field">
                 <label>售价</label>
-                <input type="number" name="price">
+                <input type="number" step="0.01" name="price">
             </div>
             <div class="field">
                 <label>产品系列图</label>
