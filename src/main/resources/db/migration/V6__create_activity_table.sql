@@ -7,6 +7,6 @@ create TABLE activity_tbl (
   content_img_addr varchar(2000),
   activity_start_date TIMESTAMP NOT NULL,
   activity_end_date TIMESTAMP NOT NULL,
-  create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  last_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

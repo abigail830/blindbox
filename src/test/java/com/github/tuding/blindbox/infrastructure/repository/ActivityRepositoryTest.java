@@ -35,7 +35,7 @@ class ActivityRepositoryTest {
 
         System.out.println(act);
         assertEquals(1, act.size());
-        assertFalse(act.get(0).getCreateTime().toString().isEmpty());
+        assertFalse(act.get(0).getLastUpdateTime().toString().isEmpty());
 
         activityRepository.deleteActivity("id");
 

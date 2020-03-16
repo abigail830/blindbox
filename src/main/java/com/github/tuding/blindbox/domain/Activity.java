@@ -22,7 +22,7 @@ public class Activity {
     Timestamp activityStartDate;
     Timestamp activityEndDate;
 
-    Date createTime;
+    Timestamp lastUpdateTime;
     String mainImgAddr;
     String contentImgAddr;
 
@@ -32,8 +32,12 @@ public class Activity {
         this.activityName = name;
         this.activityDescription = description;
         this.shownInAd = shownInAd;
-        this.activityStartDate = new Timestamp(activityStartDate.getTime());
-        this.activityEndDate = new Timestamp(activityEndDate.getTime());
+        if (activityStartDate != null) {
+            this.activityStartDate = new Timestamp(activityStartDate.getTime());
+        }
+        if (activityEndDate != null) {
+            this.activityEndDate = new Timestamp(activityEndDate.getTime());
+        }
         this.mainImg = mainImg;
         this.contentImg = contentImg;
     }
@@ -59,7 +63,7 @@ public class Activity {
                 ", shownInAd=" + shownInAd +
                 ", activityStartDate=" + activityStartDate +
                 ", activityEndDate=" + activityEndDate +
-                ", createTime=" + createTime +
+                ", lastUpdateTime=" + lastUpdateTime +
                 ", mainImgAddr='" + mainImgAddr + '\'' +
                 ", contentImgAddr='" + contentImgAddr + '\'' +
                 '}';

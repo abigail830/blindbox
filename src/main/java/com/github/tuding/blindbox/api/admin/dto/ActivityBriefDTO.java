@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.api.admin.dto;
 
+import com.github.tuding.blindbox.domain.Activity;
 import lombok.*;
 
 import java.util.Date;
@@ -11,14 +12,21 @@ import java.util.Date;
 @Getter
 public class ActivityBriefDTO {
 
-    Long id;
+    String id;
     String name;
     String description;
     Boolean showAsAd;
 
     Date activityStartDate;
     Date activityEndDate;
-    Date createDate;
     Date lastUpdateDate;
 
+    public ActivityBriefDTO(Activity activity) {
+        this.id = activity.getId();
+        this.name = activity.getActivityName();
+        this.description = activity.getActivityDescription();
+        this.activityStartDate = new Date(activity.getActivityStartDate().getTime());
+        this.activityEndDate = new Date(activity.getActivityEndDate().getTime());
+        this.lastUpdateDate = new Date(activity.getLastUpdateTime().getTime());
+    }
 }

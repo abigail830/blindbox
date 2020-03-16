@@ -11,6 +11,15 @@
         $('.ui.checkbox')
          .checkbox();
 
+         $('#rangestart').calendar({
+            type: 'date',
+            endCalendar: $('#rangeend')
+        });
+        $('#rangeend').calendar({
+            type: 'date',
+            startCalendar: $('#rangestart')
+        });
+
     </script>
     <style>
         form {
@@ -55,7 +64,7 @@
         <div class="ui divider"></div>
         <form class="ui form" enctype="multipart/form-data" method="POST"
               action="#" th:action="@{/admin-ui/activities/form}" th:object="${activityForm}">
-            <div class="field">
+            <div class="field required ">
                 <label>活动名称</label>
                 <input type="text" placeholder="Name" th:field="*{name}">
             </div>
@@ -64,12 +73,30 @@
                 <input type="text" placeholder="Description" th:field="*{description}">
             </div>
             <div class="field">
+                <label>活动开始日期</label>
+                <div class="ui calendar" id="rangestart">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input type="text" placeholder="Start">
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>活动结束日期</label>
+                <div class="ui calendar" id="rangeend">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input type="text" placeholder="End">
+                    </div>
+                </div>
+            </div>
+            <div class="field">
                 <div class="ui checkbox">
                     <input id="showInAd-box" type="checkbox" th:field="*{shownInAd}">
                     <label for="showInAd-box">是否展示在首页banner？</label>
                 </div>
             </div>
-            <div class="field">
+            <div class="field required">
                 <label>活动主图</label>
                 <input type="file" th:field="*{mainImg}">
             </div>

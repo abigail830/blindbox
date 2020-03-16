@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.api.admin;
 
+import com.github.tuding.blindbox.api.admin.dto.ActivityBriefDTO;
 import com.github.tuding.blindbox.api.admin.dto.ActivityFormDTO;
 import com.github.tuding.blindbox.domain.Activity;
 import com.github.tuding.blindbox.domain.ActivityService;
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin-ui/activities")
@@ -32,7 +34,10 @@ public class ActivityController {
     public String homepage(Model model) {
         //TODO: to query all activities in brief format
 
-        model.addAttribute("activities", new ArrayList<>());
+        final List<ActivityBriefDTO> activityBriefDTOS = activityService.getAllActivities().stream()
+                .map(ActivityBriefDTO::new)
+                .collect(Collectors.toList());
+        model.addAttribute("activities", activityBriefDTOS);
         return "activity";
     }
 
