@@ -30,7 +30,7 @@ public class SeriesController {
 
         List<SeriesDTO> seriesDTOs = seriesRespository.queryByRoleID(roleID);
         model.addAttribute("series", seriesDTOs);
-        model.addAttribute("role", rolesRepository.queryRolesByName(roleID).get());
+        model.addAttribute("role", rolesRepository.queryRolesByID(roleID).get());
         return "series";
     }
 }
