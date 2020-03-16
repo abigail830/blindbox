@@ -14,8 +14,8 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin-ui/products")
-public class ProductController {
+@RequestMapping("/admin-ui/role")
+public class RoleController {
 
     @Autowired
     RolesRepository rolesRepository;
@@ -25,6 +25,6 @@ public class ProductController {
         List<RoleDTO> roleDTOS = rolesRepository.queryRoles();
         log.info(roleDTOS.toString());
         model.addAttribute("roles", roleDTOS);
-        return "product";
+        return "role";
     }
 }

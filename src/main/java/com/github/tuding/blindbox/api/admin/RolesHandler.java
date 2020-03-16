@@ -48,7 +48,7 @@ public class RolesHandler {
         roleDTO.setDescription(description);
         roleDTO.setRoleImage(storeFile.getCanonicalPath());
         rolesRepository.saveRole(roleDTO);
-        return new RedirectView("/admin-ui/products/");
+        return new RedirectView("/admin-ui/role/");
 
     }
 
