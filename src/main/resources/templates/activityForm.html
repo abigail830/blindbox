@@ -6,12 +6,12 @@
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script th:src="@{/javascript/semantic.min.js}"></script>
     <script>
         $('.ui.checkbox')
          .checkbox();
 
-         $('#rangestart').calendar({
+        $('#rangestart').calendar({
             type: 'date',
             endCalendar: $('#rangeend')
         });
@@ -72,21 +72,23 @@
                 <label>活动简介</label>
                 <input type="text" placeholder="Description" th:field="*{description}">
             </div>
-            <div class="field">
-                <label>活动开始日期</label>
-                <div class="ui calendar" id="rangestart">
-                    <div class="ui input left icon">
-                        <i class="calendar icon"></i>
-                        <input type="text" placeholder="Start">
+            <div class="two fields">
+                <div class="field">
+                    <label>Start date</label>
+                    <div class="ui calendar" id="rangestart">
+                        <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            <input type="text" placeholder="Start">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="field">
-                <label>活动结束日期</label>
-                <div class="ui calendar" id="rangeend">
-                    <div class="ui input left icon">
-                        <i class="calendar icon"></i>
-                        <input type="text" placeholder="End">
+                <div class="field">
+                    <label>End date</label>
+                    <div class="ui calendar" id="rangeend">
+                        <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            <input type="text" placeholder="End">
+                        </div>
                     </div>
                 </div>
             </div>

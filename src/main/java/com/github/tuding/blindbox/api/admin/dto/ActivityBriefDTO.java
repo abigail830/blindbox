@@ -25,8 +25,12 @@ public class ActivityBriefDTO {
         this.id = activity.getId();
         this.name = activity.getActivityName();
         this.description = activity.getActivityDescription();
-        this.activityStartDate = new Date(activity.getActivityStartDate().getTime());
-        this.activityEndDate = new Date(activity.getActivityEndDate().getTime());
+        if (activity.getActivityStartDate() != null)
+            this.activityStartDate = new Date(activity.getActivityStartDate().getTime());
+
+        if (activity.getActivityEndDate() != null)
+            this.activityEndDate = new Date(activity.getActivityEndDate().getTime());
+
         this.lastUpdateDate = new Date(activity.getLastUpdateTime().getTime());
     }
 }

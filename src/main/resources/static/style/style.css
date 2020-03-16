@@ -55,3 +55,21 @@
 .white-text * {
     color: #ffffff;
 }
+
+table {
+  width: 100%;
+}
+
+th {
+  border-bottom: 1px solid #d8d8d8;
+  font-weight: bolder;
+  padding: 10px;
+}
+
+td {
+  padding: 5px;
+  border-bottom: 1px solid #d8d8d8;
+}
+
+
+

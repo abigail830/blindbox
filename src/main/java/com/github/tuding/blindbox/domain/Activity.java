@@ -34,9 +34,13 @@ public class Activity {
         this.shownInAd = shownInAd;
         if (activityStartDate != null) {
             this.activityStartDate = new Timestamp(activityStartDate.getTime());
+        } else {
+            this.activityStartDate = new Timestamp(new Date().getTime());
         }
         if (activityEndDate != null) {
             this.activityEndDate = new Timestamp(activityEndDate.getTime());
+        } else {
+            this.activityEndDate = new Timestamp(new Date().getTime());
         }
         this.mainImg = mainImg;
         this.contentImg = contentImg;
