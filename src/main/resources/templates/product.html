@@ -12,6 +12,7 @@
 <div class="big-title">
     <a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
 </div>
+
 <div class="ui grid main">
     <div class="four wide column">
         <div class="ui vertical menu">
@@ -33,40 +34,39 @@
     <div class="twelve wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
-                <a th:href="@{'/admin-ui/seriesform/?roleName=' + ${role.name}}" class="ui button primary white-text">添加产品系列</a>
+                <a th:href="@{'/admin-ui/productform/?seriesName=' + ${series.name}}" class="ui button primary white-text">添加产品</a>
             </div>
             <div class="six wide column">
-                <div class="title"><h2>产品系列管理</h2></div>
+                <div class="title"><h2>产品管理</h2></div>
             </div>
         </div>
         <div class="ui divider"></div>
 
         <div class="four wide column">
-            <h2 th:text="${role.name}"></h2>
-            <p th:text="${role.description}"></p>
-            <div align="center"><img class="ui small circular image" style="text-align: center" th:src="'/roles/' + ${role.name} + '/images'"></div>
+            <h2 th:text="${series.name}"></h2>
+            <div align="center"><img class="ui small circular image" style="text-align: center" th:src="'/series/' + ${series.name} + '/images'"></div>
 
         </div>
 
-        <div th:if="${!series.empty}">
+        <div th:if="${!products.empty}">
             <div class="ui grid horizontal">
-                <div class="four wide column" th:each="seriesItem : ${series}">
-                    <a th:href="@{'/admin-ui/product/?seriesName=' + ${seriesItem.name}}">
+                <div class="four wide column" th:each="product : ${products}">
                         <img class="ui large image"
-                             th:src="'/series/' + ${seriesItem.name} + '/images'">
-                    </a>
-                    <div th:text="${seriesItem.name}"></div>
-                    <i class="trash alternate outline icon" th:attr="onclick=|delItem('${seriesItem.name}')|"></i>
+                             th:src="'/product/' + ${product.name} + '/images'">
+                    <div th:text="${product.name}"></div>
+                    <i class="trash alternate outline icon" th:attr="onclick=|delItem('${product.name}')|"></i>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
+
+
 <script type="text/javascript">
     function delItem (item){
         $.ajax({
-            url: "/series/" + item,
+            url: "/product/" + item,
             type: "DELETE",
             success: function (data, status) {
                 console.info("Got delete status " + status);

@@ -46,7 +46,7 @@ public class SeriesRespository {
         } else {
             String insertSql = "INSERT ignore INTO series_tbl " +
                     " (roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)¡";
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql,
                     seriesDTO.getRoleId(),
                     seriesDTO.getName(),

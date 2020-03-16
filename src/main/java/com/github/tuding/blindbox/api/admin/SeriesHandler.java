@@ -32,7 +32,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/series")
 public class SeriesHandler {
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final ThreadLocal<SimpleDateFormat> simpleDateFormatter
+            = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"));
 
     @Autowired
     SeriesRespository seriesRespository;
@@ -67,7 +68,7 @@ public class SeriesHandler {
             SeriesDTO seriesDTO = new SeriesDTO();
             seriesDTO.setRoleId(roleDTO.get().getId());
             seriesDTO.setName(name);
-            seriesDTO.setReleaseDate(simpleDateFormat.parse(releaseDate));
+            seriesDTO.setReleaseDate(simpleDateFormatter.get().parse(releaseDate));
             seriesDTO.setNewSeries(isNewSeries);
             seriesDTO.setPresale(isPresale);
             seriesDTO.setPrice(price);
@@ -104,7 +105,7 @@ public class SeriesHandler {
     }
 
     @DeleteMapping("/{name}")
-    public void deleteRoles(@PathVariable("name") String name) {
+    public void deleteSeries(@PathVariable("name") String name) {
         seriesRespository.deleteSeries(name);
     }
 

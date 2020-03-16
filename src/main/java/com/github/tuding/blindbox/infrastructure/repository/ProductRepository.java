@@ -64,4 +64,11 @@ public class ProductRepository {
             throw new RuntimeException("Series id " + productDTO.getSeriesID() + " is not existed");
         }
     }
+
+    public void deleteProduct(String name) {
+        log.info("Delete product for {}", name);
+        jdbcTemplate.update("DELETE FROM product_tbl where name = ?", name);
+
+
+    }
 }
