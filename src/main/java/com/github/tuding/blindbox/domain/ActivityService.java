@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,5 +41,13 @@ public class ActivityService {
 
     public List<Activity> getAllActivities() {
         return activityRepository.queryActivities();
+    }
+
+    public Optional<Activity> getActivityById(String id) {
+        return activityRepository.queryActivityById(id);
+    }
+
+    public void deleteActivityById(String id) {
+        activityRepository.deleteActivity(id);
     }
 }

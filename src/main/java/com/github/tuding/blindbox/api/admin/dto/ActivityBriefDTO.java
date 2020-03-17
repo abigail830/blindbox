@@ -25,6 +25,8 @@ public class ActivityBriefDTO {
         this.id = activity.getId();
         this.name = activity.getActivityName();
         this.description = activity.getActivityDescription();
+        this.showAsAd = activity.getShownInAd();
+
         if (activity.getActivityStartDate() != null)
             this.activityStartDate = new Date(activity.getActivityStartDate().getTime());
 
