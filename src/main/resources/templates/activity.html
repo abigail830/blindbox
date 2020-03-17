@@ -77,8 +77,8 @@
                 <tr th:each="activity : ${activities}">
                     <td><span th:text="${activity.name}">活动名称</span></td>
                     <td><span th:text="${activity.description}">活动简介</span></td>
-                    <td><span th:text="${activity.activityStartDate}">活动开始时间</span></td>
-                    <td><span th:text="${activity.activityEndDate}">活动结束时间</span></td>
+                    <td><span th:text="${activity.startDate}">活动开始时间</span></td>
+                    <td><span th:text="${activity.endDate}">活动结束时间</span></td>
                     <td>
                         <div th:if="${activity.showAsAd}"><i class="check circle icon"></i></div>
                     </td>

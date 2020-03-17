@@ -58,7 +58,6 @@ public class ActivityRepository {
         }
     }
 
-
     public List<Activity> queryActivities() {
         log.info("Going to query activitys ");
         return jdbcTemplate.query("SELECT * FROM activity_tbl", rowMapper);
@@ -74,4 +73,24 @@ public class ActivityRepository {
         List<Activity> activities = jdbcTemplate.query("SELECT * FROM activity_tbl WHERE id = ?", rowMapper, id);
         return activities.stream().findFirst();
     }
+
+    public void updateActivity(Activity activity) {
+        log.info("Going to update activity_tbl for activity : {}", activity);
+
+        String insertSql = "REPLACE INTO activity_tbl (id, activity_name, activity_description, shown_in_ad, " +
+                "main_img_addr, content_img_addr, activity_start_date, activity_end_date) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        int update = jdbcTemplate.update(insertSql,
+                activity.getId(),
+                activity.getActivityName(),
+                activity.getActivityDescription(),
+                activity.getShownInAd(),
+                activity.getMainImgAddr(),
+                activity.getContentImgAddr(),
+                activity.getActivityStartDate(),
+                activity.getActivityEndDate()
+        );
+        log.info("update row {} ", update);
+    }
+
 }

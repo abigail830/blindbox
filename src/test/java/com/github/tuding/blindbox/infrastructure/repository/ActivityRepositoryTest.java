@@ -1,6 +1,5 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
-import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.domain.Activity;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
-@DBRider
 class ActivityRepositoryTest {
 
     @Autowired
@@ -42,4 +40,5 @@ class ActivityRepositoryTest {
         assertFalse(activityRepository.queryActivityById("id").isPresent());
 
     }
+
 }

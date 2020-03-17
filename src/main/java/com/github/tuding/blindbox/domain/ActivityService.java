@@ -30,11 +30,11 @@ public class ActivityService {
             activity.setMainImgAddr(mainImgAddr);
         }
 
-        if (!activity.getContentImg().isEmpty()) {
-            final String contentImgAddr = imageRepository.saveImage(uuid.toString() + "-content",
-                    ImageCategory.ACTIVITY, activity.getContentImg());
-            activity.setContentImgAddr(contentImgAddr);
-        }
+//        if (!activity.getContentImg().isEmpty()) {
+//            final String contentImgAddr = imageRepository.saveImage(uuid.toString() + "-content",
+//                    ImageCategory.ACTIVITY, activity.getContentImg());
+//            activity.setContentImgAddr(contentImgAddr);
+//        }
 
         activityRepository.saveActivity(activity);
     }
@@ -49,5 +49,9 @@ public class ActivityService {
 
     public void deleteActivityById(String id) {
         activityRepository.deleteActivity(id);
+    }
+
+    public void updateActivity(Activity activity) {
+        activityRepository.updateActivity(activity);
     }
 }

@@ -7,6 +7,7 @@ import com.github.tuding.blindbox.domain.Activity;
 import com.github.tuding.blindbox.domain.ActivityService;
 import com.github.tuding.blindbox.exception.RolesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -16,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -80,19 +80,32 @@ public class ActivityController {
     @GetMapping("/form")
     public String addAcvitityPage(Model model) {
         model.addAttribute("activityForm", new ActivityFormDTO(Mode.ADD));
-        log.info("Going to create activity");
+        log.info("Going to show activity form");
         return "activityForm";
     }
 
     @PostMapping("/form")
-    public RedirectView handleForm(@ModelAttribute("activityForm") ActivityFormDTO activityForm) throws IOException {
+    public String handleForm(@ModelAttribute("activityForm") ActivityFormDTO activityForm, Model model) throws IOException {
         log.info("handle activity form creation [{}]", activityForm);
-        //TODO: image format/size check
+
+        if (activityForm.getMainImg().isEmpty() && Strings.isNullOrEmpty(activityForm.getMainImgAddr())) {
+            activityForm.setupMode(Mode.valueOf(activityForm.getMode()));
+            activityForm.setErrorMsg("活动主图缺失！");
+            log.info("Lack of main image, redirect back to form [{}]", activityForm);
+            model.addAttribute("activityForm", activityForm);
+            return "activityForm";
+        }
 
         final Activity activity = activityForm.toActivity();
-        activityService.saveActivity(activity);
+        log.info("activity {}", activity);
 
-        return new RedirectView("/admin-ui/activities/");
+        if (activity.getId() == null) {
+            activityService.saveActivity(activity);
+        } else {
+            activityService.updateActivity(activity);
+        }
+
+        return "redirect:/admin-ui/activities/";
     }
 
     @GetMapping("/id/{id}/mainImg")

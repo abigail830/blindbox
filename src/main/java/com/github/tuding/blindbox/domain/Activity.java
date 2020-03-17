@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.domain;
 
+import com.google.common.base.Strings;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,8 +28,9 @@ public class Activity {
     String contentImgAddr;
 
     public Activity(String id, String name, String description, Boolean shownInAd,
-                    Date activityStartDate, Date activityEndDate, MultipartFile mainImg, MultipartFile contentImg) {
-        this.id = id;
+                    Date activityStartDate, Date activityEndDate, MultipartFile mainImg, MultipartFile contentImg,
+                    String mainImgAddr, String contentImgAddr) {
+        if (!Strings.isNullOrEmpty(id)) this.id = id;
         this.activityName = name;
         this.activityDescription = description;
         this.shownInAd = shownInAd;
@@ -44,6 +46,9 @@ public class Activity {
         }
         this.mainImg = mainImg;
         this.contentImg = contentImg;
+        this.mainImgAddr = mainImgAddr;
+        this.contentImgAddr = contentImgAddr;
+
     }
 
     public Activity(String id, String activityName, String activityDescription, Boolean shownInAd,

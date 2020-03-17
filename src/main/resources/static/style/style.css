@@ -56,6 +56,10 @@
     color: #ffffff;
 }
 
+.alert-text * {
+    color: red;
+}
+
 table {
   width: 100%;
 }

@@ -28,8 +28,11 @@ public class ActivityFormDTO {
     Boolean readOnly;
     String title;
     String mode;
+    String errorMsg;
 
     public ActivityFormDTO(Mode mode) {
+//        this.activityStartDate = new Date();
+//        this.activityEndDate = new Date();
         setupMode(mode);
     }
 
@@ -53,7 +56,7 @@ public class ActivityFormDTO {
 
     public Activity toActivity() {
         return new Activity(id, name, description, shownInAd,
-                activityStartDate, activityEndDate, mainImg, contentImg);
+                activityStartDate, activityEndDate, mainImg, contentImg, mainImgAddr, contentImgAddr);
     }
 
     public void setupMode(Mode mode) {
