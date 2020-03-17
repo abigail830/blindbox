@@ -19,6 +19,7 @@
 
 
 
+
     </style>
 </head>
 <body>
@@ -125,9 +126,14 @@
             type: "DELETE",
             success: function (data, status) {
                 console.info("Got delete activity " + status);
+                window.location = '/admin-ui/activities/';
+            },
+            error: function (e) {
+                console.log(e);
             }
         })
     }
+
 
 
 </script>

@@ -27,6 +27,7 @@ public class ActivityFormDTO {
 
     Boolean readOnly;
     String title;
+    String mode;
 
     public ActivityFormDTO(Mode mode) {
         setupMode(mode);
@@ -66,5 +67,6 @@ public class ActivityFormDTO {
             this.readOnly = Boolean.TRUE;
             this.title = "查看活动";
         }
+        this.mode = mode.name();
     }
 }

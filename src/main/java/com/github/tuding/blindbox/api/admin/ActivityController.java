@@ -5,14 +5,22 @@ import com.github.tuding.blindbox.api.admin.dto.ActivityFormDTO;
 import com.github.tuding.blindbox.api.admin.dto.Mode;
 import com.github.tuding.blindbox.domain.Activity;
 import com.github.tuding.blindbox.domain.ActivityService;
+import com.github.tuding.blindbox.exception.RolesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -31,8 +39,6 @@ public class ActivityController {
 
     @GetMapping("/")
     public String homepage(Model model) {
-        //TODO: to query all activities in brief format
-
         final List<ActivityBriefDTO> activityBriefDTOS = activityService.getAllActivities().stream()
                 .map(ActivityBriefDTO::new)
                 .collect(Collectors.toList());
@@ -65,10 +71,10 @@ public class ActivityController {
 
     @DeleteMapping("/id/{id}")
     public @ResponseBody
-    String deleteActivity(@PathVariable String id) {
+    void deleteActivity(@PathVariable String id) {
         activityService.deleteActivityById(id);
         log.info("Deleted activity {}", id);
-        return "redirect:/admin-ui/activities/";
+//        return "redirect:/admin-ui/activities/";
     }
 
     @GetMapping("/form")
@@ -87,6 +93,22 @@ public class ActivityController {
         activityService.saveActivity(activity);
 
         return new RedirectView("/admin-ui/activities/");
+    }
+
+    @GetMapping("/id/{id}/mainImg")
+    public ResponseEntity<Resource> getRoleImage(@PathVariable("id") String id) throws FileNotFoundException {
+        Optional<Activity> activity = activityService.getActivityById(id);
+        if (activity.isPresent()) {
+            File file = new File(activity.get().getMainImgAddr());
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            return ResponseEntity.ok()
+                    .contentLength(file.length())
+                    .contentType(MediaType.parseMediaType("image/png"))
+                    .body(resource);
+        } else {
+            throw new RolesNotFoundException();
+        }
+
     }
 
 }
