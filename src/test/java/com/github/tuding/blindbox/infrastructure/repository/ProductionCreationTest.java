@@ -44,10 +44,10 @@ public class ProductionCreationTest {
         System.out.println(formatter.parse("2020-03-13"));
         //roles
         rolesRepository.saveRole(new RoleDTO("roleid1", "testRole1", "test",
-                "test", "/app/data/role/testRole1/testRole1.png"));
+                "test", "/app/data/role/testRole1/testRole1.png", null));
 
         rolesRepository.saveRole(new RoleDTO("roleid2", "testRole2", "test",
-                "test", "/app/data/role/testRole2/testRole2.png"));
+                "test", "/app/data/role/testRole2/testRole2.png", null));
 
         assertTrue(rolesRepository.queryRolesByName("testRole1").isPresent());
 

@@ -24,6 +24,7 @@ public class ImageRepository {
             file.transferTo(storeFile);
             return storeFile.getCanonicalPath();
         } catch (IOException e) {
+            log.error("Failed to save image " + fileName, e);
             throw new BizException(ErrorCode.FAIL_TO_STORE_FILE);
         }
     }

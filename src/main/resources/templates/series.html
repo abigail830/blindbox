@@ -44,14 +44,14 @@
         <div class="four wide column">
             <h2 th:text="${role.name}"></h2>
             <p th:text="${role.description}"></p>
-            <div align="center"><img class="ui small circular image" style="text-align: center" th:src="'/roles/' + ${role.name} + '/images'"></div>
+            <div align="center"><img class="ui small circular image" style="text-align: center" th:src="'/admin-ui/role/' + ${role.id} + '/images'"></div>
 
         </div>
 
         <div th:if="${!series.empty}">
             <div class="ui grid horizontal">
                 <div class="four wide column" th:each="seriesItem : ${series}">
-                    <a th:href="@{'/admin-ui/product/?seriesName=' + ${seriesItem.name}}">
+                    <a th:href="@{'/admin-ui/product/?seriesID=' + ${seriesItem.id}}">
                         <img class="ui large image"
                              th:src="'/series/' + ${seriesItem.name} + '/images'">
                     </a>

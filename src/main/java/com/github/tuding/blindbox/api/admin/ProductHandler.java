@@ -71,7 +71,7 @@ public class ProductHandler {
             productDTO.setProductImage(productImageFile.getCanonicalPath());
             productDTO.setPostCardImage(postCardImageFile.getCanonicalPath());
             productRepository.createProduct(productDTO);
-            return new RedirectView("/admin-ui/product/?series=" + seriesDTOOptional.get().getName());
+            return new RedirectView("/admin-ui/product/?seriesID=" + seriesDTOOptional.get().getId());
 
         } else {
             throw new SeriesNotFoundException();

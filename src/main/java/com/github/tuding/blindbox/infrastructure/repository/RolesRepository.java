@@ -49,13 +49,23 @@ public class RolesRepository {
         return jdbcTemplate.query("SELECT * FROM roles_tbl", rowMapper);
     }
 
-    public void deleteRoles(String name) {
-        log.info("Delete role for {}", name);
-        jdbcTemplate.update("DELETE FROM roles_tbl WHERE name = ?", name);
+    public void deleteRoles(String id) {
+        log.info("Delete role for {}", id);
+        jdbcTemplate.update("DELETE FROM roles_tbl WHERE id = ?", id);
     }
 
     public Optional<RoleDTO> queryRolesByID(String id) {
         log.info("Going to query roles with id: {}", id);
         List<RoleDTO> roleDTOs = jdbcTemplate.query("SELECT * FROM roles_tbl WHERE id = ?", rowMapper, id);
         return roleDTOs.stream().findFirst();
-    }}
+    }
+
+    public void updateRole(RoleDTO roleDTO) {
+        String insertSql = "UPDATE roles_tbl " +
+                " SET name = ?, category = ?, description = ?,  role_image = ?" +
+                " WHERE id = ? ";
+        int update = jdbcTemplate.update(insertSql, roleDTO.getName(), roleDTO.getCategory(),
+                roleDTO.getDescription(), roleDTO.getRoleImage(), roleDTO.getId());
+        log.info("update row {} ", update);
+    }
+}

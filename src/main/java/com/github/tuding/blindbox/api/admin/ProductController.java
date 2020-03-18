@@ -28,8 +28,8 @@ public class ProductController {
 
     @GetMapping("/")
     public String seriesPage(Model model,
-                             @RequestParam("seriesName") String seriesName) {
-        Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByName(seriesName);
+                             @RequestParam("seriesID") String seriesID) {
+        Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByID(seriesID);
         List<ProductDTO> productDTOs = productRepository.getProductBySeries(seriesDTOOptional.get().getId());
         model.addAttribute("series", seriesDTOOptional.get());
         model.addAttribute("products", productDTOs);

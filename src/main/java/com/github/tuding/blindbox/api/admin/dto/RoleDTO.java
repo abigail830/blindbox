@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.api.admin.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +16,7 @@ public class RoleDTO {
     String description;
     //Image c
     String roleImage;
+    MultipartFile roleImageFile;
 
 
 
