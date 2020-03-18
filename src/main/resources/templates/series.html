@@ -33,7 +33,7 @@
     <div class="twelve wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
-                <a th:href="@{'/admin-ui/seriesform/?roleName=' + ${role.name}}" class="ui button primary white-text">添加产品系列</a>
+                <a th:href="@{'/admin-ui/series/seriesform/?roleId=' + ${role.id}}" class="ui button primary white-text">添加产品系列</a>
             </div>
             <div class="six wide column">
                 <div class="title"><h2>产品系列管理</h2></div>
@@ -49,24 +49,50 @@
         </div>
 
         <div th:if="${!series.empty}">
-            <div class="ui grid horizontal">
-                <div class="four wide column" th:each="seriesItem : ${series}">
-                    <a th:href="@{'/admin-ui/product/?seriesID=' + ${seriesItem.id}}">
-                        <img class="ui large image"
-                             th:src="'/series/' + ${seriesItem.name} + '/images'">
-                    </a>
-                    <div th:text="${seriesItem.name}"></div>
-                    <i class="trash alternate outline icon" th:attr="onclick=|delItem('${seriesItem.name}')|"></i>
-                </div>
-            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>系列名称</th>
+                    <th>发布日期</th>
+                    <th>新系列</th>
+                    <th>预售</th>
+                    <th>售价</th>
+                    <th>更多操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${series}">
+                    <td><span th:text="${item.name}">系列名称</span></td>
+                    <td><span th:text="${item.releaseDate}">发布日期</span></td>
+                    <td>
+                        <div th:if="${item.isNewSeries}"><i class="check circle icon"></i></div>
+                    </td>
+                    <td>
+                        <div th:if="${item.isPresale}"><i class="check circle icon"></i></div>
+                    </td>
+                    <td><span th:text="${item.price}">售价</span></td>
+
+
+                    <td>
+                        <a th:href="@{'/admin-ui/series/seriesform/' + ${item.id}}" title="编辑">
+                            <i class="edit outline icon"></i>
+                        </a>
+                        <a title="删除" href="#">
+                            <i class="trash alternate outline icon" th:attr="onclick=|delItem('${item.id}')|"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
+
     </div>
 
 </div>
 <script type="text/javascript">
     function delItem (item){
         $.ajax({
-            url: "/series/" + item,
+            url: "/admin-ui/series/" + item,
             type: "DELETE",
             success: function (data, status) {
                 console.info("Got delete status " + status);

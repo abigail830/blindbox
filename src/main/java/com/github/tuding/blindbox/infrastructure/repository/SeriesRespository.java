@@ -37,8 +37,8 @@ public class SeriesRespository {
                     seriesDTO.getRoleId(),
                     seriesDTO.getName(),
                     seriesDTO.getReleaseDate(),
-                    seriesDTO.isNewSeries(),
-                    seriesDTO.isPresale(),
+                    seriesDTO.getIsNewSeries(),
+                    seriesDTO.getIsPresale(),
                     seriesDTO.getPrice(),
                     seriesDTO.getSeriesImage(),
                     seriesDTO.getMatrixHeaderImage(),
@@ -53,8 +53,8 @@ public class SeriesRespository {
                     seriesDTO.getRoleId(),
                     seriesDTO.getName(),
                     seriesDTO.getReleaseDate(),
-                    seriesDTO.isNewSeries(),
-                    seriesDTO.isPresale(),
+                    seriesDTO.getIsNewSeries(),
+                    seriesDTO.getIsPresale(),
                     seriesDTO.getPrice(),
                     seriesDTO.getSeriesImage(),
                     seriesDTO.getMatrixHeaderImage(),
@@ -98,10 +98,28 @@ public class SeriesRespository {
         }
     }
 
-    public void deleteSeries(String name) {
-        log.info("Delete series for {}", name);
-        jdbcTemplate.update("DELETE FROM series_tbl where name = ?", name);
+    public void deleteSeries(String id) {
+        log.info("Delete series for {}", id);
+        jdbcTemplate.update("DELETE FROM series_tbl where id = ?", id);
 
 
+    }
+
+    public void updateSeries(SeriesDTO seriesDTO) {
+        String updateSql = "UPDATE series_tbl " +
+                " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ? , seriesImage = ?," +
+                " matrixHeaderImage = ?, matrixCellImage = ? " +
+                " WHERE id = ? ";
+        int update = jdbcTemplate.update(updateSql,
+                seriesDTO.getName(),
+                seriesDTO.getReleaseDate(),
+                seriesDTO.getIsNewSeries(),
+                seriesDTO.getIsPresale(),
+                seriesDTO.getPrice(),
+                seriesDTO.getSeriesImage(),
+                seriesDTO.getMatrixHeaderImage(),
+                seriesDTO.getMatrixCellImage(),
+                seriesDTO.getId());
+        log.info("update row {} ", update);
     }
 }

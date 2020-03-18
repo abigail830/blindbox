@@ -67,30 +67,6 @@ public class RoleController {
         return "roleform";
     }
 
-    @PostMapping("/")
-    public RedirectView handleForm(
-                                    @RequestParam("name") String name,
-                                   @RequestParam("description") String description,
-                                   @RequestParam("category") String category,
-                                   @RequestParam("image") MultipartFile file) throws IOException {
-        UUID roleID = UUID.randomUUID();
-        log.info("handle role creation as id {} name {} category {} description {}",
-                roleID.toString(), name, category, description);
-        //TODO: image format/size check
-        File storeFile = new File( getRolesFolder() + roleID.toString() + ".png");
-        file.transferTo(storeFile);
-
-        RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setId(roleID.toString());
-        roleDTO.setName(name);
-        roleDTO.setCategory(category);
-        roleDTO.setDescription(description);
-        roleDTO.setRoleImage(storeFile.getCanonicalPath());
-        rolesRepository.saveRole(roleDTO);
-        return new RedirectView("/admin-ui/role/");
-
-    }
-
     @PostMapping("/roleform")
     public RedirectView handleRoleForm(
             @ModelAttribute("roleForm") RoleDTO roleDTO,
@@ -109,7 +85,7 @@ public class RoleController {
             return new RedirectView("/admin-ui/role/");
         } else {
             UUID roleID = UUID.randomUUID();
-            log.info("handle role creation as {} id {}", roleDTO, roleDTO.getId());
+            log.info("handle role creation as {} id {}", roleDTO, roleID.toString());
             //TODO: image format/size check
             File storeFile = new File( getRolesFolder() + roleID.toString() + ".png");
             roleDTO.getRoleImageFile().transferTo(storeFile);
@@ -123,7 +99,8 @@ public class RoleController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteRoles(@PathVariable("id") String id) {
+    public @ResponseBody
+    void deleteRoles(@PathVariable("id") String id) {
         rolesRepository.deleteRoles(id);
     }
 

@@ -66,7 +66,7 @@
                     </a>
                     <div class="role-name" th:text="${role.name}"></div>
                     <a title="删除" href="#">
-                        <i class="trash alternate outline icon" th:attr="onclick=|delItem('${role.name}')|"></i>
+                        <i class="trash alternate outline icon" th:attr="onclick=|delItem('${role.id}')|"></i>
                     </a>
                     <a th:href="@{'/admin-ui/role/roleform/' + ${role.id}}" title="编辑">
                         <i class="edit outline icon"></i>
@@ -85,7 +85,10 @@
             type: "DELETE",
             success: function (data, status) {
                 console.info("Got delete status " + status);
-                location.reload();
+                window.location = '/admin-ui/role/';
+            },
+            error: function (e) {
+                console.log(e);
             }
         })
     }

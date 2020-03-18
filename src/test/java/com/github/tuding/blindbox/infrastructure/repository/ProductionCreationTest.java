@@ -54,14 +54,16 @@ public class ProductionCreationTest {
 
         //series
         seriesRespository.createSeries(new SeriesDTO("seriesid1", rolesRepository.queryRolesByName("testRole1").get().getId(),
-                "testSeries", formatter.parse("2020-03-13"), false, false, BigDecimal.valueOf(25.5),
-                "/app/data/series/testSeries.png", "/app/data/series/header/testSeries.png",
-                "/app/data/series/cell/testSeries.png"));
+                "testSeries", "2020-03-13", false, false, BigDecimal.valueOf(25.5),
+                "/app/data/series/testSeries.png", null,
+                "/app/data/series/header/testSeries.png", null,
+                "/app/data/series/cell/testSeries.png",null));
 
         seriesRespository.createSeries(new SeriesDTO("seriesid2", rolesRepository.queryRolesByName("testRole1").get().getId(),
-                "testSeries2", formatter.parse("2020-03-13"), false, false, BigDecimal.valueOf(30),
-                "/app/data/series/testSeries2.png", "/app/data/series/header/testSeries2.png",
-                "/app/data/series/cell/testSeries2.png"));
+                "testSeries2", "2020-03-13", false, false, BigDecimal.valueOf(30),
+                "/app/data/series/testSeries2.png", null,
+                "/app/data/series/header/testSeries2.png", null,
+                "/app/data/series/cell/testSeries2.png", null));
         assertTrue(seriesRespository.querySeriesByName("testSeries").isPresent());
 
         //product
