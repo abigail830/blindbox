@@ -2,12 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SeriesForm</title>
+    <title>ProductForm</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
-
+    <script th:src="@{/javascript/semantic.min.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.ui.checkbox').checkbox();
+        });
+    </script>
+    <style>
+        form {
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
 <div class="big-title">
@@ -41,31 +50,59 @@
             </div>
         </div>
         <div class="ui divider"></div>
-        <form class="ui form three wide column" enctype="multipart/form-data" th:action="@{'/product/' + ${seriesName}}"  method="POST">
-            <div class="field">
+        <form class="ui form three wide column"
+              enctype="multipart/form-data"
+              th:action="@{'/admin-ui/product/form/' + ${seriesId}}"
+              method="POST"
+              th:object="${product}">
+            <input type="text" th:field="*{id}" style="display: none">
+            <input type="text" th:field="*{seriesID}" style="display: none">
+
+            <div class="field required">
                 <label>产品名称</label>
-                <input type="text" name="name">
+                <input type="text" name="name" th:field="*{name}">
             </div>
-            <div class="field">
-                <input type="radio" name="isSpecial" value="true" >珍稀产品<br>
-                <input type="radio" name="isSpecial" value="false" checked>普通产品<br>
+
+
+            <div class="field required">
+                <div class="ui checkbox">
+                    <input id="isSpecial" type="checkbox" th:field="*{isSpecial}">
+                    <label for="isSpecial">珍稀产品</label>
+                </div>
             </div>
-            <div class="field">
+
+            <div class="field required">
                 <label>初始库存</label>
-                <input type="number" name="stock">
+                <input type="number" name="stock" th:field="*{stock}">
             </div>
+
+
+
             <div class="field">
                 <label>抽中（如有特殊比率设置）</label>
-                <input type="number" step="0.01" name="probability">
+                <input type="number" step="0.01" name="probability" th:field="*{probability}">
             </div>
-            <div class="field">
+
+            <div class="inline field required">
                 <label>产品图</label>
-                <input type="file" name="productImage">
+                <div th:if="*{id!=null}">
+                    <img class="ui medium circular image"
+                         th:src="'/admin-ui/product/' + *{id} + '/images'">
+                </div>
+                <input type="file" name="productImageFile">
             </div>
-            <div class="field">
+
+
+            <div class="inline field required">
                 <label>产品海报</label>
-                <input type="file" name="postCardImage">
+                <div th:if="*{id!=null}">
+                    <img class="ui medium circular image"
+                         th:src="'/admin-ui/product/' + *{id} + '/postcard'">
+                </div>
+                <input type="file" name="postCardImageFile">
             </div>
+
+
             <button class="ui button">提交</button>
         </form>
     </div>

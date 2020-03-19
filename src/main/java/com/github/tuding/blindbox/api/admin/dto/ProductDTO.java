@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.api.admin.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -13,13 +14,16 @@ public class ProductDTO {
     String id;
     String seriesID;
     String name;
-    boolean isSpecial;
-    boolean isPresale;
-    long stock;
+    Boolean isSpecial;
+    Boolean isPresale;
+    Long stock;
     BigDecimal probability;
     //Image f
     String productImage;
+    MultipartFile productImageFile;
+
     String postCardImage;
+    MultipartFile postCardImageFile;
 
 
 }

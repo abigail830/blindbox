@@ -27,7 +27,7 @@ public class ProductRepositoryTest {
     @Test
     @DataSet("expect-data/save-product.yml")
     void queryProductByName () {
-        Optional<ProductDTO> productDTOOptional = productRepository.getProductByName("product1");
+        Optional<ProductDTO> productDTOOptional = productRepository.getProductByID("productid1");
         assertTrue(productDTOOptional.isPresent());
     }
 

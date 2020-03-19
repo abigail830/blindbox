@@ -67,38 +67,46 @@ public class ProductionCreationTest {
         assertTrue(seriesRespository.querySeriesByName("testSeries").isPresent());
 
         //product
-        productRepository.createProduct(new ProductDTO("productid1", seriesRespository.querySeriesByName("testSeries").get().getId(),
+        productRepository.createProduct(new ProductDTO("productid1",
+                seriesRespository.querySeriesByName("testSeries").get().getId(),
                 "product1", false, false,
-                200,
+                200L,
                 BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product1.png",
-                "/app/data/product/postcard/product1.png"));
+                null,
+                "/app/data/product/postcard/product1.png",
+                null));
 
-        productRepository.createProduct(new ProductDTO("productid2", seriesRespository.querySeriesByName("testSeries").get().getId(),
+        productRepository.createProduct(new ProductDTO("productid2",
+                seriesRespository.querySeriesByName("testSeries").get().getId(),
                 "product2", false, false,
-                200,
+                200L,
                 BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product2.png",
-                "/app/data/product/postcard/product2.png"));
+                null,
+                "/app/data/product/postcard/product2.png",
+                null));
 
 
         productRepository.createProduct(new ProductDTO("productid3", seriesRespository.querySeriesByName("testSeries").get().getId(),
                 "product3", true, false,
-                10,
+                10L,
                 BigDecimal.valueOf(0.01),
                 "/app/data/product/image/product3.png",
-                "/app/data/product/postcard/product3.png"));
+                null,
+                "/app/data/product/postcard/product3.png",
+                null));
 
-        assertTrue(productRepository.getProductByName("product1").isPresent());
-        assertTrue(productRepository.getProductByName("product2").isPresent());
-        assertTrue(productRepository.getProductByName("product3").isPresent());
+        assertTrue(productRepository.getProductByID("productid1").isPresent());
+        assertTrue(productRepository.getProductByID("productid2").isPresent());
+        assertTrue(productRepository.getProductByID("productid3").isPresent());
 
     }
 
     @Test
     @DataSet("expect-data/save-product.yml")
     void queryProductByName () {
-        Optional<ProductDTO> productDTOOptional = productRepository.getProductByName("product1");
+        Optional<ProductDTO> productDTOOptional = productRepository.getProductByID("productid1");
         assertTrue(productDTOOptional.isPresent());
     }
 

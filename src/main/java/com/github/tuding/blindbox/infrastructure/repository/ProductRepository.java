@@ -32,7 +32,7 @@ public class ProductRepository {
                     " probability, productImage, postCardImage) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, productDTO.getId(), productDTO.getSeriesID(), productDTO.getName(),
-                    productDTO.isSpecial(), productDTO.isPresale(), productDTO.getStock(), productDTO.getProbability(),
+                    productDTO.getIsSpecial(), productDTO.getIsPresale(), productDTO.getStock(), productDTO.getProbability(),
                     productDTO.getProductImage(), productDTO.getPostCardImage());
             log.info("update row {} ", update);
         } else {
@@ -40,15 +40,15 @@ public class ProductRepository {
                     " probability, productImage, postCardImage) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, productDTO.getId(), productDTO.getSeriesID(), productDTO.getName(),
-                    productDTO.isSpecial(), productDTO.isPresale(), productDTO.getStock(), productDTO.getProbability(),
+                    productDTO.getIsSpecial(), productDTO.getIsPresale(), productDTO.getStock(), productDTO.getProbability(),
                     productDTO.getProductImage(), productDTO.getPostCardImage());
             log.info("update row {} ", update);
         }
     }
 
-    public Optional<ProductDTO> getProductByName(String name) {
-        log.info("Going to query product with name: {}", name);
-        List<ProductDTO> productDTOs = jdbcTemplate.query("SELECT * FROM product_tbl WHERE name = ?", rowMapper, name);
+    public Optional<ProductDTO> getProductByID(String id) {
+        log.info("Going to query product with id: {}", id);
+        List<ProductDTO> productDTOs = jdbcTemplate.query("SELECT * FROM product_tbl WHERE id = ?", rowMapper, id);
         return productDTOs.stream().findFirst();
     }
 
@@ -65,10 +65,21 @@ public class ProductRepository {
         }
     }
 
-    public void deleteProduct(String name) {
-        log.info("Delete product for {}", name);
-        jdbcTemplate.update("DELETE FROM product_tbl where name = ?", name);
+    public void deleteProduct(String id) {
+        log.info("Delete product for {}", id);
+        jdbcTemplate.update("DELETE FROM product_tbl where id = ?", id);
 
 
+    }
+
+    public void updateProduct(ProductDTO productDTO) {
+        String updateSql = "UPDATE product_tbl " +
+                " SET name = ?, isSpecial = ?, stock = ?, probability = ?," +
+                " productImage = ?, postCardImage = ?"+
+                " WHERE id = ?";
+        int update = jdbcTemplate.update(updateSql, productDTO.getName(), productDTO.getIsSpecial(),
+                productDTO.getStock(), productDTO.getProbability(),
+                productDTO.getProductImage(), productDTO.getPostCardImage(), productDTO.getId());
+        log.info("update row {} ", update);
     }
 }
