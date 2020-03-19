@@ -31,10 +31,17 @@ public class ImageRepository {
 
 
     String getBasePath(ImageCategory imageCategory) {
-        if (imageCategory.equals(ImageCategory.ACTIVITY))
-            return imagePath + "/activities/";
-        if (imageCategory.equals(ImageCategory.ROLE))
-            return imagePath + "/roles/";
-        return imagePath + "/";
+        switch (imageCategory) {
+            case ACTIVITY:
+                return imagePath + "/activities/";
+            case ROLE:
+                return imagePath + "/roles/";
+            case SERIES:
+                return imagePath + "/series/";
+            case PRODUCT:
+                return imagePath + "/product/";
+            default:
+                return imagePath + "/";
+        }
     }
 }

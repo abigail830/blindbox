@@ -7,7 +7,6 @@
     <link rel="stylesheet" th:href="@{/style/style.css}">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
-
     <script type="text/javascript">
         $(document).ready(function(){
             $('.ui.checkbox').checkbox();
@@ -16,6 +15,8 @@
         $('.ui.form').form({
             fields: {
                 releaseDate: 'empty',
+                activityStartDate: 'empty',
+                activityEndDate: 'empty',
             }
         });
     </script>
@@ -62,6 +63,9 @@
               th:action="@{'/admin-ui/series/form/' + ${roleId}}" method="POST" th:object="${series}">
             <input type="text" th:field="*{id}" style="display: none">
             <input type="text" th:field="*{roleId}" style="display: none">
+            <input type="text" th:field="*{seriesImage}" style="display: none">
+            <input type="text" th:field="*{matrixHeaderImage}" style="display: none">
+            <input type="text" th:field="*{matrixCellImage}" style="display: none">
 
             <div class="field required">
                 <label>产品系列名称</label>
@@ -74,12 +78,10 @@
                 <div class="ui calendar">
                     <div class="ui input left icon">
                         <i class="calendar icon"></i>
-                        <input type="date" name="releaseDate" th:field="*{releaseDate}" >
+                        <input type="date" name="releaseDate" th:field="*{releaseDate}" th:value="*{releaseDate}">
                     </div>
                 </div>
             </div>
-
-
 
 
             <div class="field">

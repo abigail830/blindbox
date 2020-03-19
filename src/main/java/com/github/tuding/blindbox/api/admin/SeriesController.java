@@ -2,8 +2,10 @@ package com.github.tuding.blindbox.api.admin;
 
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
+import com.github.tuding.blindbox.domain.ImageCategory;
 import com.github.tuding.blindbox.exception.RolesNotFoundException;
 import com.github.tuding.blindbox.exception.SeriesNotFoundException;
+import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
 import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +47,9 @@ public class SeriesController {
 
     @Autowired
     RolesRepository rolesRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
 
     @GetMapping("/")
     public String seriesPage(Model model,
@@ -91,24 +96,21 @@ public class SeriesController {
             if (StringUtils.isNotBlank(seriesDTO.getId())) {
                 log.info("handle role update as {} ", roleDTO);
 
-                File seriesImageFile = new File(getSeriesFolder(seriesDTO.getId()) + "image" + ".png");
                 if (seriesDTO.getSeriesImageFile().getSize() > 0) {
-                    seriesDTO.getSeriesImageFile().transferTo(seriesImageFile);
+                    String image = imageRepository.saveImage(seriesDTO.getId(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
+                    seriesDTO.setSeriesImage(image);
                 }
-                File matrixHeaderImageFile = new File(getSeriesFolder(seriesDTO.getId()) + "matrixHeaderImage" + ".png");
+
                 if (seriesDTO.getMatrixHeaderImageFile().getSize() > 0) {
-                    seriesDTO.getMatrixHeaderImageFile().transferTo(matrixHeaderImageFile);
+                    String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
+                    seriesDTO.setMatrixHeaderImage(image);
                 }
 
-
-                File matrixCellImageFile = new File(getSeriesFolder(seriesDTO.getId()) + "matrixCellImage" + ".png");
                 if (seriesDTO.getMatrixCellImageFile().getSize() > 0) {
-                    seriesDTO.getMatrixCellImageFile().transferTo(matrixCellImageFile);
+                    String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
+                    seriesDTO.setMatrixCellImage(image);
                 }
                 seriesDTO.setRoleId(roleId);
-                seriesDTO.setSeriesImage(seriesImageFile.getCanonicalPath());
-                seriesDTO.setMatrixHeaderImage(matrixHeaderImageFile.getCanonicalPath());
-                seriesDTO.setMatrixCellImage(matrixCellImageFile.getCanonicalPath());
                 seriesRespository.updateSeries(seriesDTO);
 
                 return new RedirectView("/admin-ui/series/?roleID=" + roleDTO.get().getId());
@@ -117,18 +119,14 @@ public class SeriesController {
                 UUID seriesID = UUID.randomUUID();
                 log.info("handle role creation as {} id {}", roleDTO, seriesID.toString());
 
-                File seriesImageFile = new File(getSeriesFolder(seriesID.toString()) + "image" + ".png");
-                seriesDTO.getSeriesImageFile().transferTo(seriesImageFile);
-                File matrixHeaderImageFile = new File(getSeriesFolder(seriesID.toString()) + "matrixHeaderImage" + ".png");
-                seriesDTO.getMatrixHeaderImageFile().transferTo(matrixHeaderImageFile);
-                File matrixCellImageFile = new File(getSeriesFolder(seriesID.toString()) + "matrixCellImage" + ".png");
-                seriesDTO.getMatrixCellImageFile().transferTo(matrixCellImageFile);
-
+                String image = imageRepository.saveImage(seriesDTO.getId(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
+                seriesDTO.setSeriesImage(image);
+                image = imageRepository.saveImage(seriesDTO.getId() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
+                seriesDTO.setMatrixHeaderImage(image);
+                image = imageRepository.saveImage(seriesDTO.getId() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
+                seriesDTO.setMatrixCellImage(image);
                 seriesDTO.setId(seriesID.toString());
                 seriesDTO.setRoleId(roleId);
-                seriesDTO.setSeriesImage(seriesImageFile.getCanonicalPath());
-                seriesDTO.setMatrixHeaderImage(matrixHeaderImageFile.getCanonicalPath());
-                seriesDTO.setMatrixCellImage(matrixCellImageFile.getCanonicalPath());
                 seriesRespository.createSeries(seriesDTO);
                 return new RedirectView("/admin-ui/series/?roleID=" + roleDTO.get().getId());
             }
@@ -210,15 +208,4 @@ public class SeriesController {
         }
     }
 
-    public String getSeriesFolder(String name) {
-        File seriesBase = new File(imagePath + "/series/");
-        if (!seriesBase.exists()) {
-            seriesBase.mkdir();
-        }
-        File rolesFolder = new File(imagePath + "/series/" + name + "/");
-        if (!rolesFolder.exists()) {
-            rolesFolder.mkdir();
-        }
-        return imagePath + "/series/" + name + "/";
-    }
 }

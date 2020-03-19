@@ -50,6 +50,7 @@
         <form class="ui form three wide column" enctype="multipart/form-data"
               action="/admin-ui/role/roleform" method="POST" th:object="${role}">
             <input type="text" th:field="*{id}" style="display: none">
+            <input type="text" th:field="*{roleImage}" style="display: none">
             <div class="field required">
                 <label>角色名称</label>
                 <input type="text" name="name" th:field="*{name}" >

@@ -1,10 +1,9 @@
 package com.github.tuding.blindbox.api.admin;
 
-import com.github.tuding.blindbox.api.admin.dto.ActivityFormDTO;
-import com.github.tuding.blindbox.api.admin.dto.Mode;
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
-import com.github.tuding.blindbox.domain.Activity;
+import com.github.tuding.blindbox.domain.ImageCategory;
 import com.github.tuding.blindbox.exception.RolesNotFoundException;
+import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -17,14 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,8 +34,8 @@ public class RoleController {
     @Autowired
     RolesRepository rolesRepository;
 
-    @Value("${app.imagePath}")
-    private String imagePath;
+    @Autowired
+    ImageRepository imageRepository;
 
 
     @GetMapping("/")
@@ -75,23 +72,18 @@ public class RoleController {
         if (StringUtils.isNotBlank(roleDTO.getId())) {
             log.info("handle role update as {}, with image size {}", roleDTO, roleDTO.getRoleImageFile().getSize());
 
-            File storeFile = new File( getRolesFolder() + roleDTO.getId() + ".png");
             if (roleDTO.getRoleImageFile().getSize() > 0) {
-                roleDTO.getRoleImageFile().transferTo(storeFile);
+                String image = imageRepository.saveImage(roleDTO.getId(), ImageCategory.ROLE, roleDTO.getRoleImageFile());
+                roleDTO.setRoleImage(image);
             }
-
-            roleDTO.setRoleImage(storeFile.getCanonicalPath());
             rolesRepository.updateRole(roleDTO);
             return new RedirectView("/admin-ui/role/");
         } else {
             UUID roleID = UUID.randomUUID();
             log.info("handle role creation as {} id {}", roleDTO, roleID.toString());
-            //TODO: image format/size check
-            File storeFile = new File( getRolesFolder() + roleID.toString() + ".png");
-            roleDTO.getRoleImageFile().transferTo(storeFile);
-
+            String image = imageRepository.saveImage(roleDTO.getId(), ImageCategory.ROLE, roleDTO.getRoleImageFile());
+            roleDTO.setRoleImage(image);
             roleDTO.setId(roleID.toString());
-            roleDTO.setRoleImage(storeFile.getCanonicalPath());
             rolesRepository.saveRole(roleDTO);
             return new RedirectView("/admin-ui/role/");
         }
@@ -131,12 +123,4 @@ public class RoleController {
 
     }
 
-
-    public String getRolesFolder() {
-        File rolesFolder = new File(imagePath + "/roles/");
-        if (!rolesFolder.exists()) {
-            rolesFolder.mkdir();
-        }
-        return imagePath + "/roles/";
-    }
 }

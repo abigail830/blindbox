@@ -3,8 +3,10 @@ package com.github.tuding.blindbox.api.admin;
 import com.github.tuding.blindbox.api.admin.dto.ProductDTO;
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
+import com.github.tuding.blindbox.domain.ImageCategory;
 import com.github.tuding.blindbox.exception.RolesNotFoundException;
 import com.github.tuding.blindbox.exception.SeriesNotFoundException;
+import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,9 @@ public class ProductController {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    ImageRepository imageRepository;
 
     @Value("${app.imagePath}")
     private String imagePath;
@@ -87,34 +92,29 @@ public class ProductController {
         if (seriesDTOOptional.isPresent()) {
             if (StringUtils.isNotBlank(productDTO.getId())) {
                 log.info("handle product update as {} id {}", productDTO, seriesID.toString());
-                File productImageFile = new File(getProductFolder(productDTO.getId()) + "image" + ".png");
+
                 if (productDTO.getProductImageFile().getSize() > 0) {
-                    productDTO.getProductImageFile().transferTo(productImageFile);
+                    String image = imageRepository.saveImage(productDTO.getId(), ImageCategory.PRODUCT, productDTO.getProductImageFile());
+                    productDTO.setProductImage(image);
                 }
-                File postCardImageFile = new File(getProductFolder(productDTO.getId()) + "postcard" + ".png");
+
                 if (productDTO.getPostCardImageFile().getSize() > 0){
-                    productDTO.getPostCardImageFile().transferTo(postCardImageFile);
+                    String image = imageRepository.saveImage(productDTO.getId() + "postcard", ImageCategory.PRODUCT, productDTO.getPostCardImageFile());
+                    productDTO.setPostCardImage(image);
                 }
-
-
-                productDTO.setProductImage(productImageFile.getCanonicalPath());
-                productDTO.setPostCardImage(postCardImageFile.getCanonicalPath());
                 productRepository.updateProduct(productDTO);
                 return new RedirectView("/admin-ui/product/?seriesId=" + seriesDTOOptional.get().getId());
             } else {
                 UUID productID = UUID.randomUUID();
                 log.info("handle product creation as {} id {}", productDTO, seriesID.toString());
 
-                File productImageFile = new File(getProductFolder(productID.toString()) + "image" + ".png");
-                productDTO.getProductImageFile().transferTo(productImageFile);
-                File postCardImageFile = new File(getProductFolder(productID.toString()) + "postcard" + ".png");
-                productDTO.getPostCardImageFile().transferTo(postCardImageFile);
-
+                String image = imageRepository.saveImage(productDTO.getId(), ImageCategory.PRODUCT, productDTO.getProductImageFile());
+                productDTO.setProductImage(image);
+                image = imageRepository.saveImage(productDTO.getId() + "postcard", ImageCategory.PRODUCT, productDTO.getPostCardImageFile());
+                productDTO.setPostCardImage(image);
 
                 productDTO.setId(productID.toString());
                 productDTO.setSeriesID(seriesID);
-                productDTO.setProductImage(productImageFile.getCanonicalPath());
-                productDTO.setPostCardImage(postCardImageFile.getCanonicalPath());
                 productRepository.createProduct(productDTO);
                 return new RedirectView("/admin-ui/product/?seriesId=" + seriesDTOOptional.get().getId());
             }
@@ -173,15 +173,4 @@ public class ProductController {
     }
 
 
-    public String getProductFolder(String name) {
-        File seriesBase = new File(imagePath + "/product/");
-        if (!seriesBase.exists()) {
-            seriesBase.mkdir();
-        }
-        File rolesFolder = new File(imagePath + "/product/" + name + "/");
-        if (!rolesFolder.exists()) {
-            rolesFolder.mkdir();
-        }
-        return imagePath + "/product/" + name + "/";
-    }
 }

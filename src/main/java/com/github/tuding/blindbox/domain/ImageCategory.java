@@ -4,4 +4,6 @@ public enum ImageCategory {
 
     ACTIVITY,
     ROLE,
+    SERIES,
+    PRODUCT
 }
