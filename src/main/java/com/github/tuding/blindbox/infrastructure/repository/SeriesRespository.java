@@ -4,6 +4,7 @@ import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -106,20 +107,38 @@ public class SeriesRespository {
     }
 
     public void updateSeries(SeriesDTO seriesDTO) {
-        String updateSql = "UPDATE series_tbl " +
-                " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ? , seriesImage = ?," +
-                " matrixHeaderImage = ?, matrixCellImage = ? " +
-                " WHERE id = ? ";
-        int update = jdbcTemplate.update(updateSql,
-                seriesDTO.getName(),
-                seriesDTO.getReleaseDate(),
-                seriesDTO.getIsNewSeries(),
-                seriesDTO.getIsPresale(),
-                seriesDTO.getPrice(),
-                seriesDTO.getSeriesImage(),
-                seriesDTO.getMatrixHeaderImage(),
-                seriesDTO.getMatrixCellImage(),
-                seriesDTO.getId());
-        log.info("update row {} ", update);
+        if (StringUtils.isNotBlank(seriesDTO.getReleaseDate())) {
+            String updateSql = "UPDATE series_tbl " +
+                    " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ? , seriesImage = ?," +
+                    " matrixHeaderImage = ?, matrixCellImage = ? " +
+                    " WHERE id = ? ";
+            int update = jdbcTemplate.update(updateSql,
+                    seriesDTO.getName(),
+                    seriesDTO.getReleaseDate(),
+                    seriesDTO.getIsNewSeries(),
+                    seriesDTO.getIsPresale(),
+                    seriesDTO.getPrice(),
+                    seriesDTO.getSeriesImage(),
+                    seriesDTO.getMatrixHeaderImage(),
+                    seriesDTO.getMatrixCellImage(),
+                    seriesDTO.getId());
+            log.info("update row {} ", update);
+        } else {
+            String updateSql = "UPDATE series_tbl " +
+                    " SET name = ?, isNewSeries = ?, isPresale = ?, price = ? , seriesImage = ?," +
+                    " matrixHeaderImage = ?, matrixCellImage = ? " +
+                    " WHERE id = ? ";
+            int update = jdbcTemplate.update(updateSql,
+                    seriesDTO.getName(),
+                    seriesDTO.getIsNewSeries(),
+                    seriesDTO.getIsPresale(),
+                    seriesDTO.getPrice(),
+                    seriesDTO.getSeriesImage(),
+                    seriesDTO.getMatrixHeaderImage(),
+                    seriesDTO.getMatrixCellImage(),
+                    seriesDTO.getId());
+            log.info("update row {} ", update);
+        }
+
     }
 }
