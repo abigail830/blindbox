@@ -1,7 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
-import com.github.tuding.blindbox.api.admin.dto.ProductDTO;
-import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
+import com.github.tuding.blindbox.domain.Product;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,46 +21,46 @@ public class ProductRepository {
     @Autowired
     private SeriesRespository seriesRespository;
 
-    private RowMapper<ProductDTO> rowMapper = new BeanPropertyRowMapper<>(ProductDTO.class);
+    private RowMapper<Product> rowMapper = new BeanPropertyRowMapper<>(Product.class);
 
-    private void saveProduct(ProductDTO productDTO) {
-        log.info("Going to insert product_tbl for {}", productDTO);
+    private void saveProduct(Product product) {
+        log.info("Going to insert product_tbl for {}", product);
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO product_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
                     " probability, productImage, postCardImage) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, productDTO.getId(), productDTO.getSeriesID(), productDTO.getName(),
-                    productDTO.getIsSpecial(), productDTO.getIsPresale(), productDTO.getStock(), productDTO.getProbability(),
-                    productDTO.getProductImage(), productDTO.getPostCardImage());
+            int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
+                    product.getIsSpecial(), product.getIsPresale(), product.getStock(), product.getProbability(),
+                    product.getProductImage(), product.getPostCardImage());
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO product_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
                     " probability, productImage, postCardImage) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, productDTO.getId(), productDTO.getSeriesID(), productDTO.getName(),
-                    productDTO.getIsSpecial(), productDTO.getIsPresale(), productDTO.getStock(), productDTO.getProbability(),
-                    productDTO.getProductImage(), productDTO.getPostCardImage());
+            int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
+                    product.getIsSpecial(), product.getIsPresale(), product.getStock(), product.getProbability(),
+                    product.getProductImage(), product.getPostCardImage());
             log.info("update row {} ", update);
         }
     }
 
-    public Optional<ProductDTO> getProductByID(String id) {
+    public Optional<Product> getProductByID(String id) {
         log.info("Going to query product with id: {}", id);
-        List<ProductDTO> productDTOs = jdbcTemplate.query("SELECT * FROM product_tbl WHERE id = ?", rowMapper, id);
-        return productDTOs.stream().findFirst();
+        List<Product> products = jdbcTemplate.query("SELECT * FROM product_tbl WHERE id = ?", rowMapper, id);
+        return products.stream().findFirst();
     }
 
-    public List<ProductDTO> getProductBySeries(String id) {
+    public List<Product> getProductBySeries(String id) {
         log.info("Going to query product with product series: {}", id);
         return jdbcTemplate.query("SELECT * FROM product_tbl WHERE seriesID = ?", rowMapper, id);
     }
 
-    public void createProduct(ProductDTO productDTO) {
-        if (seriesRespository.querySeriesByID(productDTO.getSeriesID()).isPresent()) {
-            saveProduct(productDTO);
+    public void createProduct(Product product) {
+        if (seriesRespository.querySeriesByID(product.getSeriesID()).isPresent()) {
+            saveProduct(product);
         } else {
-            throw new RuntimeException("Series id " + productDTO.getSeriesID() + " is not existed");
+            throw new RuntimeException("Series id " + product.getSeriesID() + " is not existed");
         }
     }
 
@@ -72,14 +71,14 @@ public class ProductRepository {
 
     }
 
-    public void updateProduct(ProductDTO productDTO) {
+    public void updateProduct(Product product) {
         String updateSql = "UPDATE product_tbl " +
                 " SET name = ?, isSpecial = ?, stock = ?, probability = ?," +
                 " productImage = ?, postCardImage = ?"+
                 " WHERE id = ?";
-        int update = jdbcTemplate.update(updateSql, productDTO.getName(), productDTO.getIsSpecial(),
-                productDTO.getStock(), productDTO.getProbability(),
-                productDTO.getProductImage(), productDTO.getPostCardImage(), productDTO.getId());
+        int update = jdbcTemplate.update(updateSql, product.getName(), product.getIsSpecial(),
+                product.getStock(), product.getProbability(),
+                product.getProductImage(), product.getPostCardImage(), product.getId());
         log.info("update row {} ", update);
     }
 }

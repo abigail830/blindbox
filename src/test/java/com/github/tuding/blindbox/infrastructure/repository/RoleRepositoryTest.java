@@ -3,6 +3,7 @@ package com.github.tuding.blindbox.infrastructure.repository;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
+import com.github.tuding.blindbox.domain.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,8 +22,8 @@ public class RoleRepositoryTest {
     @Test
     @DataSet("expect-data/save-product.yml")
     void getRoleByName()  {
-        Optional<RoleDTO> roleDTO = rolesRepository.queryRolesByName("testRole1");
-        assertTrue(roleDTO.isPresent());
+        Optional<Role> role = rolesRepository.queryRolesByName("testRole1");
+        assertTrue(role.isPresent());
 
 
     }

@@ -2,6 +2,8 @@ package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
+import com.github.tuding.blindbox.domain.Role;
+import com.github.tuding.blindbox.domain.Series;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -10,7 +12,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,78 +25,78 @@ public class SeriesRespository {
     @Autowired
     private RolesRepository rolesRepository;
 
-    private RowMapper<SeriesDTO> rowMapper = new BeanPropertyRowMapper<>(SeriesDTO.class);
+    private RowMapper<Series> rowMapper = new BeanPropertyRowMapper<>(Series.class);
 
-    public void saveSeries(SeriesDTO seriesDTO) {
-        log.info("handle series creation as {}", seriesDTO);
+    public void saveSeries(Series series) {
+        log.info("handle series creation as {}", series);
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO series_tbl " +
                     " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql,
-                    seriesDTO.getId(),
-                    seriesDTO.getRoleId(),
-                    seriesDTO.getName(),
-                    seriesDTO.getReleaseDate(),
-                    seriesDTO.getIsNewSeries(),
-                    seriesDTO.getIsPresale(),
-                    seriesDTO.getPrice(),
-                    seriesDTO.getSeriesImage(),
-                    seriesDTO.getMatrixHeaderImage(),
-                    seriesDTO.getMatrixCellImage());
+                    series.getId(),
+                    series.getRoleId(),
+                    series.getName(),
+                    series.getReleaseDate(),
+                    series.getIsNewSeries(),
+                    series.getIsPresale(),
+                    series.getPrice(),
+                    series.getSeriesImage(),
+                    series.getMatrixHeaderImage(),
+                    series.getMatrixCellImage());
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO series_tbl " +
                     " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage) " +
                     " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql,
-                    seriesDTO.getId(),
-                    seriesDTO.getRoleId(),
-                    seriesDTO.getName(),
-                    seriesDTO.getReleaseDate(),
-                    seriesDTO.getIsNewSeries(),
-                    seriesDTO.getIsPresale(),
-                    seriesDTO.getPrice(),
-                    seriesDTO.getSeriesImage(),
-                    seriesDTO.getMatrixHeaderImage(),
-                    seriesDTO.getMatrixCellImage());
+                    series.getId(),
+                    series.getRoleId(),
+                    series.getName(),
+                    series.getReleaseDate(),
+                    series.getIsNewSeries(),
+                    series.getIsPresale(),
+                    series.getPrice(),
+                    series.getSeriesImage(),
+                    series.getMatrixHeaderImage(),
+                    series.getMatrixCellImage());
             log.info("update row {} ", update);
         }
     }
 
 
-    public Optional<SeriesDTO> querySeriesByName(String name) {
+    public Optional<Series> querySeriesByName(String name) {
         log.info("Going to query series with name: {}", name);
 
-        List<SeriesDTO> seriesDTOs = jdbcTemplate.query("SELECT * FROM series_tbl WHERE name = ?", rowMapper, name);
-        return seriesDTOs.stream().findFirst();
+        List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_tbl WHERE name = ?", rowMapper, name);
+        return seriesList.stream().findFirst();
     }
 
-    public Optional<SeriesDTO> querySeriesByID(String id) {
+    public Optional<Series> querySeriesByID(String id) {
         log.info("Going to query series with id: {}", id);
 
-        List<SeriesDTO> seriesDTOs = jdbcTemplate.query("SELECT * FROM series_tbl WHERE id = ?", rowMapper, id);
-        return seriesDTOs.stream().findFirst();
+        List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_tbl WHERE id = ?", rowMapper, id);
+        return seriesList.stream().findFirst();
     }
 
-    public List<SeriesDTO> queryByRoleID(String roleID) {
+    public List<Series> queryByRoleID(String roleID) {
         log.info("Going to query series with role id: {}", roleID);
         return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
 
     }
 
-    public List<SeriesDTO> queryRoles() {
+    public List<Series> queryRoles() {
         log.info("Going to query series ");
         return jdbcTemplate.query("SELECT * FROM series_tbl", rowMapper);
     }
 
-    public void createSeries(SeriesDTO seriesDTO) {
-        Optional<RoleDTO> roleDTO = rolesRepository.queryRolesByID(seriesDTO.getRoleId());
-        if (roleDTO.isPresent()) {
-            saveSeries(seriesDTO);
+    public void createSeries(Series series) {
+        Optional<Role> role = rolesRepository.queryRolesByID(series.getRoleId());
+        if (role.isPresent()) {
+            saveSeries(series);
         } else {
-            throw new RuntimeException("Role id " + seriesDTO.getRoleId() + " is not existed");
+            throw new RuntimeException("Role id " + series.getRoleId() + " is not existed");
         }
     }
 
@@ -106,22 +107,22 @@ public class SeriesRespository {
 
     }
 
-    public void updateSeries(SeriesDTO seriesDTO) {
-        if (StringUtils.isNotBlank(seriesDTO.getReleaseDate())) {
+    public void updateSeries(Series series) {
+        if (StringUtils.isNotBlank(series.getReleaseDate())) {
             String updateSql = "UPDATE series_tbl " +
                     " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ? , seriesImage = ?," +
                     " matrixHeaderImage = ?, matrixCellImage = ? " +
                     " WHERE id = ? ";
             int update = jdbcTemplate.update(updateSql,
-                    seriesDTO.getName(),
-                    seriesDTO.getReleaseDate(),
-                    seriesDTO.getIsNewSeries(),
-                    seriesDTO.getIsPresale(),
-                    seriesDTO.getPrice(),
-                    seriesDTO.getSeriesImage(),
-                    seriesDTO.getMatrixHeaderImage(),
-                    seriesDTO.getMatrixCellImage(),
-                    seriesDTO.getId());
+                    series.getName(),
+                    series.getReleaseDate(),
+                    series.getIsNewSeries(),
+                    series.getIsPresale(),
+                    series.getPrice(),
+                    series.getSeriesImage(),
+                    series.getMatrixHeaderImage(),
+                    series.getMatrixCellImage(),
+                    series.getId());
             log.info("update row {} ", update);
         } else {
             String updateSql = "UPDATE series_tbl " +
@@ -129,14 +130,14 @@ public class SeriesRespository {
                     " matrixHeaderImage = ?, matrixCellImage = ? " +
                     " WHERE id = ? ";
             int update = jdbcTemplate.update(updateSql,
-                    seriesDTO.getName(),
-                    seriesDTO.getIsNewSeries(),
-                    seriesDTO.getIsPresale(),
-                    seriesDTO.getPrice(),
-                    seriesDTO.getSeriesImage(),
-                    seriesDTO.getMatrixHeaderImage(),
-                    seriesDTO.getMatrixCellImage(),
-                    seriesDTO.getId());
+                    series.getName(),
+                    series.getIsNewSeries(),
+                    series.getIsPresale(),
+                    series.getPrice(),
+                    series.getSeriesImage(),
+                    series.getMatrixHeaderImage(),
+                    series.getMatrixCellImage(),
+                    series.getId());
             log.info("update row {} ", update);
         }
 

@@ -6,6 +6,9 @@ import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.api.admin.dto.ProductDTO;
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
+import com.github.tuding.blindbox.domain.Product;
+import com.github.tuding.blindbox.domain.Role;
+import com.github.tuding.blindbox.domain.Series;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,59 +46,53 @@ public class ProductionCreationTest {
 
         System.out.println(formatter.parse("2020-03-13"));
         //roles
-        rolesRepository.saveRole(new RoleDTO("roleid1", "testRole1", "test",
-                "test", "/app/data/role/testRole1/testRole1.png", null));
+        rolesRepository.saveRole(new Role("roleid1", "testRole1", "test",
+                "test", "/app/data/role/testRole1/testRole1.png"));
 
-        rolesRepository.saveRole(new RoleDTO("roleid2", "testRole2", "test",
-                "test", "/app/data/role/testRole2/testRole2.png", null));
+        rolesRepository.saveRole(new Role("roleid2", "testRole2", "test",
+                "test", "/app/data/role/testRole2/testRole2.png"));
 
         assertTrue(rolesRepository.queryRolesByName("testRole1").isPresent());
 
 
         //series
-        seriesRespository.createSeries(new SeriesDTO("seriesid1", rolesRepository.queryRolesByName("testRole1").get().getId(),
+        seriesRespository.createSeries(new Series("seriesid1", rolesRepository.queryRolesByName("testRole1").get().getId(),
                 "testSeries", "2020-03-13", false, false, BigDecimal.valueOf(25.5),
-                "/app/data/series/testSeries.png", null,
-                "/app/data/series/header/testSeries.png", null,
-                "/app/data/series/cell/testSeries.png",null));
+                "/app/data/series/testSeries.png",
+                "/app/data/series/header/testSeries.png",
+                "/app/data/series/cell/testSeries.png"));
 
-        seriesRespository.createSeries(new SeriesDTO("seriesid2", rolesRepository.queryRolesByName("testRole1").get().getId(),
+        seriesRespository.createSeries(new Series("seriesid2", rolesRepository.queryRolesByName("testRole1").get().getId(),
                 "testSeries2", "2020-03-13", false, false, BigDecimal.valueOf(30),
-                "/app/data/series/testSeries2.png", null,
-                "/app/data/series/header/testSeries2.png", null,
-                "/app/data/series/cell/testSeries2.png", null));
+                "/app/data/series/testSeries2.png",
+                "/app/data/series/header/testSeries2.png",
+                "/app/data/series/cell/testSeries2.png"));
         assertTrue(seriesRespository.querySeriesByName("testSeries").isPresent());
 
         //product
-        productRepository.createProduct(new ProductDTO("productid1",
+        productRepository.createProduct(new Product("productid1",
                 seriesRespository.querySeriesByName("testSeries").get().getId(),
                 "product1", false, false,
                 200L,
                 BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product1.png",
-                null,
-                "/app/data/product/postcard/product1.png",
-                null));
+                "/app/data/product/postcard/product1.png"));
 
-        productRepository.createProduct(new ProductDTO("productid2",
+        productRepository.createProduct(new Product("productid2",
                 seriesRespository.querySeriesByName("testSeries").get().getId(),
                 "product2", false, false,
                 200L,
                 BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product2.png",
-                null,
-                "/app/data/product/postcard/product2.png",
-                null));
+                "/app/data/product/postcard/product2.png"));
 
 
-        productRepository.createProduct(new ProductDTO("productid3", seriesRespository.querySeriesByName("testSeries").get().getId(),
+        productRepository.createProduct(new Product("productid3", seriesRespository.querySeriesByName("testSeries").get().getId(),
                 "product3", true, false,
                 10L,
                 BigDecimal.valueOf(0.01),
                 "/app/data/product/image/product3.png",
-                null,
-                "/app/data/product/postcard/product3.png",
-                null));
+                "/app/data/product/postcard/product3.png"));
 
         assertTrue(productRepository.getProductByID("productid1").isPresent());
         assertTrue(productRepository.getProductByID("productid2").isPresent());
@@ -106,14 +103,14 @@ public class ProductionCreationTest {
     @Test
     @DataSet("expect-data/save-product.yml")
     void queryProductByName () {
-        Optional<ProductDTO> productDTOOptional = productRepository.getProductByID("productid1");
-        assertTrue(productDTOOptional.isPresent());
+        Optional<Product> productOptional = productRepository.getProductByID("productid1");
+        assertTrue(productOptional.isPresent());
     }
 
     @Test
     @DataSet("expect-data/save-product.yml")
     void queryProductBySeriesID () {
-        List<ProductDTO> productBySeries = productRepository.getProductBySeries("seriesid1");
+        List<Product> productBySeries = productRepository.getProductBySeries("seriesid1");
         assertThat(productBySeries.size(), is(3));
     }
 

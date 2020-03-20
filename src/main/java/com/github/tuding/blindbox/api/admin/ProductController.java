@@ -1,9 +1,10 @@
 package com.github.tuding.blindbox.api.admin;
 
 import com.github.tuding.blindbox.api.admin.dto.ProductDTO;
-import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
 import com.github.tuding.blindbox.domain.ImageCategory;
+import com.github.tuding.blindbox.domain.Product;
+import com.github.tuding.blindbox.domain.Series;
 import com.github.tuding.blindbox.exception.RolesNotFoundException;
 import com.github.tuding.blindbox.exception.SeriesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
@@ -20,19 +21,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -54,10 +53,10 @@ public class ProductController {
     @GetMapping("/")
     public String seriesPage(Model model,
                              @RequestParam("seriesId") String seriesID) {
-        Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByID(seriesID);
-        List<ProductDTO> productDTOs = productRepository.getProductBySeries(seriesDTOOptional.get().getId());
-        model.addAttribute("series", seriesDTOOptional.get());
-        model.addAttribute("products", productDTOs);
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(seriesID);
+        List<Product> products = productRepository.getProductBySeries(seriesOptional.get().getId());
+        model.addAttribute("series", new SeriesDTO(seriesOptional.get()));
+        model.addAttribute("products", products.stream().map(ProductDTO::new).collect(Collectors.toList()));
         return "product";
     }
 
@@ -73,11 +72,11 @@ public class ProductController {
     @GetMapping("/productform/{id}")
     public String editFrom(Model model, @PathVariable String id) {
 
-        final Optional<ProductDTO> productDTOOptional = productRepository.getProductByID(id);
-        productDTOOptional.ifPresent(roleDTO -> {
-                    model.addAttribute("seriesId", productDTOOptional.get().getSeriesID());
-                    model.addAttribute("product", productDTOOptional.get());
-                    log.info("Edit ProductDTO [{}]", productDTOOptional.get());
+        final Optional<Product> productOptional = productRepository.getProductByID(id);
+        productOptional.ifPresent(product -> {
+                    model.addAttribute("seriesId", product.getSeriesID());
+                    model.addAttribute("product", new ProductDTO(product));
+                    log.info("Edit ProductDTO [{}]", product);
                 }
         );
         return "productform";
@@ -88,10 +87,10 @@ public class ProductController {
     public RedirectView handleForm(@PathVariable("seriesId") String seriesID,
                                    @ModelAttribute("productForm") ProductDTO productDTO,
                                    Model model) throws IOException {
-        Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByID(seriesID);
-        if (seriesDTOOptional.isPresent()) {
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(seriesID);
+        if (seriesOptional.isPresent()) {
             if (StringUtils.isNotBlank(productDTO.getId())) {
-                log.info("handle product update as {} id {}", productDTO, seriesID.toString());
+                log.info("handle product update as {} id {}", productDTO, seriesID);
 
                 if (productDTO.getProductImageFile().getSize() > 0) {
                     String image = imageRepository.saveImage(productDTO.getId(), ImageCategory.PRODUCT, productDTO.getProductImageFile());
@@ -102,21 +101,21 @@ public class ProductController {
                     String image = imageRepository.saveImage(productDTO.getId() + "postcard", ImageCategory.PRODUCT, productDTO.getPostCardImageFile());
                     productDTO.setPostCardImage(image);
                 }
-                productRepository.updateProduct(productDTO);
-                return new RedirectView("/admin-ui/product/?seriesId=" + seriesDTOOptional.get().getId());
+                productRepository.updateProduct(productDTO.toDomainObject());
+                return new RedirectView("/admin-ui/product/?seriesId=" + seriesOptional.get().getId());
             } else {
                 UUID productID = UUID.randomUUID();
-                log.info("handle product creation as {} id {}", productDTO, seriesID.toString());
+                log.info("handle product creation as {} id {}", productDTO, productID.toString());
 
-                String image = imageRepository.saveImage(productDTO.getId(), ImageCategory.PRODUCT, productDTO.getProductImageFile());
+                String image = imageRepository.saveImage(productID.toString(), ImageCategory.PRODUCT, productDTO.getProductImageFile());
                 productDTO.setProductImage(image);
-                image = imageRepository.saveImage(productDTO.getId() + "postcard", ImageCategory.PRODUCT, productDTO.getPostCardImageFile());
+                image = imageRepository.saveImage(productID.toString() + "postcard", ImageCategory.PRODUCT, productDTO.getPostCardImageFile());
                 productDTO.setPostCardImage(image);
 
                 productDTO.setId(productID.toString());
                 productDTO.setSeriesID(seriesID);
-                productRepository.createProduct(productDTO);
-                return new RedirectView("/admin-ui/product/?seriesId=" + seriesDTOOptional.get().getId());
+                productRepository.createProduct(productDTO.toDomainObject());
+                return new RedirectView("/admin-ui/product/?seriesId=" + seriesOptional.get().getId());
             }
         } else {
             throw new SeriesNotFoundException();
@@ -126,9 +125,10 @@ public class ProductController {
 
     @GetMapping("/series/{id}")
     public List<ProductDTO> getProductList(@PathVariable("id")String seriesID) {
-        Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByID(seriesID);
-        if (seriesDTOOptional.isPresent()) {
-            return productRepository.getProductBySeries(seriesDTOOptional.get().getId());
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(seriesID);
+        if (seriesOptional.isPresent()) {
+            List<Product> productBySeries = productRepository.getProductBySeries(seriesOptional.get().getId());
+            return productBySeries.stream().map(ProductDTO::new).collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
@@ -136,9 +136,9 @@ public class ProductController {
 
     @GetMapping("/{id}/images")
     public ResponseEntity<Resource> getSeriesImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<ProductDTO> productDTOOptional = productRepository.getProductByID(id);
-        if (productDTOOptional.isPresent()) {
-            File file = new File(productDTOOptional.get().getProductImage());
+        Optional<Product> productOptional = productRepository.getProductByID(id);
+        if (productOptional.isPresent()) {
+            File file = new File(productOptional.get().getProductImage());
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
                     .contentLength(file.length())
@@ -151,9 +151,9 @@ public class ProductController {
 
     @GetMapping("/{id}/postcard")
     public ResponseEntity<Resource> getPostcardImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<ProductDTO> productDTOOptional = productRepository.getProductByID(id);
-        if (productDTOOptional.isPresent()) {
-            File file = new File(productDTOOptional.get().getPostCardImage());
+        Optional<Product> productOptional = productRepository.getProductByID(id);
+        if (productOptional.isPresent()) {
+            File file = new File(productOptional.get().getPostCardImage());
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
                     .contentLength(file.length())

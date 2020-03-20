@@ -4,6 +4,7 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.api.admin.dto.ProductDTO;
+import com.github.tuding.blindbox.domain.Product;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +28,14 @@ public class ProductRepositoryTest {
     @Test
     @DataSet("expect-data/save-product.yml")
     void queryProductByName () {
-        Optional<ProductDTO> productDTOOptional = productRepository.getProductByID("productid1");
+        Optional<Product> productDTOOptional = productRepository.getProductByID("productid1");
         assertTrue(productDTOOptional.isPresent());
     }
 
     @Test
     @DataSet("expect-data/save-product.yml")
     void queryProductBySeriesID () {
-        List<ProductDTO> productBySeries = productRepository.getProductBySeries("seriesid1");
+        List<Product> productBySeries = productRepository.getProductBySeries("seriesid1");
         assertThat(productBySeries.size(), is(3));
     }
 

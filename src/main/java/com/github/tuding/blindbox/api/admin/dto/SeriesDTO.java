@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.api.admin.dto;
 
+import com.github.tuding.blindbox.domain.Series;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,4 +33,31 @@ public class SeriesDTO {
     String matrixCellImage;
     MultipartFile matrixCellImageFile;
 
+    public Series toDomainObject() {
+        Series series = new Series();
+        series.setId(id);
+        series.setRoleId(roleId);
+        series.setName(name);
+        series.setReleaseDate(releaseDate);
+        series.setIsNewSeries(isNewSeries);
+        series.setPrice(price);
+        series.setIsPresale(isPresale);
+        series.setSeriesImage(seriesImage);
+        series.setMatrixHeaderImage(matrixHeaderImage);
+        series.setMatrixCellImage(matrixCellImage);
+        return series;
+    }
+
+    public SeriesDTO (Series series) {
+        this.id = series.getId();
+        this.roleId = series.getRoleId();
+        this.name = series.getName();
+        this.releaseDate = series.getReleaseDate();
+        this.isNewSeries = series.getIsNewSeries();
+        this.isPresale = series.getIsPresale();
+        this.price = series.getPrice();
+        this.seriesImage = series.getSeriesImage();
+        this.matrixHeaderImage = series.getMatrixHeaderImage();
+        this.matrixCellImage = series.getMatrixCellImage();
+    }
 }

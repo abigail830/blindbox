@@ -2,6 +2,7 @@ package com.github.tuding.blindbox.api.admin;
 
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.domain.ImageCategory;
+import com.github.tuding.blindbox.domain.Role;
 import com.github.tuding.blindbox.exception.RolesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -40,7 +42,8 @@ public class RoleController {
 
     @GetMapping("/")
     public String roleList(Model model) {
-        List<RoleDTO> roleDTOS = rolesRepository.queryRoles();
+        List<Role> roles = rolesRepository.queryRoles();
+        List<RoleDTO> roleDTOS = roles.stream().map(RoleDTO::new).collect(Collectors.toList());
         log.info(roleDTOS.toString());
         model.addAttribute("roles", roleDTOS);
         return "role";
@@ -49,10 +52,10 @@ public class RoleController {
     @GetMapping("/roleform/{id}")
     public String editRole(Model model, @PathVariable String id) {
 
-        final Optional<RoleDTO> roleDTOOptional = rolesRepository.queryRolesByID(id);
-        roleDTOOptional.ifPresent(roleDTO -> {
-                    model.addAttribute("role", roleDTO);
-                    log.info("Edit roleDTO [{}]", roleDTO);
+        final Optional<Role> roleOptional = rolesRepository.queryRolesByID(id);
+        roleOptional.ifPresent(role -> {
+                    model.addAttribute("role", new RoleDTO(role));
+                    log.info("Edit roleDTO [{}]", role);
                 }
         );
         return "roleform";
@@ -68,7 +71,6 @@ public class RoleController {
     public RedirectView handleRoleForm(
             @ModelAttribute("roleForm") RoleDTO roleDTO,
             Model model) throws IOException {
-        log.info("test role form {}", roleDTO);
         if (StringUtils.isNotBlank(roleDTO.getId())) {
             log.info("handle role update as {}, with image size {}", roleDTO, roleDTO.getRoleImageFile().getSize());
 
@@ -76,15 +78,15 @@ public class RoleController {
                 String image = imageRepository.saveImage(roleDTO.getId(), ImageCategory.ROLE, roleDTO.getRoleImageFile());
                 roleDTO.setRoleImage(image);
             }
-            rolesRepository.updateRole(roleDTO);
+            rolesRepository.updateRole(roleDTO.toDomainObject());
             return new RedirectView("/admin-ui/role/");
         } else {
             UUID roleID = UUID.randomUUID();
             log.info("handle role creation as {} id {}", roleDTO, roleID.toString());
-            String image = imageRepository.saveImage(roleDTO.getId(), ImageCategory.ROLE, roleDTO.getRoleImageFile());
+            String image = imageRepository.saveImage(roleID.toString(), ImageCategory.ROLE, roleDTO.getRoleImageFile());
             roleDTO.setRoleImage(image);
             roleDTO.setId(roleID.toString());
-            rolesRepository.saveRole(roleDTO);
+            rolesRepository.saveRole(roleDTO.toDomainObject());
             return new RedirectView("/admin-ui/role/");
         }
 
@@ -96,22 +98,11 @@ public class RoleController {
         rolesRepository.deleteRoles(id);
     }
 
-    @GetMapping("/{name}")
-    public RoleDTO getRole(@PathVariable("name") String name) {
-        Optional<RoleDTO> roleDTOOptional = rolesRepository.queryRolesByName(name);
-        if (roleDTOOptional.isPresent()) {
-            return roleDTOOptional.get();
-        } else {
-            throw new RolesNotFoundException();
-        }
-    }
-
-
     @GetMapping("/{id}/images")
     public ResponseEntity<Resource> getRoleImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<RoleDTO> roleDTOOptional = rolesRepository.queryRolesByID(id);
-        if (roleDTOOptional.isPresent()) {
-            File file = new File(roleDTOOptional.get().getRoleImage());
+        Optional<Role> roleOptional = rolesRepository.queryRolesByID(id);
+        if (roleOptional.isPresent()) {
+            File file = new File(roleOptional.get().getRoleImage());
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
                     .contentLength(file.length())

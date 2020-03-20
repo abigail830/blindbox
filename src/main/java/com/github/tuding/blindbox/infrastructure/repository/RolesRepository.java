@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
+import com.github.tuding.blindbox.domain.Role;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,32 +20,34 @@ public class RolesRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private RowMapper<RoleDTO> rowMapper = new BeanPropertyRowMapper<>(RoleDTO.class);
+    private RowMapper<Role> rowMapper = new BeanPropertyRowMapper<>(Role.class);
 
 
-    public void saveRole(RoleDTO roleDTO) {
-        log.info("Going to insert roles_tbl with name: {}", roleDTO.getName());
+    public void saveRole(Role role) {
+        log.info("Going to insert roles_tbl with {}", role);
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO roles_tbl (id, name, category, description, role_image) " +
                     "VALUES (?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, roleDTO.getId(), roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
+            int update = jdbcTemplate.update(insertSql, role.getId(), role.getName(), role.getCategory(),
+                    role.getDescription(), role.getRoleImage());
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO roles_tbl (id, name, category, description, role_image) " +
                     "VALUES (?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, roleDTO.getId(), roleDTO.getName(), roleDTO.getCategory(), roleDTO.getDescription(), roleDTO.getRoleImage());
+            int update = jdbcTemplate.update(insertSql, role.getId(), role.getName(), role.getCategory(),
+                    role.getDescription(), role.getRoleImage());
             log.info("update row {} ", update);
         }
     }
 
-    public Optional<RoleDTO> queryRolesByName(String name) {
+    public Optional<Role> queryRolesByName(String name) {
         log.info("Going to query roles with name: {}", name);
-        List<RoleDTO> roleDTOs = jdbcTemplate.query("SELECT * FROM roles_tbl WHERE name = ?", rowMapper, name);
-        return roleDTOs.stream().findFirst();
+        List<Role> roles = jdbcTemplate.query("SELECT * FROM roles_tbl WHERE name = ?", rowMapper, name);
+        return roles.stream().findFirst();
     }
 
-    public List<RoleDTO> queryRoles() {
+    public List<Role> queryRoles() {
         log.info("Going to query roles ");
         return jdbcTemplate.query("SELECT * FROM roles_tbl", rowMapper);
     }
@@ -54,18 +57,18 @@ public class RolesRepository {
         jdbcTemplate.update("DELETE FROM roles_tbl WHERE id = ?", id);
     }
 
-    public Optional<RoleDTO> queryRolesByID(String id) {
+    public Optional<Role> queryRolesByID(String id) {
         log.info("Going to query roles with id: {}", id);
-        List<RoleDTO> roleDTOs = jdbcTemplate.query("SELECT * FROM roles_tbl WHERE id = ?", rowMapper, id);
-        return roleDTOs.stream().findFirst();
+        List<Role> roles = jdbcTemplate.query("SELECT * FROM roles_tbl WHERE id = ?", rowMapper, id);
+        return roles.stream().findFirst();
     }
 
-    public void updateRole(RoleDTO roleDTO) {
+    public void updateRole(Role role) {
         String insertSql = "UPDATE roles_tbl " +
                 " SET name = ?, category = ?, description = ?,  role_image = ?" +
                 " WHERE id = ? ";
-        int update = jdbcTemplate.update(insertSql, roleDTO.getName(), roleDTO.getCategory(),
-                roleDTO.getDescription(), roleDTO.getRoleImage(), roleDTO.getId());
+        int update = jdbcTemplate.update(insertSql, role.getName(), role.getCategory(),
+                role.getDescription(), role.getRoleImage(), role.getId());
         log.info("update row {} ", update);
     }
 }

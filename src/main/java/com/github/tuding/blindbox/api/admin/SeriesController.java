@@ -3,6 +3,8 @@ package com.github.tuding.blindbox.api.admin;
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
 import com.github.tuding.blindbox.domain.ImageCategory;
+import com.github.tuding.blindbox.domain.Role;
+import com.github.tuding.blindbox.domain.Series;
 import com.github.tuding.blindbox.exception.RolesNotFoundException;
 import com.github.tuding.blindbox.exception.SeriesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
@@ -33,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -55,9 +58,10 @@ public class SeriesController {
     public String seriesPage(Model model,
                              @RequestParam("roleID") String roleID) {
 
-        List<SeriesDTO> seriesDTOs = seriesRespository.queryByRoleID(roleID);
+        List<Series> seriesList = seriesRespository.queryByRoleID(roleID);
+        List<SeriesDTO> seriesDTOs = seriesList.stream().map(SeriesDTO::new).collect(Collectors.toList());
         model.addAttribute("series", seriesDTOs);
-        model.addAttribute("role", rolesRepository.queryRolesByID(roleID).get());
+        model.addAttribute("role", new RoleDTO(rolesRepository.queryRolesByID(roleID).get()));
         return "series";
     }
 
@@ -73,11 +77,11 @@ public class SeriesController {
     @GetMapping("/seriesform/{id}")
     public String editRole(Model model, @PathVariable String id) {
 
-        final Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByID(id);
-        seriesDTOOptional.ifPresent(roleDTO -> {
-                    model.addAttribute("roleId", seriesDTOOptional.get().getRoleId());
-                    model.addAttribute("series", seriesDTOOptional.get());
-                    log.info("Edit seriesDTO [{}]", seriesDTOOptional.get());
+        final Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
+        seriesOptional.ifPresent(series -> {
+                    model.addAttribute("roleId", series.getRoleId());
+                    model.addAttribute("series", new SeriesDTO(series));
+                    log.info("Edit seriesDTO [{}]", series);
                 }
         );
         return "seriesform";
@@ -91,10 +95,10 @@ public class SeriesController {
     public RedirectView handleForm(@PathVariable("roleID") String roleId,
                                    @ModelAttribute("roleForm") SeriesDTO seriesDTO,
                                    Model model) throws IOException, ParseException {
-        Optional<RoleDTO> roleDTO = rolesRepository.queryRolesByID(roleId);
-        if (roleDTO.isPresent()) {
+        Optional<Role> roleOptional = rolesRepository.queryRolesByID(roleId);
+        if (roleOptional.isPresent()) {
             if (StringUtils.isNotBlank(seriesDTO.getId())) {
-                log.info("handle role update as {} ", roleDTO);
+                log.info("handle series update as {} ", seriesDTO);
 
                 if (seriesDTO.getSeriesImageFile().getSize() > 0) {
                     String image = imageRepository.saveImage(seriesDTO.getId(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
@@ -111,24 +115,24 @@ public class SeriesController {
                     seriesDTO.setMatrixCellImage(image);
                 }
                 seriesDTO.setRoleId(roleId);
-                seriesRespository.updateSeries(seriesDTO);
+                seriesRespository.updateSeries(seriesDTO.toDomainObject());
 
-                return new RedirectView("/admin-ui/series/?roleID=" + roleDTO.get().getId());
+                return new RedirectView("/admin-ui/series/?roleID=" + roleOptional.get().getId());
 
             } else {
                 UUID seriesID = UUID.randomUUID();
-                log.info("handle role creation as {} id {}", roleDTO, seriesID.toString());
+                log.info("handle series creation as {} id {}", seriesDTO, seriesID.toString());
 
-                String image = imageRepository.saveImage(seriesDTO.getId(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
+                String image = imageRepository.saveImage(seriesID.toString(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
                 seriesDTO.setSeriesImage(image);
-                image = imageRepository.saveImage(seriesDTO.getId() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
+                image = imageRepository.saveImage(seriesID.toString() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
                 seriesDTO.setMatrixHeaderImage(image);
-                image = imageRepository.saveImage(seriesDTO.getId() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
+                image = imageRepository.saveImage(seriesID.toString() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
                 seriesDTO.setMatrixCellImage(image);
                 seriesDTO.setId(seriesID.toString());
                 seriesDTO.setRoleId(roleId);
-                seriesRespository.createSeries(seriesDTO);
-                return new RedirectView("/admin-ui/series/?roleID=" + roleDTO.get().getId());
+                seriesRespository.createSeries(seriesDTO.toDomainObject());
+                return new RedirectView("/admin-ui/series/?roleID=" + roleOptional.get().getId());
             }
         } else {
             throw new RolesNotFoundException();
@@ -138,9 +142,10 @@ public class SeriesController {
 
     @GetMapping("/role/{id}")
     public List<SeriesDTO> getSeriesList(@PathVariable("id") String roleID) {
-        Optional<RoleDTO> roleDTO = rolesRepository.queryRolesByID(roleID);
-        if (roleDTO.isPresent()) {
-            return seriesRespository.queryByRoleID(roleDTO.get().getId());
+        Optional<Role> roleOptional = rolesRepository.queryRolesByID(roleID);
+        if (roleOptional.isPresent()) {
+            List<Series> series = seriesRespository.queryByRoleID(roleOptional.get().getId());
+            return series.stream().map(SeriesDTO::new).collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
@@ -148,9 +153,9 @@ public class SeriesController {
 
     @GetMapping("/{id}")
     public SeriesDTO getSeries(@PathVariable("id") String id) {
-        Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByID(id);
-        if (seriesDTOOptional.isPresent()) {
-            return seriesDTOOptional.get();
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
+        if (seriesOptional.isPresent()) {
+            return new SeriesDTO(seriesOptional.get());
         } else {
             throw new SeriesNotFoundException();
         }
@@ -165,9 +170,9 @@ public class SeriesController {
 
     @GetMapping("/{id}/images")
     public ResponseEntity<Resource> getSeriesImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByID(id);
-        if (seriesDTOOptional.isPresent()) {
-            File file = new File(seriesDTOOptional.get().getSeriesImage());
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
+        if (seriesOptional.isPresent()) {
+            File file = new File(seriesOptional.get().getSeriesImage());
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
                     .contentLength(file.length())
@@ -180,9 +185,9 @@ public class SeriesController {
 
     @GetMapping("/{id}/headerimage")
     public ResponseEntity<Resource> getSeriesHeaderImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByID(id);
-        if (seriesDTOOptional.isPresent()) {
-            File file = new File(seriesDTOOptional.get().getMatrixHeaderImage());
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
+        if (seriesOptional.isPresent()) {
+            File file = new File(seriesOptional.get().getMatrixHeaderImage());
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
                     .contentLength(file.length())
@@ -195,9 +200,9 @@ public class SeriesController {
 
     @GetMapping("/{id}/cellimage")
     public ResponseEntity<Resource> getSeriesCellImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<SeriesDTO> seriesDTOOptional = seriesRespository.querySeriesByID(id);
-        if (seriesDTOOptional.isPresent()) {
-            File file = new File(seriesDTOOptional.get().getMatrixCellImage());
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
+        if (seriesOptional.isPresent()) {
+            File file = new File(seriesOptional.get().getMatrixCellImage());
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
                     .contentLength(file.length())
