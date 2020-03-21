@@ -30,11 +30,11 @@ public class ActivityService {
             activity.setMainImgAddr(mainImgAddr);
         }
 
-//        if (!activity.getContentImg().isEmpty()) {
-//            final String contentImgAddr = imageRepository.saveImage(uuid.toString() + "-content",
-//                    ImageCategory.ACTIVITY, activity.getContentImg());
-//            activity.setContentImgAddr(contentImgAddr);
-//        }
+        if (!activity.getContentImg().isEmpty()) {
+            final String contentImgAddr = imageRepository.saveImage(uuid.toString() + "-content",
+                    ImageCategory.ACTIVITY, activity.getContentImg());
+            activity.setContentImgAddr(contentImgAddr);
+        }
 
         activityRepository.saveActivity(activity);
     }
@@ -52,6 +52,19 @@ public class ActivityService {
     }
 
     public void updateActivity(Activity activity) {
+
+        if (!activity.getMainImg().isEmpty()) {
+            final String mainImgAddr = imageRepository.saveImage(activity.getId() + "-main",
+                    ImageCategory.ACTIVITY, activity.getMainImg());
+            activity.setMainImgAddr(mainImgAddr);
+        }
+
+        if (!activity.getContentImg().isEmpty()) {
+            final String contentImgAddr = imageRepository.saveImage(activity.getId() + "-content",
+                    ImageCategory.ACTIVITY, activity.getContentImg());
+            activity.setContentImgAddr(contentImgAddr);
+        }
+
         activityRepository.updateActivity(activity);
     }
 }

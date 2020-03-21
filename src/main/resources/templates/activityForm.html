@@ -21,11 +21,13 @@
             });
 
          });
+
     </script>
     <style>
         form {
             text-align: left;
         }
+
 
     </style>
 
@@ -69,7 +71,7 @@
             <p th:text="${activityForm.errorMsg}" th:if="${activityForm.errorMsg!=null}">errorMsg</p>
         </div>
 
-        <form class="ui form" enctype="multipart/form-data" method="POST"
+        <form class="ui form" enctype="multipart/form-data" method="POST" autocomplete="off"
               action="#" th:action="@{/admin-ui/activities/form}" th:object="${activityForm}">
 
             <input type="text" th:field="*{id}" style="display: none">
@@ -92,7 +94,8 @@
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
                             <input type="text" name="activityStartDate" placeholder="Start"
-                                   th:field="*{activityStartDate}" th:readonly="${activityForm.readOnly}">
+                                   th:field="*{activityStartDate}" th:value="*{activityStartDate}"
+                                   th:readonly="${activityForm.readOnly}">
                         </div>
                     </div>
                 </div>
@@ -102,7 +105,8 @@
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
                             <input type="text" name="activityEndDate" placeholder="End"
-                                   th:field="*{activityEndDate}" th:readonly="*{readOnly}">
+                                   th:field="*{activityEndDate}" th:value="*{activityEndDate}"
+                                   th:readonly="*{readOnly}">
                         </div>
                     </div>
                 </div>
@@ -119,14 +123,16 @@
             </div>
 
 
-            <!--<div class="inline field">-->
-            <!--<label>活动详细内容图</label>-->
-            <!--<div th:if="${activityForm.mainImgAddr!=null}">-->
-            <!--<img class="ui small image"-->
-            <!--th:src="'/admin-ui/activities/id/' + ${activityForm.id} + '/mainImg'">-->
-            <!--</div>-->
-            <!--<input type="file" th:field="*{contentImg}" th:if="${!activityForm.readOnly}">-->
-            <!--</div>-->
+            <div class="inline field">
+                <label>活动详细内容图</label>
+                <div th:if="${activityForm.contentImgAddr!=null and contentImgAddr!=''}">
+                    <img class="ui small image"
+                         th:src="'/admin-ui/activities/id/' + ${activityForm.id} + '/contentImg'">
+                </div>
+                <input type="file" th:field="*{contentImg}" th:if="${!activityForm.readOnly}">
+                <input type="text" th:field="*{contentImgAddr}" style="display: none">
+            </div>
+
             <br/>
             <div class="field">
                 <div class="ui checkbox">

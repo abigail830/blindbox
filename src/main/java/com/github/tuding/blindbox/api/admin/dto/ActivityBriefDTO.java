@@ -26,6 +26,9 @@ public class ActivityBriefDTO {
     String startDate;
     String endDate;
 
+//    private static final ThreadLocal<SimpleDateFormat> dateFormat
+//            = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd kk:mm"));
+
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm");
 
     public ActivityBriefDTO(Activity activity) {

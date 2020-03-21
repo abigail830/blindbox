@@ -60,7 +60,7 @@ public class ActivityRepository {
 
     public List<Activity> queryActivities() {
         log.info("Going to query activitys ");
-        return jdbcTemplate.query("SELECT * FROM activity_tbl", rowMapper);
+        return jdbcTemplate.query("SELECT * FROM activity_tbl ORDER BY activity_start_date DESC", rowMapper);
     }
 
     public void deleteActivity(String id) {

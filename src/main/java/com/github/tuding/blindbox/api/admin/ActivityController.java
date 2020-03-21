@@ -5,7 +5,7 @@ import com.github.tuding.blindbox.api.admin.dto.ActivityFormDTO;
 import com.github.tuding.blindbox.api.admin.dto.Mode;
 import com.github.tuding.blindbox.domain.Activity;
 import com.github.tuding.blindbox.domain.ActivityService;
-import com.github.tuding.blindbox.exception.RolesNotFoundException;
+import com.github.tuding.blindbox.exception.ActivityImgNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
@@ -109,7 +109,7 @@ public class ActivityController {
     }
 
     @GetMapping("/id/{id}/mainImg")
-    public ResponseEntity<Resource> getRoleImage(@PathVariable("id") String id) throws FileNotFoundException {
+    public ResponseEntity<Resource> getMainImage(@PathVariable("id") String id) throws FileNotFoundException {
         Optional<Activity> activity = activityService.getActivityById(id);
         if (activity.isPresent()) {
             File file = new File(activity.get().getMainImgAddr());
@@ -119,9 +119,23 @@ public class ActivityController {
                     .contentType(MediaType.parseMediaType("image/png"))
                     .body(resource);
         } else {
-            throw new RolesNotFoundException();
+            throw new ActivityImgNotFoundException();
         }
+    }
 
+    @GetMapping("/id/{id}/contentImg")
+    public ResponseEntity<Resource> getContentImage(@PathVariable("id") String id) throws FileNotFoundException {
+        Optional<Activity> activity = activityService.getActivityById(id);
+        if (activity.isPresent()) {
+            File file = new File(activity.get().getContentImgAddr());
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            return ResponseEntity.ok()
+                    .contentLength(file.length())
+                    .contentType(MediaType.parseMediaType("image/png"))
+                    .body(resource);
+        } else {
+            throw new ActivityImgNotFoundException();
+        }
     }
 
 }
