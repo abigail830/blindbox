@@ -43,6 +43,10 @@ public class ActivityService {
         return activityRepository.queryActivities();
     }
 
+    public List<Activity> getAllActivitiesShownInFrontPage() {
+        return activityRepository.queryActivitiesShowInAd();
+    }
+
     public Optional<Activity> getActivityById(String id) {
         return activityRepository.queryActivityById(id);
     }

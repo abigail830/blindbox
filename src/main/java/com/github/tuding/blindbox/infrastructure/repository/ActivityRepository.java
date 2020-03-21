@@ -93,4 +93,9 @@ public class ActivityRepository {
         log.info("update row {} ", update);
     }
 
+    public List<Activity> queryActivitiesShowInAd() {
+        log.info("Going to query activitys ");
+        return jdbcTemplate.query("SELECT * FROM activity_tbl WHERE shown_in_ad = true ORDER BY activity_start_date DESC", rowMapper);
+
+    }
 }
