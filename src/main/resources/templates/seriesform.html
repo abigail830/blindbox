@@ -55,7 +55,7 @@
                     <i class="angle left icon"></i>返回产品系列列表</a>
             </div>
             <div class="six wide column">
-                <div class="title"><h2>添加产品系列</h2></div>
+                <div class="title"><h2>产品系列管理</h2></div>
             </div>
         </div>
         <div class="ui divider"></div>
@@ -90,21 +90,6 @@
             </div>
 
 
-            <div class="field">
-                <div class="ui checkbox">
-                    <input id="isNewSeries" type="checkbox" th:field="*{isNewSeries}">
-                    <label for="isNewSeries">新系列？</label>
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="ui checkbox">
-                    <input id="isPresale" type="checkbox" th:field="*{isPresale}">
-                    <label for="isPresale">预售？</label>
-                </div>
-            </div>
-
-
             <div class="three fields">
                 <div class="inline field required">
                     <label>产品系列图</label>
@@ -133,6 +118,21 @@
                     <input type="file" name="matrixCellImageFile">
                 </div>
             </div>
+            <br/>
+            <div class="field">
+                <div class="ui checkbox">
+                    <input id="isNewSeries" type="checkbox" th:field="*{isNewSeries}">
+                    <label for="isNewSeries">新系列？</label>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="ui checkbox">
+                    <input id="isPresale" type="checkbox" th:field="*{isPresale}">
+                    <label for="isPresale">预售？</label>
+                </div>
+            </div>
+            <br/>
             <button class="ui button">提交</button>
         </form>
     </div>

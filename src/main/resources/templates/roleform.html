@@ -66,7 +66,7 @@
             <div class="inline field required">
                 <label>角色图片</label>
                 <div th:if="*{id!=null}">
-                    <img class="ui medium circular image"
+                    <img class="ui small circular image"
                          th:src="'/admin-ui/role/' + *{id} + '/images'">
                 </div>
                 <input type="file" name="roleImageFile">

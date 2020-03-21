@@ -22,11 +22,13 @@
 
          });
 
+
     </script>
     <style>
         form {
             text-align: left;
         }
+
 
 
     </style>
@@ -112,25 +114,27 @@
                 </div>
             </div>
 
-            <div class="inline field required">
-                <label>活动主图</label>
-                <div th:if="*{mainImgAddr!=null and mainImgAddr!=''}">
-                    <img class="ui small image"
-                         th:src="'/admin-ui/activities/id/' + *{id} + '/mainImg'">
+            <div class="two fields">
+                <div class="inline field required">
+                    <label>活动主图</label>
+                    <div th:if="*{mainImgAddr!=null and mainImgAddr!=''}">
+                        <img class="ui medium image"
+                             th:src="'/admin-ui/activities/id/' + *{id} + '/mainImg'">
+                    </div>
+                    <input type="file" th:field="*{mainImg}" name="mainImg" th:if="*{!readOnly}">
+                    <input type="text" th:field="*{mainImgAddr}" style="display: none">
                 </div>
-                <input type="file" th:field="*{mainImg}" name="mainImg" th:if="*{!readOnly}">
-                <input type="text" th:field="*{mainImgAddr}" style="display: none">
-            </div>
 
 
-            <div class="inline field">
-                <label>活动详细内容图</label>
-                <div th:if="${activityForm.contentImgAddr!=null and contentImgAddr!=''}">
-                    <img class="ui small image"
-                         th:src="'/admin-ui/activities/id/' + ${activityForm.id} + '/contentImg'">
+                <div class="inline field">
+                    <label>活动详细内容图</label>
+                    <div th:if="${activityForm.contentImgAddr!=null and contentImgAddr!=''}">
+                        <img class="ui small image"
+                             th:src="'/admin-ui/activities/id/' + ${activityForm.id} + '/contentImg'">
+                    </div>
+                    <input type="file" th:field="*{contentImg}" th:if="${!activityForm.readOnly}">
+                    <input type="text" th:field="*{contentImgAddr}" style="display: none">
                 </div>
-                <input type="file" th:field="*{contentImg}" th:if="${!activityForm.readOnly}">
-                <input type="text" th:field="*{contentImgAddr}" style="display: none">
             </div>
 
             <br/>
