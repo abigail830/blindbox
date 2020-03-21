@@ -1,9 +1,8 @@
-package com.github.tuding.blindbox.api.admin.dto;
+package com.github.tuding.blindbox.api.wx.wxDto;
 
 import com.github.tuding.blindbox.domain.Role;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,30 +10,18 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @Getter
 public class RoleDTO {
-
     String id;
     String name;
     String category;
     String description;
     //Image c
     String roleImage;
-    MultipartFile roleImageFile;
-
-    public Role toDomainObject() {
-        Role role = new Role();
-        role.setId(id);
-        role.setName(name);
-        role.setCategory(category);
-        role.setDescription(description);
-        role.setRoleImage(roleImage);
-        return role;
-    }
 
     public RoleDTO(Role role) {
         this.id = role.getId();
         this.name = role.getName();
         this.category = role.getCategory();
         this.description = role.getDescription();
-        this.roleImage = Constant.ADMIN_UI_IMAGE_PATH + role.getRoleImage();
+        this.roleImage = Constant.WX_UI_IMAGE_PATH + role.getRoleImage();
     }
 }

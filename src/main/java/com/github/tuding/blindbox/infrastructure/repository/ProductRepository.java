@@ -73,12 +73,10 @@ public class ProductRepository {
 
     public void updateProduct(Product product) {
         String updateSql = "UPDATE product_tbl " +
-                " SET name = ?, isSpecial = ?, stock = ?, probability = ?," +
-                " productImage = ?, postCardImage = ?"+
+                " SET name = ?, isSpecial = ?, stock = ?, probability = ?" +
                 " WHERE id = ?";
         int update = jdbcTemplate.update(updateSql, product.getName(), product.getIsSpecial(),
-                product.getStock(), product.getProbability(),
-                product.getProductImage(), product.getPostCardImage(), product.getId());
+                product.getStock(), product.getProbability(), product.getId());
         log.info("update row {} ", update);
     }
 }

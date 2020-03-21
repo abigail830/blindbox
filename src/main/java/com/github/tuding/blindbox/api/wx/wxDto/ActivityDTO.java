@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.sql.Timestamp;
 
+import static com.github.tuding.blindbox.infrastructure.Constant.WX_UI_IMAGE_PATH;
+
 @Getter
 @Setter
 @ToString
@@ -31,8 +33,7 @@ public class ActivityDTO {
         this.shownInAd = activity.getShownInAd();
         this.activityStartDate = activity.getActivityStartDate();
         this.activityEndDate = activity.getActivityEndDate();
-        this.mainImgUrl = MAIN_IMG_URL.replace("UUID", this.id);
-        this.contentImgUrl = CONTENT_IMG_URL.replace("UUID", this.id);
-        ;
+        this.mainImgUrl = WX_UI_IMAGE_PATH + activity.getMainImgAddr();
+        this.contentImgUrl = WX_UI_IMAGE_PATH + activity.getContentImgAddr();
     }
 }

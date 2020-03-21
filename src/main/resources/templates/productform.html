@@ -83,26 +83,23 @@
                 </div>
             </div>
 
-
-            <div class="two fields">
-                <div class="inline field required">
-                    <label>产品图</label>
-                    <div th:if="*{id!=null}">
-                        <img class="ui medium circular image"
-                             th:src="'/admin-ui/product/' + *{id} + '/images'">
-                    </div>
-                    <input type="file" name="productImageFile">
+            <div class="inline field required">
+                <label>产品图</label>
+                <div th:if="*{id!=null}">
+                    <img class="ui medium image"
+                         th:src="*{productImage}">
                 </div>
+                <input type="file" name="productImageFile">
+            </div>
 
 
-                <div class="inline field required">
-                    <label>产品海报</label>
-                    <div th:if="*{id!=null}">
-                        <img class="ui small circular image"
-                             th:src="'/admin-ui/product/' + *{id} + '/postcard'">
-                    </div>
-                    <input type="file" name="postCardImageFile">
+            <div class="inline field required">
+                <label>产品海报</label>
+                <div th:if="*{id!=null}">
+                    <img class="ui medium image"
+                         th:src="*{postCardImage}">
                 </div>
+                <input type="file" name="postCardImageFile">
             </div>
             <br/>
             <div class="field required">

@@ -1,7 +1,5 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
-import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
-import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
 import com.github.tuding.blindbox.domain.Role;
 import com.github.tuding.blindbox.domain.Series;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
@@ -110,8 +108,7 @@ public class SeriesRespository {
     public void updateSeries(Series series) {
         if (StringUtils.isNotBlank(series.getReleaseDate())) {
             String updateSql = "UPDATE series_tbl " +
-                    " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ? , seriesImage = ?," +
-                    " matrixHeaderImage = ?, matrixCellImage = ? " +
+                    " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ? " +
                     " WHERE id = ? ";
             int update = jdbcTemplate.update(updateSql,
                     series.getName(),
@@ -119,24 +116,17 @@ public class SeriesRespository {
                     series.getIsNewSeries(),
                     series.getIsPresale(),
                     series.getPrice(),
-                    series.getSeriesImage(),
-                    series.getMatrixHeaderImage(),
-                    series.getMatrixCellImage(),
                     series.getId());
             log.info("update row {} ", update);
         } else {
             String updateSql = "UPDATE series_tbl " +
-                    " SET name = ?, isNewSeries = ?, isPresale = ?, price = ? , seriesImage = ?," +
-                    " matrixHeaderImage = ?, matrixCellImage = ? " +
+                    " SET name = ?, isNewSeries = ?, isPresale = ?, price = ? " +
                     " WHERE id = ? ";
             int update = jdbcTemplate.update(updateSql,
                     series.getName(),
                     series.getIsNewSeries(),
                     series.getIsPresale(),
                     series.getPrice(),
-                    series.getSeriesImage(),
-                    series.getMatrixHeaderImage(),
-                    series.getMatrixCellImage(),
                     series.getId());
             log.info("update row {} ", update);
         }

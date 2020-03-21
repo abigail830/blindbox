@@ -62,7 +62,7 @@
                 <div class="four wide column" th:each="role : ${roles}">
                     <a th:href="@{'/admin-ui/series/?roleID=' + ${role.id}}">
                         <img class="ui medium circular image"
-                             th:src="'/admin-ui/role/' + ${role.id} + '/images'">
+                             th:src="${role.roleImage}">
                     </a>
                     <div class="role-name" th:text="${role.name}"></div>
                     <a title="删除" href="#">

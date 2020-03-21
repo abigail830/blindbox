@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.api.admin.dto;
 
 import com.github.tuding.blindbox.domain.Series;
+import com.github.tuding.blindbox.infrastructure.Constant;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,8 +57,8 @@ public class SeriesDTO {
         this.isNewSeries = series.getIsNewSeries();
         this.isPresale = series.getIsPresale();
         this.price = series.getPrice();
-        this.seriesImage = series.getSeriesImage();
-        this.matrixHeaderImage = series.getMatrixHeaderImage();
-        this.matrixCellImage = series.getMatrixCellImage();
+        this.seriesImage = Constant.ADMIN_UI_IMAGE_PATH + series.getSeriesImage();
+        this.matrixHeaderImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixHeaderImage();
+        this.matrixCellImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixCellImage();
     }
 }

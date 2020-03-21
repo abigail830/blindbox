@@ -77,19 +77,16 @@ public class ActivityRepository {
     public void updateActivity(Activity activity) {
         log.info("Going to update activity_tbl for activity : {}", activity);
 
-        String insertSql = "REPLACE INTO activity_tbl (id, activity_name, activity_description, shown_in_ad, " +
-                "main_img_addr, content_img_addr, activity_start_date, activity_end_date) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        int update = jdbcTemplate.update(insertSql,
-                activity.getId(),
+        String updateSQL = "UPDATE activity_tbl " +
+                " SET activity_name=?, activity_description=?, shown_in_ad=?, activity_start_date=?, activity_end_date=? " +
+                " WHERE id = ?";
+        int update = jdbcTemplate.update(updateSQL,
                 activity.getActivityName(),
                 activity.getActivityDescription(),
                 activity.getShownInAd(),
-                activity.getMainImgAddr(),
-                activity.getContentImgAddr(),
                 activity.getActivityStartDate(),
-                activity.getActivityEndDate()
-        );
+                activity.getActivityEndDate(),
+                activity.getId());
         log.info("update row {} ", update);
     }
 

@@ -94,8 +94,8 @@
                 <div class="inline field required">
                     <label>产品系列图</label>
                     <div th:if="*{id!=null}">
-                        <img class="ui medium circular image"
-                             th:src="'/admin-ui/series/' + *{id} + '/images'">
+                        <img class="ui medium image"
+                             th:src="*{seriesImage}">
                     </div>
                     <input type="file" name="seriesImageFile">
                 </div>
@@ -103,8 +103,8 @@
                 <div class="field required">
                     <label>抽盒页面封面</label>
                     <div th:if="*{id!=null}">
-                        <img class="ui medium circular image"
-                             th:src="'/admin-ui/series/' + *{id} + '/headerimage'">
+                        <img class="ui medium image"
+                             th:src="*{matrixHeaderImage}">
                     </div>
                     <input type="file" name="matrixHeaderImageFile">
                 </div>
@@ -112,8 +112,8 @@
                 <div class="field required">
                     <label>抽盒图</label>
                     <div th:if="*{id!=null}">
-                        <img class="ui medium circular image"
-                             th:src="'/admin-ui/series/' + *{id} + '/cellimage'">
+                        <img class="ui medium image"
+                             th:src="*{matrixCellImage}">
                     </div>
                     <input type="file" name="matrixCellImageFile">
                 </div>

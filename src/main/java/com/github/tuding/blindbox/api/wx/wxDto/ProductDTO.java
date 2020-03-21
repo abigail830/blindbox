@@ -1,9 +1,8 @@
-package com.github.tuding.blindbox.api.admin.dto;
+package com.github.tuding.blindbox.api.wx.wxDto;
 
 import com.github.tuding.blindbox.domain.Product;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -22,24 +21,9 @@ public class ProductDTO {
     BigDecimal probability;
     //Image f
     String productImage;
-    MultipartFile productImageFile;
 
     String postCardImage;
-    MultipartFile postCardImageFile;
 
-    public Product toDomainObject() {
-        Product product = new Product();
-        product.setId(id);
-        product.setSeriesID(seriesID);
-        product.setName(name);
-        product.setIsSpecial(isSpecial);
-        product.setIsPresale(isPresale);
-        product.setStock(stock);
-        product.setProbability(probability);
-        product.setProductImage(productImage);
-        product.setPostCardImage(postCardImage);
-        return product;
-    }
 
     public ProductDTO(Product product) {
         this.id = product.getId();
@@ -49,8 +33,8 @@ public class ProductDTO {
         this.isPresale = product.getIsPresale();
         this.stock = product.getStock();
         this.probability = product.getProbability();
-        this.productImage = Constant.ADMIN_UI_IMAGE_PATH + product.getProductImage();
-        this.postCardImage = Constant.ADMIN_UI_IMAGE_PATH + product.getPostCardImage();
+        this.productImage = Constant.WX_UI_IMAGE_PATH + product.getProductImage();
+        this.postCardImage = Constant.WX_UI_IMAGE_PATH + product.getPostCardImage();
 
     }
 }

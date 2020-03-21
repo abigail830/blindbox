@@ -65,10 +65,10 @@ public class RolesRepository {
 
     public void updateRole(Role role) {
         String insertSql = "UPDATE roles_tbl " +
-                " SET name = ?, category = ?, description = ?,  role_image = ?" +
+                " SET name = ?, category = ?, description = ? " +
                 " WHERE id = ? ";
         int update = jdbcTemplate.update(insertSql, role.getName(), role.getCategory(),
-                role.getDescription(), role.getRoleImage(), role.getId());
+                role.getDescription(), role.getId());
         log.info("update row {} ", update);
     }
 }
