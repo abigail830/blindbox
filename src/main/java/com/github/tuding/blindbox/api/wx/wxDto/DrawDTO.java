@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.api.wx.wxDto;
 
 import com.github.tuding.blindbox.domain.Product;
+import com.github.tuding.blindbox.infrastructure.Constant;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -28,7 +29,7 @@ public class DrawDTO {
         this.seriesID = product.getSeriesID();
         this.name = product.getName();
         this.isSpecial = product.getIsSpecial();
-        this.productImage = product.getProductImage();
-        this.postCardImage = product.getPostCardImage();
+        this.productImage = Constant.WX_UI_IMAGE_PATH + product.getProductImage();
+        this.postCardImage = Constant.WX_UI_IMAGE_PATH + product.getPostCardImage();
     }
 }
