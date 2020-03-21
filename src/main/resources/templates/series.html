@@ -33,6 +33,8 @@
     <div class="twelve wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
+                <a th:href="@{/admin-ui/role/}" class="ui button primary basic theme-text">
+                    <i class="angle left icon"></i>返回角色列表</a>
                 <a th:href="@{'/admin-ui/series/seriesform/?roleId=' + ${role.id}}" class="ui button primary white-text">添加产品系列</a>
             </div>
             <div class="six wide column">
@@ -58,6 +60,7 @@
                     <th>预售</th>
                     <th>售价</th>
                     <th>更多操作</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -77,11 +80,14 @@
                         <a th:href="@{'/admin-ui/series/seriesform/' + ${item.id}}" title="编辑">
                             <i class="edit outline icon"></i>
                         </a>
-                        <a th:href="@{'/admin-ui/product/?seriesId=' + ${item.id}}" title="盲盒编辑">
-                            <i class="bars icon"></i>
-                        </a>
+
                         <a title="删除" href="#">
                             <i class="trash alternate outline icon" th:attr="onclick=|delItem('${item.id}')|"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:href="@{'/admin-ui/product/?seriesId=' + ${item.id}}" class="small ui basic button">
+                            <i class="arrow circle right icon"></i> 编辑产品
                         </a>
                     </td>
                 </tr>

@@ -51,8 +51,8 @@
     <div class="twelve wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
-                <a th:href="@{/admin-ui/series/}" class="ui button primary basic theme-text">
-                    <i class="angle left icon"></i>返回</a>
+                <a th:href="@{'/admin-ui/series/?roleID='+${roleId}}" class="ui button primary basic theme-text">
+                    <i class="angle left icon"></i>返回产品系列列表</a>
             </div>
             <div class="six wide column">
                 <div class="title"><h2>添加产品系列</h2></div>
@@ -73,14 +73,19 @@
                 <input type="text" name="name" th:field="*{name}">
             </div>
 
-
-            <div class="field">
-                <label>发布日期</label>
-                <div class="ui calendar">
-                    <div class="ui input left icon">
-                        <i class="calendar icon"></i>
-                        <input type="date" name="releaseDate" th:field="*{releaseDate}" th:value="*{releaseDate}">
+            <div class="two fields">
+                <div class="field">
+                    <label>发布日期</label>
+                    <div class="ui calendar">
+                        <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            <input type="date" name="releaseDate" th:field="*{releaseDate}" th:value="*{releaseDate}">
+                        </div>
                     </div>
+                </div>
+                <div class="field required">
+                    <label>售价</label>
+                    <input type="number" step="0.01" name="price" th:field="*{price}">
                 </div>
             </div>
 
@@ -99,36 +104,34 @@
                 </div>
             </div>
 
-            <div class="field required">
-                <label>售价</label>
-                <input type="number" step="0.01" name="price" th:field="*{price}">
-            </div>
 
-            <div class="inline field required">
-                <label>产品系列图</label>
-                <div th:if="*{id!=null}">
-                    <img class="ui medium circular image"
-                         th:src="'/admin-ui/series/' + *{id} + '/images'">
+            <div class="three fields">
+                <div class="inline field required">
+                    <label>产品系列图</label>
+                    <div th:if="*{id!=null}">
+                        <img class="ui medium circular image"
+                             th:src="'/admin-ui/series/' + *{id} + '/images'">
+                    </div>
+                    <input type="file" name="seriesImageFile">
                 </div>
-                <input type="file" name="seriesImageFile">
-            </div>
 
-            <div class="field required">
-                <label>抽盒页面封面</label>
-                <div th:if="*{id!=null}">
-                    <img class="ui medium circular image"
-                         th:src="'/admin-ui/series/' + *{id} + '/headerimage'">
+                <div class="field required">
+                    <label>抽盒页面封面</label>
+                    <div th:if="*{id!=null}">
+                        <img class="ui medium circular image"
+                             th:src="'/admin-ui/series/' + *{id} + '/headerimage'">
+                    </div>
+                    <input type="file" name="matrixHeaderImageFile">
                 </div>
-                <input type="file" name="matrixHeaderImageFile">
-            </div>
 
-            <div class="field required">
-                <label>抽盒图</label>
-                <div th:if="*{id!=null}">
-                    <img class="ui medium circular image"
-                         th:src="'/admin-ui/series/' + *{id} + '/cellimage'">
+                <div class="field required">
+                    <label>抽盒图</label>
+                    <div th:if="*{id!=null}">
+                        <img class="ui medium circular image"
+                             th:src="'/admin-ui/series/' + *{id} + '/cellimage'">
+                    </div>
+                    <input type="file" name="matrixCellImageFile">
                 </div>
-                <input type="file" name="matrixCellImageFile">
             </div>
             <button class="ui button">提交</button>
         </form>

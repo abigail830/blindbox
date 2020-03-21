@@ -42,11 +42,11 @@
     <div class="twelve wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
-                <a th:href="@{/admin-ui/product/}" class="ui button primary basic theme-text">
-                    <i class="angle left icon"></i>返回</a>
+                <a th:href="@{'/admin-ui/product/?seriesId='+${seriesId}}" class="ui button primary basic theme-text">
+                    <i class="angle left icon"></i>返回产品列表</a>
             </div>
             <div class="six wide column">
-                <div class="title"><h2>添加产品系列</h2></div>
+                <div class="title"><h2>添加产品</h2></div>
             </div>
         </div>
         <div class="ui divider"></div>

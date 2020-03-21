@@ -55,6 +55,7 @@ public class ProductController {
                              @RequestParam("seriesId") String seriesID) {
         Optional<Series> seriesOptional = seriesRespository.querySeriesByID(seriesID);
         List<Product> products = productRepository.getProductBySeries(seriesOptional.get().getId());
+        model.addAttribute("roleId", seriesOptional.get().getRoleId());
         model.addAttribute("series", new SeriesDTO(seriesOptional.get()));
         model.addAttribute("products", products.stream().map(ProductDTO::new).collect(Collectors.toList()));
         return "product";

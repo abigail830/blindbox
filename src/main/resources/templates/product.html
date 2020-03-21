@@ -34,6 +34,8 @@
     <div class="twelve wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
+                <a th:href="@{'/admin-ui/series/?roleID='+${roleId}}" class="ui button primary basic theme-text">
+                    <i class="angle left icon"></i>返回产品系列列表</a>
                 <a th:href="@{'/admin-ui/product/productform/?seriesId=' + ${series.id}}" class="ui button primary white-text">添加产品</a>
             </div>
             <div class="six wide column">
