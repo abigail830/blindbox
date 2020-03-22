@@ -5,6 +5,8 @@ import com.github.tuding.blindbox.domain.ShippingAddress;
 import com.github.tuding.blindbox.domain.ShippingAddressService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/wx/address")
 @Slf4j
+@Api(value = "地址相关接口", description = "地址相关接口")
 public class WxAddrController {
 
     @Autowired
@@ -26,6 +29,7 @@ public class WxAddrController {
 
     @PostMapping
     @NeedWxVerifyToken
+    @ApiOperation(value = "添加发货地址(需要带token）")
     public void addShippingAddress(HttpServletRequest request,
                                    @RequestBody ShippingAddrDTO shippingAddrDTO) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
@@ -36,6 +40,7 @@ public class WxAddrController {
 
     @PutMapping
     @NeedWxVerifyToken
+    @ApiOperation(value = "修改发货地址(需要带token）")
     public void updateShippingAddress(HttpServletRequest request,
                                       @RequestBody ShippingAddrDTO shippingAddrDTO) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
@@ -46,6 +51,7 @@ public class WxAddrController {
 
     @GetMapping
     @NeedWxVerifyToken
+    @ApiOperation(value = "根据token查询关联发货地址(需要带token）")
     public List<ShippingAddrDTO> getAddressByToken(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return shippingAddressService.getAddressByToken(token).stream()
@@ -54,6 +60,8 @@ public class WxAddrController {
     }
 
     @DeleteMapping("/id/{addrId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "删除发货地址(需要带token）")
     public void deleteAddress(HttpServletRequest request,
                               @PathVariable String addrId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);

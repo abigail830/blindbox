@@ -5,8 +5,10 @@ import com.github.tuding.blindbox.domain.UserService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.util.JsonUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/wx/users")
 @Slf4j
+@Api(value = "用户相关接口", description = "用户相关接口")
 public class WxUserController {
 
     @Autowired
@@ -32,6 +35,7 @@ public class WxUserController {
     @PostMapping("/login")
     @ApiImplicitParam(name = "X-WX-Code", value = "wechat code for get openId", required = true,
             paramType = "header", dataTypeClass = String.class)
+    @ApiOperation(value = "用户微信登陆(不需要带token)")
     public String login(HttpServletRequest request) {
 
         String code = request.getHeader("X-WX-Code");
@@ -45,6 +49,7 @@ public class WxUserController {
 
     @GetMapping("/by-token")
     @NeedWxVerifyToken
+    @ApiOperation(value = "根据Token获取用户信息(需要带token)")
     public User getUserByToken(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return userService.getUserByToken(token);
@@ -56,6 +61,7 @@ public class WxUserController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "encryptedData", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "header", name = "iv", required = true, dataType = "String")})
+    @ApiOperation(value = "获取用户微信授权信息并更新后台数据(需要带token)")
     public void decrypt(HttpServletRequest request) {
         String encryptedData = request.getHeader("encryptedData");
         String iv = request.getHeader("iv");
