@@ -5,4 +5,4 @@ export $(grep -v '^#' env.list | xargs -d '\n')
 
 echo "Starting Service"
 
-nohup /usr/bin/java -jar -Dspring.profiles.active=dev ./blindbox.jar 1 $1 > ./Server.out &
+nohup /usr/bin/java -jar -Dspring.profiles.active=prod ./blindbox.jar 1 $1 > ./Server.out &
