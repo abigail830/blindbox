@@ -1,0 +1,153 @@
+<!--
+ * @Author: seekwe
+ * @Date: 2020-03-11 13:03:12
+ * @Last Modified by:: seekwe
+ * @Last Modified time: 2020-03-17 10:18:21
+ -->
+<template>
+	<view
+		class="page order-view"
+		@touchstart="refreshStart"
+		@touchmove="refreshMove"
+		@touchend="refreshEnd"
+	>
+		<zRefresh ref="refresh" @isRefresh="isRefresh" />
+		<zTab
+			:tabList="tabList"
+			:scrollX="false"
+			:textFlex="true"
+			:tabIndex.sync="tabIndex"
+			@change="changeTab"
+			tabClass="tab-class"
+		/>
+		<swiper
+			class="order-list-view"
+			:skip-hidden-item-layout="true"
+			@change="changeTabBox"
+			:current="tabIndex"
+		>
+			<swiper-item class="order-list-box">
+				<scroll-view
+					style="height: 100%;"
+					scroll-y="true"
+					@scrolltolower="getMore"
+					scroll-with-animation
+					enable-back-to-top
+					:scroll-into-view="toView"
+				>
+					<view :id="'i'+k" class="order-list-item" v-for="(v,k) in orderList" :key="k">
+						<img mode="widthFix" class="order-image" :src="v.image" />
+						<view class="order-right">
+							<view class="order-title one-text">{{v.title}}</view>
+							<view>下单时间</view>
+						</view>
+						<zIcon type="arrowright" />
+					</view>
+				</scroll-view>
+			</swiper-item>
+
+			<swiper-item class="order-list-box">222</swiper-item>
+		</swiper>
+	</view>
+</template>
+
+<script>
+import zTab from '@/components/layout/zTab';
+import zIcon from '@/components/zIcon/zIcon';
+import zRefresh from '@/components/layout/zRefresh';
+import { $util } from '@/common/util';
+export default {
+	components: { zTab, zIcon, zRefresh },
+	data() {
+		return {
+			toView: '',
+			tabIndex: 0,
+			tabList: [
+				{
+					name: '订单'
+				},
+				{
+					name: '预约产品'
+				}
+			],
+			orderList: [
+				{
+					image: 'https://s2.ax1x.com/2020/03/01/3gaFg0.jpg',
+					title:
+						'活动大标题活动大标题活动大标题活动大标题活动大标题活动大标题活动大标题活动大标题活动大标题'
+				}
+			],
+			makeList: []
+		};
+	},
+	computed: {
+		height() {
+			return '300rpx';
+		}
+	},
+	mounted() {
+		console.log(this.$systems);
+		console.log(this.$to.px2rpx(414));
+		console.log(this.$to.rpx2px(750));
+
+		for (let index = 0; index < 10; index++) {
+			this.orderList.push({
+				image: 'https://s2.ax1x.com/2020/03/01/3gaFg0.jpg',
+				title:
+					'活动大标题活动大标题活动大标题活动大标题活动大标题活动大标题活动大标题活动大标题活动大标题'
+			});
+		}
+	},
+	methods: {
+		refreshStart(e) {
+			this.$refs.refresh.refreshStart(e);
+		},
+		refreshMove(e) {
+			this.$refs.refresh.refreshMove(e);
+		},
+		refreshEnd(e) {
+			this.$refs.refresh.refreshEnd(e);
+		},
+		isRefresh() {
+			setTimeout(() => {
+				uni.showToast({
+					icon: 'success',
+					title: '刷新成功'
+				});
+				this.$refs.refresh.endAfter();
+			}, 1000);
+		},
+		getMore: $util.throttle(function(e) {
+			let hide = this.$loading('加载中');
+
+			setTimeout(_ => {
+				this.orderList.push({
+					image: 'https://s2.ax1x.com/2020/03/01/3gaFg0.jpg',
+					title: '活动大标题活动'
+				});
+				this.orderList.push({
+					image: 'https://s2.ax1x.com/2020/03/01/3gaFg0.jpg',
+					title: '活动大标题活动'
+				});
+				this.orderList.push({
+					image: 'https://s2.ax1x.com/2020/03/01/3gaFg0.jpg',
+					title: '活动大标题活动'
+				});
+				setTimeout(_ => {
+					hide();
+				}, 500);
+				this.$alert('加载完成');
+			}, 1000);
+		}, 800),
+		changeTabBox({ detail }) {
+			this.tabIndex = detail.current;
+		},
+		changeTab(v) {}
+	}
+};
+</script>
+
+
+<style lang="less">
+@import './order.less';
+</style>

@@ -1,0 +1,58 @@
+/*
+ * @Author: seekwe
+ * @Date:   2020-03-10 14:24:09
+ * @Last Modified by:   seekwe
+ * @Last Modified time: 2020-03-10 20:43:41
+ */
+.aon {
+  position: absolute;
+  display: flex;
+  white-space: nowrap;
+  animation-timing-function: linear;
+  animation-fill-mode: none;
+  @background-color: rgba(61, 61, 61, 0.6);
+  // @background-color: #fff;
+  @height: 60rpx;
+  height: @height;
+  min-width: 60rpx;
+  line-height: @height;
+  box-sizing: border-box;
+  font-size: 22.22rpx;
+  .aon-text {
+    display: block;
+    padding: 0 20rpx;
+    color: #fff;
+    background-color: @background-color;
+  }
+  &::after,
+  &::before {
+    content: '';
+    width: 0;
+    border-width: @height / 2 @height / 4;
+    border-style: solid;
+  }
+  &::after {
+    border-color: transparent transparent transparent @background-color;
+    margin-right: @height;
+  }
+  &::before {
+    border-color: transparent @background-color transparent transparent;
+    margin-left: @height;
+  }
+}
+.zbarrage-view {
+  z-index: 3;
+  height: 80%;
+  width: 100%;
+  touch-action: none;
+  pointer-events: none;
+}
+
+@keyframes first {
+  from {
+    transform: translateX(750rpx);
+  }
+  to {
+    transform: translateX(-750rpx);
+  }
+}

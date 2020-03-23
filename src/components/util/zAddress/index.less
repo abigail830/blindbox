@@ -1,0 +1,147 @@
+/*
+ * @Author: seekwe
+ * @Date:   2020-03-11 11:01:41
+ * @Last Modified by:   seekwe
+ * @Last Modified time: 2020-03-11 11:13:45
+ */
+@import '../../../common/var.less';
+.z-address {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: column;
+}
+
+.z-address-mask {
+  position: fixed;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  transition-property: opacity;
+  transition-duration: 0.3s;
+  opacity: 0;
+  /* #ifndef APP-NVUE */
+  z-index: 99;
+  /* #endif */
+}
+
+.mask-ani {
+  transition-property: opacity;
+  transition-duration: 0.2s;
+}
+
+.simple-bottom-mask {
+  opacity: 1;
+}
+
+.simple-center-mask {
+  opacity: 1;
+}
+
+.z-address-fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition-property: transform;
+  transition-duration: 0.3s;
+  transform: translateY(460rpx);
+  /* #ifndef APP-NVUE */
+  z-index: 99;
+  /* #endif */
+}
+
+.z-address-content {
+  background-color: #ffffff;
+}
+
+.simple-content-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(500rpx);
+}
+
+.content-ani {
+  transition-property: transform, opacity;
+  transition-duration: 0.2s;
+}
+
+.simple-bottom-content {
+  transform: translateY(0);
+}
+
+.simple-center-content {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.z-address_header {
+  position: relative;
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  border-bottom-color: #f2f2f2;
+  border-bottom-style: solid;
+  border-bottom-width: 1rpx;
+}
+
+.z-address-fixed-top {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: row;
+  justify-content: space-between;
+  border-top-color: @lightGreyPageBackground;
+  border-top-style: solid;
+  border-top-width: 1px;
+}
+
+.z-address_header-btn-box {
+  /* #ifndef APP-NVUE */
+  display: flex;
+  /* #endif */
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 70rpx;
+}
+
+.z-address_header-text {
+  text-align: center;
+  font-size: 30rpx;
+  color: @themeColor;
+  line-height: 70rpx;
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+}
+
+.z-address_box {
+  position: relative;
+}
+
+.z-address-view {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  /* #ifndef APP-NVUE */
+  width: 100%;
+  /* #endif */
+  /* #ifdef APP-NVUE */
+  width: 750rpx;
+  /* #endif */
+  height: 408rpx;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.picker-item {
+  text-align: center;
+  line-height: 70rpx;
+  text-overflow: ellipsis;
+  font-size: 28rpx;
+}

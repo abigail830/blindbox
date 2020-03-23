@@ -1,0 +1,159 @@
+/** 
+ * @Author: seekwe
+ * @Date: 2020-03-10 16:38:24
+ * @Last Modified by:: seekwe
+ * @Last Modified time: 2020-03-17 21:18:33
+ */
+@import '../../common/var.less';
+
+.page-me {
+  font-size: 36rpx;
+}
+.header {
+  height: 524rpx;
+  background-color: @themeColor;
+  position: relative;
+  padding: 50rpx;
+  margin-bottom: 26rpx;
+  box-shadow: 1px 1px 5px @lightGreyColor;
+  .username {
+    display: flex;
+  }
+  .username-box {
+    flex: 1;
+    padding: 30rpx;
+    .nickname {
+      font-size: 33.3rpx;
+    }
+    .userid {
+      font-size: 20rpx;
+    }
+  }
+  .avatar {
+    width: 150rpx;
+    height: 150rpx;
+    border-radius: 100%;
+    background-color: #fff;
+    padding: 0;
+  }
+  .service-image {
+    margin-top: 30rpx;
+    width: 65rpx;
+    height: 58rpx;
+  }
+  .integral {
+    display: flex;
+    text-align: right;
+    flex-direction: column;
+    .integral-title {
+      font-size: 26.4rpx;
+    }
+    .integral-value {
+      font-size: 56rpx;
+    }
+  }
+
+  .header-list {
+    .page-list-item {
+      color: #fff;
+      .page-list-icon {
+        width: 30rpx;
+        float: left;
+        margin-right: 20rpx;
+      }
+      .order-icon {
+        width: 30rpx;
+        height: 36rpx;
+      }
+      .lbs-icon {
+        width: 28rpx;
+        height: 36rpx;
+      }
+      &::after {
+        background-color: #fff;
+        right: 0;
+      }
+      .page-list-item-arrow {
+        color: #fff;
+      }
+    }
+  }
+}
+
+.login-btn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 200rpx;
+  margin: auto;
+  width: 300rpx;
+  border-radius: @radius;
+}
+
+.page-me-list {
+  display: flex;
+  color: @fontColor;
+  position: relative;
+  padding-left: 72rpx;
+  box-shadow: 0px 0px 5px @lightGreyColor;
+  flex-direction: column;
+}
+.page-list-item {
+  @height: 90rpx;
+  box-sizing: border-box;
+  padding: 0 20rpx;
+  height: @height;
+  line-height: @height;
+  position: relative;
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    background-color: @lightGreyColor;
+  }
+  .page-list-item_right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    line-height: @height - 5rpx;
+    height: @height;
+    width: @height*1.5;
+  }
+  .page-list-item-arrow {
+    color: @lightGreyColor;
+    .arrow(50rpx);
+  }
+}
+
+.help-view {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  background: @lightGreyBackground;
+}
+.help-box {
+  margin: 10vh auto 0;
+  width: 750rpx - (96rpx * 2);
+  background-color: #fff;
+  height: 70vh;
+  padding: 66rpx;
+  box-sizing: border-box;
+  border-radius: @radius;
+  .help-title {
+    text-align: center;
+    font-size: 36rpx;
+    color: #000;
+    margin-bottom: 30rpx;
+  }
+  .help-center {
+    color: @fontColor;
+    height: 50vh;
+    font-size: 26rpx;
+  }
+  .close-icon();
+}

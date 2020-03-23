@@ -1,0 +1,115 @@
+/** 
+ * @Author: seekwe
+ * @Date: 2020-03-11 18:20:31
+ * @Last Modified by:: seekwe
+ * @Last Modified time: 2020-03-18 16:34:01
+ */
+@import '../../../common/var.less';
+.z-category-list-view-box {
+  //   display: flex;
+  //   align-items: stretch;
+  color: @fontColor;
+  text-align: center;
+}
+@leftWidth: 206rpx;
+.z-category-list-left {
+  background-color: @lightGreyPageBackground;
+  width: @leftWidth;
+  background-color: #f6f6f6;
+  line-height: 80rpx;
+  box-sizing: border-box;
+  font-size: 23.6rpx;
+  display: inline-block;
+  .item-box {
+    // padding-left: 20rpx;
+    position: relative;
+    &:not(:first-child) {
+      margin-top: 1px;
+      &::after {
+        content: '';
+        display: block;
+        height: 0;
+        border-top: #d6d6d6 solid 1px;
+        width: 620upx;
+        position: absolute;
+        top: -1px;
+        right: 0;
+        transform: scaleY(0.5); /* 1px像素 */
+      }
+    }
+
+    &.active {
+      background-color: #fff;
+    }
+  }
+}
+.z-category-list-main {
+  width: 750rpx - @leftWidth;
+  display: inline-block;
+  .main-box {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 50rpx;
+    justify-content: space-between;
+    justify-content: space-around;
+    box-sizing: border-box;
+  }
+  .cover-box {
+    @width: 150rpx;
+    margin-bottom: 33rpx;
+    width: @width;
+    .cover-image {
+      height: 192rpx;
+      width: @width;
+      border-radius: 10rpx;
+    }
+    .cover-title {
+      font-size: 20rpx;
+    }
+  }
+}
+.z-category-tools {
+  position: sticky;
+  bottom: 50rpx;
+  text-align: center;
+  .poster-btn {
+    background-color: @themeColor;
+    width: 100rpx;
+    height: 100rpx;
+    color: #fff;
+    font-size: 28rpx;
+    padding: 8rpx 20rpx;
+    box-sizing: border-box;
+    display: inline-block;
+    border-radius: 100%;
+  }
+}
+
+.poster-image-block {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 100;
+  bottom: 0;
+  background-color: @lightGreyBackground;
+  left: 0;
+  .poster-image {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 600rpx;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 400rpx;
+  }
+}
+
+// canvas {
+//   position: fixed;
+//   bottom: 0;
+//   pointer-events: none;
+//   left: 0;
+//   width: 300rpx;
+//   height: 600rpx;
+// }

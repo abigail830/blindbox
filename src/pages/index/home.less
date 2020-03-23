@@ -1,0 +1,81 @@
+/** 
+ * @Author: seekwe
+ * @Date: 2020-03-09 22:14:55
+ * @Last Modified by:: seekwe
+ * @Last Modified time: 2020-03-17 21:29:10
+ */
+
+@import '../../common/var.less';
+
+.home-page {
+  background-color: @themeColor;
+}
+.header {
+  position: relative;
+  overflow: hidden;
+  padding-top: @paadingSize;
+}
+.banner {
+  @bannerW: @boxWidth;
+  @bannerH: 348rpx;
+  width: @bannerW;
+  height: @bannerH;
+  margin: 0 auto @paadingSize;
+  background-color: #383838;
+  .radius();
+  .banner-image {
+    width: @bannerW;
+    height: @bannerH;
+    overflow: hidden;
+    border-radius: @radius;
+  }
+}
+
+.tabs {
+  @padding: 10rpx;
+  @line-height: 100rpx - (@padding*2);
+  display: flex;
+  padding: @padding;
+  box-sizing: border-box;
+  align-items: center;
+  margin: 0 auto @paadingSize;
+  width: @boxWidth;
+  background-color: #fff;
+  position: sticky;
+  z-index: 1;
+  height: 108rpx;
+  top: @padding;
+  box-shadow: 1rpx 2rpx 3rpx #ccc;
+  .radius();
+  .tab-separate {
+    background-color: #aab2ac;
+    width: 1px;
+    height: @line-height - (@padding*2);
+  }
+  .tab {
+    text-align: center;
+    flex: 1;
+    font-size: 29rpx;
+    color: #7b7b7b;
+    .tab-icon {
+      display: none;
+    }
+    &.tab_on {
+      font-weight: bold;
+      font-size: 32rpx;
+      color: #000;
+      .tab-icon {
+        font-size: 16rpx;
+        line-height: 12rpx;
+        display: block;
+        color: #eb5435;
+      }
+    }
+  }
+}
+.series {
+  .seriesBlock();
+}
+.items {
+  .itemsBlock();
+}

@@ -1,1 +1,6 @@
+node_modules/
+dist
 .DS_Store
+小程序页面 - PSD/
+psd/
+.vscode/

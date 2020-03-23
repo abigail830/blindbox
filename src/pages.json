@@ -1,0 +1,140 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/home",
+      "style": {
+        "navigationBarTitleText": "抽盒",
+        "enablePullDownRefresh": true,
+        "disableScroll": false,
+        "onReachBottomDistance": 100
+      }
+    },
+    {
+      "path": "pages/user/me",
+      "style": {
+        "navigationBarTitleText": "我的"
+      }
+    },
+    {
+      "path": "pages/util/poster",
+      "style": {
+        "navigationBarTextStyle": "white",
+        "navigationBarBackgroundColor": "#f7b52c",
+        "navigationBarTitleText": "海报"
+      }
+    },
+    {
+      "path": "pages/user/login",
+      "style": {
+        "navigationBarTitleText": "授权登录",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/activity/activity",
+      "style": {
+        "navigationBarTitleText": "活动",
+        "enablePullDownRefresh": true,
+        "disableScroll": false,
+        "onReachBottomDistance": 100
+      }
+    },
+    {
+      "path": "pages/activity/info",
+      "style": {
+        "navigationBarTitleText": "活动详情"
+      }
+    },
+    {
+      "path": "pages/lottery/lucky",
+      "style": {
+        "navigationBarTitleText": "手气"
+      }
+    },
+    {
+      "path": "pages/lottery/wobble",
+      "style": {
+        "navigationBarTitleText": "摇晃"
+      }
+    },
+    {
+      "path": "pages/ranking/ranking",
+      "style": {
+        "navigationBarTitleText": "名人堂",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/user/address",
+      "style": {
+        "navigationBarTitleText": "收货地址"
+      }
+    },
+    {
+      "path": "pages/user/address-edit",
+      "style": {
+        "navigationBarTitleText": "地址编辑"
+      }
+    },
+    {
+      "path": "pages/user/order",
+      "style": {
+        "navigationBarTitleText": "订单",
+        "enablePullDownRefresh": true,
+        "onReachBottomDistance": 100
+      }
+    },
+    {
+      "path": "pages/index/info",
+      "style": {
+        "navigationBarTitleText": "详情"
+      }
+    },
+    {
+      "path": "pages/index/buy"
+    }
+  ],
+  "tabBar": {
+    "color": "#595F6C",
+    "selectedColor": "#2a3244",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/home",
+        "iconPath": "static/1.png",
+        "selectedIconPath": "static/1-on.png",
+        "text": "抽盒"
+      },
+      {
+        "pagePath": "pages/ranking/ranking",
+        "iconPath": "static/2.png",
+        "selectedIconPath": "static/2-on.png",
+        "text": "名人堂"
+      },
+      {
+        "pagePath": "pages/activity/activity",
+        "iconPath": "static/3.png",
+        "selectedIconPath": "static/3-on.png",
+        "text": "活动"
+      },
+      {
+        "pagePath": "pages/user/me",
+        "iconPath": "static/4.png",
+        "selectedIconPath": "static/4-on.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "globalStyle": {
+    // #ifndef MP-WEIXIN
+    "navigationStyle": "custom",
+    // #endif
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "App",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8",
+    "h5": {},
+    "app-plus": {}
+  }
+}

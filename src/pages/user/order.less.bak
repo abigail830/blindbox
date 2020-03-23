@@ -1,0 +1,85 @@
+/*
+ * @Author: seekwe
+ * @Date:   2020-03-01 22:15:19
+ * @Last Modified by:   seekwe
+ * @Last Modified time: 2020-03-02 14:13:25
+ */
+.order-view {
+  padding-top: 40rpx;
+}
+@margin-lr: 40rpx;
+@width: 750rpx - @margin-lr*2;
+@border-radius: 10px;
+@tab-height: 120rpx;
+.tab-class {
+  @bg-color: #f8b52c;
+  width: auto;
+  margin: 0 @margin-lr 0;
+  .z-tab-item-view {
+    justify-content: space-between;
+    height: @tab-height;
+  }
+  .z-tab-item {
+    margin: 0;
+    background-color: @bg-color;
+    color: #fff;
+    font-size: 34rpx;
+    border-radius: @border-radius;
+    &:last-child {
+      margin-left: 20rpx;
+    }
+    &:first-child {
+      margin-right: 20rpx;
+    }
+  }
+  .z-tab-item.on {
+    border: 0;
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      bottom: -32rpx;
+      border-width: 20rpx 30rpx;
+      border-style: solid;
+      border-color: @bg-color transparent transparent;
+    }
+  }
+}
+
+.order-list-view {
+  margin: 0rpx @margin-lr;
+
+  border-radius: @border-radius;
+  min-height: calc(100vh - @tab-height - (@margin-lr*2));
+}
+.order-list-box {
+  padding: 15rpx;
+  box-sizing: border-box;
+  background-color: #dedde2;
+  border-radius: @border-radius;
+}
+.order-list-item {
+  display: flex;
+  padding: 20rpx;
+  background-color: #fff;
+  border-radius: @border-radius;
+  position: relative;
+  margin-bottom: 20rpx;
+}
+
+.order-image {
+  width: 200rpx;
+  height: 100rpx;
+  margin-right: 30rpx;
+}
+
+.order-right {
+  width: @width - 280rpx;
+}
+
+.order-title {
+}

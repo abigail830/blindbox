@@ -1,0 +1,14 @@
+/**
+ * @Author: seekwe
+ * @Date:   2020-03-03 13:48:50
+ * @Last Modified by:   seekwe
+ * @Last Modified time: 2020-03-03 14:32:37
+ */
+function touchstart(e, ins) {
+  let instance = ins.selectComponent('.z-refresh-view');
+}
+function touchmove(e, ins) {}
+module.exports = {
+  touchstart: touchstart,
+  touchmove: touchmove
+};

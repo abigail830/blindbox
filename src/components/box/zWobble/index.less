@@ -1,0 +1,105 @@
+/** 
+ * @Author: seekwe
+ * @Date: 2020-03-10 10:16:31
+ * @Last Modified by:: seekwe
+ * @Last Modified time: 2020-03-23 08:44:56
+ */
+.z-wobble-box {
+  position: relative;
+  @width: 300rpx;
+  @height: 500rpx;
+  .z-wobble-card {
+    @color: rgba(255, 255, 0, 0.212);
+    &::before {
+      transition: transform 2s;
+      transform: scale(0);
+      transform-origin: center top;
+      content: '';
+      top: 0;
+      margin: auto;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      position: absolute;
+      width: @width;
+      height: @height;
+      background-color: @color;
+    }
+    &::after {
+      transition: opacity 1s;
+      content: '';
+      top: 0;
+      opacity: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      border-radius: 100%;
+      width: 400rpx;
+      height: 500rpx;
+      background-color: @color;
+      position: absolute;
+      box-shadow: 3px 30px 30px @color, -3px -30px 30px @color;
+    }
+    &.on {
+      &::before {
+        transform: scale(1);
+      }
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+  .z-wobble-image-box {
+    position: relative;
+    text-align: center;
+    margin-bottom: 50rpx;
+    transition: transform 0.35s;
+    transform: scale(1);
+    opacity: 1;
+    transform-origin: center top;
+    &.out {
+      opacity: 0.1;
+      transform: scale(0);
+    }
+    .z-wobble-image {
+      width: @width;
+      height: @height;
+      transform-origin: center bottom;
+      &.on {
+        animation: rock 0.2s 0s ease-in infinite;
+      }
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 10rpx;
+      left: 0;
+      width: 500rpx;
+      right: 0;
+      margin: auto;
+      border-radius: 100%;
+      filter: blur(18rpx);
+      background-color: #deddeb;
+      height: 120rpx;
+      z-index: -1;
+    }
+  }
+}
+@keyframes rock {
+  0% {
+    transform: rotate(5deg);
+  }
+
+  25% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(5deg);
+  }
+}
