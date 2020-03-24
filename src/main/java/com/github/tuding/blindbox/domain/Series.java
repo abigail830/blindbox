@@ -27,4 +27,8 @@ public class Series {
 
     //image e
     String matrixCellImage;
+
+    Integer columnSize;
+    String longImage;
+
 }

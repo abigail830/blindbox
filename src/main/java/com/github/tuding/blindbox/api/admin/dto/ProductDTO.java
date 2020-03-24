@@ -27,6 +27,9 @@ public class ProductDTO {
     String postCardImage;
     MultipartFile postCardImageFile;
 
+    String productGrayImage;
+    MultipartFile productGrayImageFile;
+
     public Product toDomainObject() {
         Product product = new Product();
         product.setId(id);
@@ -38,6 +41,7 @@ public class ProductDTO {
         product.setProbability(probability);
         product.setProductImage(productImage);
         product.setPostCardImage(postCardImage);
+        product.setProductGrayImage(productGrayImage);
         return product;
     }
 
@@ -51,6 +55,7 @@ public class ProductDTO {
         this.probability = product.getProbability();
         this.productImage = Constant.ADMIN_UI_IMAGE_PATH + product.getProductImage();
         this.postCardImage = Constant.ADMIN_UI_IMAGE_PATH + product.getPostCardImage();
+        this.productGrayImage = Constant.ADMIN_UI_IMAGE_PATH + product.getProductGrayImage();
 
     }
 }

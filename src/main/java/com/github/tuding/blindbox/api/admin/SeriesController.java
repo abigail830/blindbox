@@ -21,14 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -114,6 +112,12 @@ public class SeriesController {
                     String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
                     seriesDTO.setMatrixCellImage(image);
                 }
+
+                if (seriesDTO.getLongImageFile().getSize() > 0) {
+                    String image = imageRepository.saveImage(seriesDTO.getId() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
+                    seriesDTO.setLongImage(image);
+                }
+
                 seriesDTO.setRoleId(roleId);
                 seriesRespository.updateSeries(seriesDTO.toDomainObject());
 
@@ -129,6 +133,8 @@ public class SeriesController {
                 seriesDTO.setMatrixHeaderImage(image);
                 image = imageRepository.saveImage(seriesID.toString() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
                 seriesDTO.setMatrixCellImage(image);
+                image = imageRepository.saveImage(seriesID.toString() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
+                seriesDTO.setLongImage(image);
                 seriesDTO.setId(seriesID.toString());
                 seriesDTO.setRoleId(roleId);
                 seriesRespository.createSeries(seriesDTO.toDomainObject());

@@ -92,6 +92,14 @@
                 <input type="file" name="productImageFile">
             </div>
 
+            <div class="inline field required">
+                <label>产品图(灰图)</label>
+                <div th:if="*{id!=null}">
+                    <img class="ui medium image"
+                         th:src="*{productGrayImage}">
+                </div>
+                <input type="file" name="productGrayImageFile">
+            </div>
 
             <div class="inline field required">
                 <label>产品海报</label>
@@ -101,6 +109,8 @@
                 </div>
                 <input type="file" name="postCardImageFile">
             </div>
+
+
             <br/>
             <div class="field required">
                 <div class="ui checkbox">

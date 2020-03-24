@@ -29,6 +29,9 @@ public class SeriesDTO {
     //image e
     String matrixCellImage;
 
+    Integer columnSize;
+    String longImage;
+
     public SeriesDTO (Series series) {
         this.id = series.getId();
         this.roleId = series.getRoleId();
@@ -37,8 +40,10 @@ public class SeriesDTO {
         this.isNewSeries = series.getIsNewSeries();
         this.isPresale = series.getIsPresale();
         this.price = series.getPrice();
+        this.columnSize = series.getColumnSize();
         this.seriesImage = Constant.WX_UI_IMAGE_PATH + series.getSeriesImage();
         this.matrixHeaderImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixHeaderImage();
         this.matrixCellImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixCellImage();
+        this.longImage = Constant.WX_UI_IMAGE_PATH + series.getLongImage();
     }
 }

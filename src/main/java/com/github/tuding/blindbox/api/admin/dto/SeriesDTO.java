@@ -34,6 +34,11 @@ public class SeriesDTO {
     String matrixCellImage;
     MultipartFile matrixCellImageFile;
 
+    Integer columnSize;
+
+    String longImage;
+    MultipartFile longImageFile;
+
     public Series toDomainObject() {
         Series series = new Series();
         series.setId(id);
@@ -46,6 +51,8 @@ public class SeriesDTO {
         series.setSeriesImage(seriesImage);
         series.setMatrixHeaderImage(matrixHeaderImage);
         series.setMatrixCellImage(matrixCellImage);
+        series.setColumnSize(columnSize);
+        series.setLongImage(longImage);
         return series;
     }
 
@@ -57,8 +64,10 @@ public class SeriesDTO {
         this.isNewSeries = series.getIsNewSeries();
         this.isPresale = series.getIsPresale();
         this.price = series.getPrice();
+        this.columnSize = series.getColumnSize();
         this.seriesImage = Constant.ADMIN_UI_IMAGE_PATH + series.getSeriesImage();
         this.matrixHeaderImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixHeaderImage();
         this.matrixCellImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixCellImage();
+        this.longImage = Constant.ADMIN_UI_IMAGE_PATH + series.getLongImage();
     }
 }

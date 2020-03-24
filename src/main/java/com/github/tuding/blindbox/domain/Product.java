@@ -21,4 +21,6 @@ public class Product {
     String productImage;
 
     String postCardImage;
+
+    String productGrayImage;
 }

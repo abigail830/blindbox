@@ -60,13 +60,17 @@ public class ProductionCreationTest {
                 "testSeries", "2020-03-13", false, false, BigDecimal.valueOf(25.5),
                 "/app/data/series/testSeries.png",
                 "/app/data/series/header/testSeries.png",
-                "/app/data/series/cell/testSeries.png"));
+                "/app/data/series/cell/testSeries.png",
+                3,
+                "/app/data/series/cell/longImage.png"));
 
         seriesRespository.createSeries(new Series("seriesid2", rolesRepository.queryRolesByName("testRole1").get().getId(),
                 "testSeries2", "2020-03-13", false, false, BigDecimal.valueOf(30),
                 "/app/data/series/testSeries2.png",
                 "/app/data/series/header/testSeries2.png",
-                "/app/data/series/cell/testSeries2.png"));
+                "/app/data/series/cell/testSeries2.png",
+                3,
+                "/app/data/series/cell/longImage.png"));
         assertTrue(seriesRespository.querySeriesByName("testSeries").isPresent());
 
         //product
@@ -76,7 +80,8 @@ public class ProductionCreationTest {
                 200L,
                 BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product1.png",
-                "/app/data/product/postcard/product1.png"));
+                "/app/data/product/postcard/product1.png",
+                "/app/data/product/postcard/grayproduct1.png"));
 
         productRepository.createProduct(new Product("productid2",
                 seriesRespository.querySeriesByName("testSeries").get().getId(),
@@ -84,7 +89,9 @@ public class ProductionCreationTest {
                 200L,
                 BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product2.png",
-                "/app/data/product/postcard/product2.png"));
+                "/app/data/product/postcard/product2.png",
+                "/app/data/product/postcard/grayproduct2.png"
+                ));
 
 
         productRepository.createProduct(new Product("productid3", seriesRespository.querySeriesByName("testSeries").get().getId(),
@@ -92,7 +99,8 @@ public class ProductionCreationTest {
                 10L,
                 BigDecimal.valueOf(0.01),
                 "/app/data/product/image/product3.png",
-                "/app/data/product/postcard/product3.png"));
+                "/app/data/product/postcard/product3.png",
+                "/app/data/product/postcard/grayproduct3.png"));
 
         assertTrue(productRepository.getProductByID("productid1").isPresent());
         assertTrue(productRepository.getProductByID("productid2").isPresent());

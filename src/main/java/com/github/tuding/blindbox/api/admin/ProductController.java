@@ -102,6 +102,10 @@ public class ProductController {
                     String image = imageRepository.saveImage(productDTO.getId() + "postcard", ImageCategory.PRODUCT, productDTO.getPostCardImageFile());
                     productDTO.setPostCardImage(image);
                 }
+                if (productDTO.getProductGrayImageFile().getSize() > 0) {
+                    String image = imageRepository.saveImage(productDTO.getId() + "gray", ImageCategory.PRODUCT, productDTO.getProductGrayImageFile());
+                    productDTO.setProductGrayImage(image);
+                }
                 productRepository.updateProduct(productDTO.toDomainObject());
                 return new RedirectView("/admin-ui/product/?seriesId=" + seriesOptional.get().getId());
             } else {
@@ -112,6 +116,8 @@ public class ProductController {
                 productDTO.setProductImage(image);
                 image = imageRepository.saveImage(productID.toString() + "postcard", ImageCategory.PRODUCT, productDTO.getPostCardImageFile());
                 productDTO.setPostCardImage(image);
+                image = imageRepository.saveImage(productDTO.getId() + "gray", ImageCategory.PRODUCT, productDTO.getProductGrayImageFile());
+                productDTO.setProductGrayImage(image);
 
                 productDTO.setId(productID.toString());
                 productDTO.setSeriesID(seriesID);

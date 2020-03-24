@@ -28,19 +28,19 @@ public class ProductRepository {
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO product_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
-                    " probability, productImage, postCardImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " probability, productImage, postCardImage, productGrayImage) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
                     product.getIsSpecial(), product.getIsPresale(), product.getStock(), product.getProbability(),
-                    product.getProductImage(), product.getPostCardImage());
+                    product.getProductImage(), product.getPostCardImage(), product.getProductGrayImage());
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO product_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
-                    " probability, productImage, postCardImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " probability, productImage, postCardImage, productGrayImage) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
                     product.getIsSpecial(), product.getIsPresale(), product.getStock(), product.getProbability(),
-                    product.getProductImage(), product.getPostCardImage());
+                    product.getProductImage(), product.getPostCardImage(), product.getProductGrayImage());
             log.info("update row {} ", update);
         }
     }
