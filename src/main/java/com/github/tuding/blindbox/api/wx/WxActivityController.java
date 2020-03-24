@@ -31,4 +31,14 @@ public class WxActivityController {
                 .map(ActivityDTO::new)
                 .collect(Collectors.toList());
     }
+
+    @GetMapping("/all")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "获取所有活动信息，已按活动开始日期排序(需要带token）")
+    public List<ActivityDTO> getAllActivity() {
+        return activityService.getAllActivities().stream()
+                .map(ActivityDTO::new)
+                .collect(Collectors.toList());
+    }
+
 }
