@@ -21,7 +21,6 @@ public class ActivityDTO {
     Timestamp activityEndDate;
     Timestamp lastUpdateTime;
     String mainImgUrl;
-    String contentImgUrl;
 
     public ActivityDTO(Activity activity) {
         this.id = activity.getId();
@@ -31,6 +30,5 @@ public class ActivityDTO {
         this.activityStartDate = activity.getActivityStartDate();
         this.activityEndDate = activity.getActivityEndDate();
         this.mainImgUrl = Constant.WX_UI_IMAGE_PATH + activity.getMainImgAddr();
-        this.contentImgUrl = Constant.WX_UI_IMAGE_PATH + activity.getContentImgAddr();
     }
 }

@@ -123,19 +123,5 @@ public class ActivityController {
         }
     }
 
-    @GetMapping("/id/{id}/contentImg")
-    public ResponseEntity<Resource> getContentImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<Activity> activity = activityService.getActivityById(id);
-        if (activity.isPresent()) {
-            File file = new File(activity.get().getContentImgAddr());
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            return ResponseEntity.ok()
-                    .contentLength(file.length())
-                    .contentType(MediaType.parseMediaType("image/png"))
-                    .body(resource);
-        } else {
-            throw new ActivityImgNotFoundException();
-        }
-    }
 
 }

@@ -18,13 +18,11 @@ public class ActivityFormDTO {
     String name;
     String description;
     MultipartFile mainImg;
-    MultipartFile contentImg;
     Boolean shownInAd;
     Date activityStartDate;
     Date activityEndDate;
 
     String mainImgAddr;
-    String contentImgAddr;
 
     Boolean readOnly;
     String title;
@@ -43,7 +41,6 @@ public class ActivityFormDTO {
         this.description = activity.getActivityDescription();
         this.shownInAd = activity.getShownInAd();
         this.mainImgAddr = Constant.ADMIN_UI_IMAGE_PATH + activity.getMainImgAddr();
-        this.contentImgAddr = Constant.ADMIN_UI_IMAGE_PATH + activity.getContentImgAddr();
 
         if (activity.getActivityStartDate() != null)
             this.activityStartDate = new Date(activity.getActivityStartDate().getTime());
@@ -57,7 +54,7 @@ public class ActivityFormDTO {
 
     public Activity toActivity() {
         return new Activity(id, name, description, shownInAd,
-                activityStartDate, activityEndDate, mainImg, contentImg, mainImgAddr, contentImgAddr);
+                activityStartDate, activityEndDate, mainImg, mainImgAddr);
     }
 
     public void setupMode(Mode mode) {

@@ -84,11 +84,7 @@
                 <input type="text" name="name" placeholder="Name" th:field="*{name}"
                        th:readonly="${activityForm.readOnly}">
             </div>
-            <div class="field">
-                <label>活动简介</label>
-                <input type="text" placeholder="Description" th:field="*{description}"
-                       th:readonly="${activityForm.readOnly}">
-            </div>
+
             <div class="two fields">
                 <div class="field required">
                     <label>Start date</label>
@@ -125,16 +121,6 @@
             </div>
 
 
-            <div class="inline field required">
-                <label>活动详细内容图</label>
-                <div th:if="${activityForm.contentImgAddr!=null and contentImgAddr!=''}">
-                    <img class="ui small image"
-                         th:src="*{contentImgAddr}">
-                </div>
-                <input type="file" th:field="*{contentImg}" th:if="${!activityForm.readOnly}">
-                <input type="text" th:field="*{contentImgAddr}" style="display: none">
-            </div>
-
             <br/>
             <div class="field">
                 <div class="ui checkbox">
@@ -142,6 +128,12 @@
                            th:disabled="${activityForm.readOnly}">
                     <label for="showInAd-box">是否马上展示在首页banner？</label>
                 </div>
+            </div>
+
+            <div class="field">
+                <label>活动简介</label>
+                <input type="text" placeholder="Description" th:field="*{description}"
+                       th:readonly="${activityForm.readOnly}">
             </div>
             <div th:if="${!activityForm.readOnly}">
                 <button class="ui button">提交</button>

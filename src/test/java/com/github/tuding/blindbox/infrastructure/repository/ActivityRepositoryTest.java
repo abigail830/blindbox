@@ -24,7 +24,7 @@ class ActivityRepositoryTest {
         Toggle.TEST_MODE.setStatus(true);
 
         final Activity activity = new Activity("id", "name", "description",
-                Boolean.TRUE, new Date(), new Date(), "mainimage", "contentimage");
+                Boolean.TRUE, new Date(), new Date(), "mainimage");
         //when
         activityRepository.saveActivity(activity);
 

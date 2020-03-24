@@ -18,18 +18,15 @@ public class Activity {
     String activityName;
     String activityDescription;
     MultipartFile mainImg;
-    MultipartFile contentImg;
     Boolean shownInAd;
     Timestamp activityStartDate;
     Timestamp activityEndDate;
 
     Timestamp lastUpdateTime;
     String mainImgAddr;
-    String contentImgAddr;
 
     public Activity(String id, String name, String description, Boolean shownInAd,
-                    Date activityStartDate, Date activityEndDate, MultipartFile mainImg, MultipartFile contentImg,
-                    String mainImgAddr, String contentImgAddr) {
+                    Date activityStartDate, Date activityEndDate, MultipartFile mainImg, String mainImgAddr) {
         if (!Strings.isNullOrEmpty(id)) this.id = id;
         this.activityName = name;
         this.activityDescription = description;
@@ -45,14 +42,11 @@ public class Activity {
             this.activityEndDate = new Timestamp(new Date().getTime());
         }
         this.mainImg = mainImg;
-        this.contentImg = contentImg;
         this.mainImgAddr = mainImgAddr;
-        this.contentImgAddr = contentImgAddr;
-
     }
 
     public Activity(String id, String activityName, String activityDescription, Boolean shownInAd,
-                    Date activityStartDate, Date activityEndDate, String mainImgAddr, String contentImgAddr) {
+                    Date activityStartDate, Date activityEndDate, String mainImgAddr) {
         this.id = id;
         this.activityName = activityName;
         this.activityDescription = activityDescription;
@@ -60,7 +54,6 @@ public class Activity {
         this.activityStartDate = new Timestamp(activityStartDate.getTime());
         this.activityEndDate = new Timestamp(activityEndDate.getTime());
         this.mainImgAddr = mainImgAddr;
-        this.contentImgAddr = contentImgAddr;
     }
 
     @Override
@@ -74,7 +67,6 @@ public class Activity {
                 ", activityEndDate=" + activityEndDate +
                 ", lastUpdateTime=" + lastUpdateTime +
                 ", mainImgAddr='" + mainImgAddr + '\'' +
-                ", contentImgAddr='" + contentImgAddr + '\'' +
                 '}';
     }
 }
