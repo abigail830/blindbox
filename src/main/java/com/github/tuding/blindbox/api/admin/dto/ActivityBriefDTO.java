@@ -16,7 +16,6 @@ public class ActivityBriefDTO {
 
     String id;
     String name;
-    String description;
     Boolean showAsAd;
 
     Date activityStartDate;
@@ -34,7 +33,6 @@ public class ActivityBriefDTO {
     public ActivityBriefDTO(Activity activity) {
         this.id = activity.getId();
         this.name = activity.getActivityName();
-        this.description = activity.getActivityDescription();
         this.showAsAd = activity.getShownInAd();
 
         if (activity.getActivityStartDate() != null) {

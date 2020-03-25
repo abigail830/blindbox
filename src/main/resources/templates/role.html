@@ -21,6 +21,11 @@
             text-align: center;
         }
 
+
+
+
+
+
     </style>
 
 </head>
@@ -57,22 +62,37 @@
         </div>
         <div class="ui divider"></div>
 
-        <div th:if="${!roles.empty}">
-            <div class="ui grid horizontal">
-                <div class="four wide column" th:each="role : ${roles}">
-                    <a th:href="@{'/admin-ui/series/?roleID=' + ${role.id}}">
-                        <img class="ui medium circular image"
-                             th:src="${role.roleImage}">
-                    </a>
-                    <div class="role-name" th:text="${role.name}"></div>
-                    <a title="删除" href="#">
-                        <i class="trash alternate outline icon" th:attr="onclick=|delItem('${role.id}')|"></i>
-                    </a>
-                    <a th:href="@{'/admin-ui/role/roleform/' + ${role.id}}" title="编辑">
-                        <i class="edit outline icon"></i>
-                    </a>
+        <div th:if="${!roles.empty}" class="ui five column grid">
+            <div th:each="role : ${roles}" class="column">
+                <div class="ui fluid card">
+                    <div class="image">
+                        <img th:src="${role.roleImage}">
+                    </div>
+                    <div class="content">
+                        <div class="header" th:text="${role.name}"></div>
+                        <div class="meta" th:text="${role.category}"></div>
+                    </div>
+                    <div class="extra content">
+                        <div class="ui three buttons">
+                            <a title="删除" href="#" class="ui basic red button">
+                                <i class="trash alternate outline icon" th:attr="onclick=|delItem('${role.id}')|"></i>
+                            </a>
+                            <a title="编辑" th:href="@{'/admin-ui/role/roleform/' + ${role.id}}"
+                               class="ui basic green button">
+                                <i class="edit alternate outline icon"></i>
+                            </a>
+                            <a title="维护产品系列" th:href="@{'/admin-ui/series/?roleID=' + ${role.id}}"
+                               class="ui basic green button">
+                                <i class="sign in alternate icon"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div th:if="${roles.empty}">
+            <p>还没有产品角色，请添加。。。</p>
         </div>
     </div>
 </div>
@@ -92,6 +112,11 @@
             }
         })
     }
+
+
+
+
+
 
 
 
