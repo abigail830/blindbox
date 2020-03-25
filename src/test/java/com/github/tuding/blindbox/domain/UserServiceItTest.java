@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @DBRider
-class UserServiceTest {
+class UserServiceItTest {
 
     @Autowired
     UserService userService;

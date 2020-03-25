@@ -8,6 +8,9 @@ import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -22,10 +25,21 @@ public class UserService {
     @Autowired
     Jwt jwt;
 
+    @Transactional
     public String login(String code) {
         final User user = wxClient.getUerWithOpenIdAndSKey(code)
                 .orElseThrow(() -> new BizException(ErrorCode.FAIL_TO_GET_OPENID));
-        userRepository.saveUserWithOpenId(user);
+
+        final Optional<User> userByOpenId = userRepository.getUserByOpenId(user.getOpenId());
+        if (!userByOpenId.isPresent()) {
+            user.adjustBonusAndLastLoginDate();
+            userRepository.addUserWithOpenIdWithBonus(user);
+        } else {
+            final User existUser = userByOpenId.get();
+            existUser.adjustBonusAndLastLoginDate();
+            userRepository.updateLastLoginDateAndBonus(existUser);
+        }
+
         return jwt.generateWxToken(user);
     }
 

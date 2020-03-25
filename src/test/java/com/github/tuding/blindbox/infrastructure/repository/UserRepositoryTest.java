@@ -4,7 +4,6 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.domain.User;
-import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,8 +24,9 @@ class UserRepositoryTest {
     @DataSet("test-data/empty-user.yml")
     @ExpectedDataSet("expect-data/save-user-with-openId.yml")
     void saveUserWithOpenId() throws SQLException {
-        Toggle.TEST_MODE.setStatus(true);
-        userRepository.saveUserWithOpenId(new User("openId", "sessionKey"));
+        final User user = new User("openId", "sessionKey");
+        user.adjustBonusAndLastLoginDate();
+        userRepository.addUserWithOpenIdWithBonus(user);
     }
 
     @Test

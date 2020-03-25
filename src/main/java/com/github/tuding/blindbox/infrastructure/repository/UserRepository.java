@@ -1,7 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.tuding.blindbox.domain.User;
-import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -21,16 +20,21 @@ public class UserRepository {
 
     private RowMapper<User> rowMapper = new BeanPropertyRowMapper<>(User.class);
 
-    public void saveUserWithOpenId(User user) {
-        log.info("Going to insert wx_user_tbl with openId: {}", user.getOpenId());
+    public void addUserWithOpenIdWithBonus(User user) {
+        log.info("User first login: {}", user);
 
-        if (Toggle.TEST_MODE.isON()) {
-            String insertSql = "INSERT INTO wx_user_tbl (open_id) VALUES (?)";
-            jdbcTemplate.update(insertSql, user.getOpenId());
-        } else {
-            String insertSql = "INSERT ignore INTO wx_user_tbl (open_id) VALUES (?)";
-            jdbcTemplate.update(insertSql, user.getOpenId());
-        }
+        String insertSql = "INSERT INTO wx_user_tbl (open_id, last_login_date, bonus) VALUES (?,?,?)";
+        jdbcTemplate.update(insertSql, user.getOpenId(), user.getLastLoginDate(), user.getBonus());
+    }
+
+    public int updateLastLoginDateAndBonus(User user) {
+        log.info("User login again: {}", user);
+
+        String updateSql = "UPDATE wx_user_tbl SET last_login_date=?, bonus=? WHERE open_id=?";
+        return jdbcTemplate.update(updateSql,
+                user.getLastLoginDate(),
+                user.getBonus(),
+                user.getOpenId());
     }
 
     public Optional<User> getUserByOpenId(String openId) {
@@ -41,6 +45,7 @@ public class UserRepository {
     public List<User> getAllUser() {
         return jdbcTemplate.query("SELECT * FROM wx_user_tbl", rowMapper);
     }
+
 
     public int updateWxDetailInfo(User decryptUser) {
         log.info("Going to update wx_user_tbl for user : {}", decryptUser);
