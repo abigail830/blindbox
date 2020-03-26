@@ -96,17 +96,20 @@ public class ProductController {
                 if (productDTO.getProductImageFile().getSize() > 0) {
                     String image = imageRepository.saveImage(productDTO.getId(), ImageCategory.PRODUCT, productDTO.getProductImageFile());
                     productDTO.setProductImage(image);
+                } else {
+                    productDTO.setProductImage(imageRepository.getPath(productDTO.getId(), ImageCategory.PRODUCT));
                 }
 
-                if (productDTO.getPostCardImageFile().getSize() > 0){
-                    String image = imageRepository.saveImage(productDTO.getId() + "postcard", ImageCategory.PRODUCT, productDTO.getPostCardImageFile());
-                    productDTO.setPostCardImage(image);
-                }
+
                 if (productDTO.getProductGrayImageFile().getSize() > 0) {
                     String image = imageRepository.saveImage(productDTO.getId() + "gray", ImageCategory.PRODUCT, productDTO.getProductGrayImageFile());
                     productDTO.setProductGrayImage(image);
+                } else {
+                    productDTO.setProductGrayImage(imageRepository.getPath(productDTO.getId() + "gray", ImageCategory.PRODUCT));
                 }
-                productRepository.updateProduct(productDTO.toDomainObject());
+                Product product = productDTO.toDomainObject();
+                product.setVersion(product.getVersion() + 1);
+                productRepository.updateProduct(product);
                 return new RedirectView("/admin-ui/product/?seriesId=" + seriesOptional.get().getId());
             } else {
                 UUID productID = UUID.randomUUID();
@@ -114,9 +117,8 @@ public class ProductController {
 
                 String image = imageRepository.saveImage(productID.toString(), ImageCategory.PRODUCT, productDTO.getProductImageFile());
                 productDTO.setProductImage(image);
-                image = imageRepository.saveImage(productID.toString() + "postcard", ImageCategory.PRODUCT, productDTO.getPostCardImageFile());
-                productDTO.setPostCardImage(image);
-                image = imageRepository.saveImage(productDTO.getId() + "gray", ImageCategory.PRODUCT, productDTO.getProductGrayImageFile());
+
+                image = imageRepository.saveImage(productID.toString() + "gray", ImageCategory.PRODUCT, productDTO.getProductGrayImageFile());
                 productDTO.setProductGrayImage(image);
 
                 productDTO.setId(productID.toString());
@@ -138,36 +140,6 @@ public class ProductController {
             return productBySeries.stream().map(ProductDTO::new).collect(Collectors.toList());
         } else {
             return Collections.emptyList();
-        }
-    }
-
-    @GetMapping("/{id}/images")
-    public ResponseEntity<Resource> getSeriesImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<Product> productOptional = productRepository.getProductByID(id);
-        if (productOptional.isPresent()) {
-            File file = new File(productOptional.get().getProductImage());
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            return ResponseEntity.ok()
-                    .contentLength(file.length())
-                    .contentType(MediaType.parseMediaType("image/png"))
-                    .body(resource);
-        } else {
-            throw new RolesNotFoundException();
-        }
-    }
-
-    @GetMapping("/{id}/postcard")
-    public ResponseEntity<Resource> getPostcardImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<Product> productOptional = productRepository.getProductByID(id);
-        if (productOptional.isPresent()) {
-            File file = new File(productOptional.get().getPostCardImage());
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            return ResponseEntity.ok()
-                    .contentLength(file.length())
-                    .contentType(MediaType.parseMediaType("image/png"))
-                    .body(resource);
-        } else {
-            throw new RolesNotFoundException();
         }
     }
 

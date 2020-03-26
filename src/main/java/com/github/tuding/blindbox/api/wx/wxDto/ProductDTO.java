@@ -22,7 +22,6 @@ public class ProductDTO {
     //Image f
     String productImage;
 
-    String postCardImage;
 
     String productGrayImage;
 
@@ -36,7 +35,6 @@ public class ProductDTO {
         this.stock = product.getStock();
         this.probability = product.getProbability();
         this.productImage = Constant.WX_UI_IMAGE_PATH + product.getProductImage();
-        this.postCardImage = Constant.WX_UI_IMAGE_PATH + product.getPostCardImage();
         this.productGrayImage = Constant.WX_UI_IMAGE_PATH + product.getProductGrayImage();
 
     }

@@ -24,6 +24,8 @@ public class ProductService {
 
     @Autowired
     ProductRepository productRepository;
+    
+    @Autowired
 
     public List<Role> getRoles() {
         return rolesRepository.queryRoles();
@@ -38,16 +40,4 @@ public class ProductService {
         return seriesRespository.querySeriesByID(seriesId);
     }
 
-    public DrawDTO putADraw(String seriesId) {
-        List<Product> productBySeries = productRepository.getProductBySeries(seriesId);
-        //TODO: put draw algo here
-        UUID drawID = UUID.randomUUID();
-        Product product = productBySeries.get(0);
-        return new DrawDTO(drawID.toString(), product);
-    }
-
-    public DrawDTO confirmADraw(String drawId) {
-        //TODO: put a order
-        return null;
-    }
 }

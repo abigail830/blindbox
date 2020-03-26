@@ -9,4 +9,6 @@ public class Constant {
     public static final String WX_UI_IMAGE_PATH = "/wx/img/?path=";
 
     public static final int FIRST_LOGIN_BONUS = 5;
+
+    public static final String DRAW_INIT_STATUS = "NEW";
 }

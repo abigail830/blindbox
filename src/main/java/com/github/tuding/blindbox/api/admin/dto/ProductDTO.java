@@ -24,11 +24,10 @@ public class ProductDTO {
     String productImage;
     MultipartFile productImageFile;
 
-    String postCardImage;
-    MultipartFile postCardImageFile;
-
     String productGrayImage;
     MultipartFile productGrayImageFile;
+
+    Long version;
 
     public Product toDomainObject() {
         Product product = new Product();
@@ -40,8 +39,8 @@ public class ProductDTO {
         product.setStock(stock);
         product.setProbability(probability);
         product.setProductImage(productImage);
-        product.setPostCardImage(postCardImage);
         product.setProductGrayImage(productGrayImage);
+        product.setVersion(version);
         return product;
     }
 
@@ -53,8 +52,8 @@ public class ProductDTO {
         this.isPresale = product.getIsPresale();
         this.stock = product.getStock();
         this.probability = product.getProbability();
+        this.version = product.getVersion();
         this.productImage = Constant.ADMIN_UI_IMAGE_PATH + product.getProductImage();
-        this.postCardImage = Constant.ADMIN_UI_IMAGE_PATH + product.getPostCardImage();
         this.productGrayImage = Constant.ADMIN_UI_IMAGE_PATH + product.getProductGrayImage();
 
     }

@@ -30,7 +30,7 @@ series_tbl:
     seriesImage: "/app/data/series/testSeries2.png"
     matrixHeaderImage: "/app/data/series/header/testSeries2.png"
     matrixCellImage: "/app/data/series/cell/testSeries2.png"
-product_tbl:
+product_v2_tbl:
   - ID: productid1
     seriesID: seriesid1
     name: "product1"
@@ -39,7 +39,8 @@ product_tbl:
     stock: 200
     probability: 0.2
     productImage: "/app/data/product/image/product1.png"
-    postCardImage: "/app/data/product/postcard/product1.png"
+    productGrayImage: "/app/data/product/image/grayproduct1.png"
+    version: 0
   - ID: productid2
     seriesID: seriesid1
     name: "product2"
@@ -48,7 +49,8 @@ product_tbl:
     stock: 200
     probability: 0.2
     productImage: "/app/data/product/image/product2.png"
-    postCardImage: "/app/data/product/postcard/product2.png"
+    productGrayImage: "/app/data/product/image/grayproduct2.png"
+    version: 0
   - ID: productid3
     seriesID: seriesid1
     name: "product3"
@@ -57,4 +59,5 @@ product_tbl:
     stock: 10
     probability: 0.01
     productImage: "/app/data/product/image/product3.png"
-    postCardImage: "/app/data/product/postcard/product3.png"
+    productGrayImage: "/app/data/product/image/grayproduct3.png"
+    version: 0

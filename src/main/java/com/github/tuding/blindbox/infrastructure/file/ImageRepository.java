@@ -29,6 +29,16 @@ public class ImageRepository {
         }
     }
 
+    public String getPath(String fileName, ImageCategory imageCategory) {
+        try {
+            File storeFile = new File(getBasePath(imageCategory) + fileName + ".png");
+            return storeFile.getCanonicalPath().replace(imagePath, "");
+        } catch (IOException e) {
+            log.error("Failed to save image " + fileName, e);
+            throw new BizException(ErrorCode.FAIL_TO_STORE_FILE);
+        }
+    }
+
     public File getImage(String fileName) {
         return new File(imagePath + "/" + fileName);
     }

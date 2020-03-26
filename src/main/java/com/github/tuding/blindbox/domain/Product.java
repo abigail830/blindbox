@@ -20,7 +20,7 @@ public class Product {
     //Image f
     String productImage;
 
-    String postCardImage;
-
     String productGrayImage;
+
+    Long version;
 }

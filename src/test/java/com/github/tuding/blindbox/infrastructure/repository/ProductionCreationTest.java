@@ -1,11 +1,7 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
-import com.github.tuding.blindbox.api.admin.dto.ProductDTO;
-import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
-import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
 import com.github.tuding.blindbox.domain.Product;
 import com.github.tuding.blindbox.domain.Role;
 import com.github.tuding.blindbox.domain.Series;
@@ -80,8 +76,8 @@ public class ProductionCreationTest {
                 200L,
                 BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product1.png",
-                "/app/data/product/postcard/product1.png",
-                "/app/data/product/postcard/grayproduct1.png"));
+                "/app/data/product/image/grayproduct1.png",
+                0L));
 
         productRepository.createProduct(new Product("productid2",
                 seriesRespository.querySeriesByName("testSeries").get().getId(),
@@ -89,9 +85,8 @@ public class ProductionCreationTest {
                 200L,
                 BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product2.png",
-                "/app/data/product/postcard/product2.png",
-                "/app/data/product/postcard/grayproduct2.png"
-                ));
+                "/app/data/product/image/grayproduct2.png",
+                0L));
 
 
         productRepository.createProduct(new Product("productid3", seriesRespository.querySeriesByName("testSeries").get().getId(),
@@ -99,8 +94,8 @@ public class ProductionCreationTest {
                 10L,
                 BigDecimal.valueOf(0.01),
                 "/app/data/product/image/product3.png",
-                "/app/data/product/postcard/product3.png",
-                "/app/data/product/postcard/grayproduct3.png"));
+                "/app/data/product/image/grayproduct3.png",
+                0L));
 
         assertTrue(productRepository.getProductByID("productid1").isPresent());
         assertTrue(productRepository.getProductByID("productid2").isPresent());

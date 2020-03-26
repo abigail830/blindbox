@@ -24,36 +24,42 @@ public class ProductRepository {
     private RowMapper<Product> rowMapper = new BeanPropertyRowMapper<>(Product.class);
 
     private void saveProduct(Product product) {
-        log.info("Going to insert product_tbl for {}", product);
+        log.info("Going to insert product_v2_tbl for {}", product);
 
         if (Toggle.TEST_MODE.isON()) {
-            String insertSql = "INSERT INTO product_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
-                    " probability, productImage, postCardImage, productGrayImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertSql = "INSERT INTO product_v2_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
+                    " probability, productImage, productGrayImage) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
                     product.getIsSpecial(), product.getIsPresale(), product.getStock(), product.getProbability(),
-                    product.getProductImage(), product.getPostCardImage(), product.getProductGrayImage());
+                    product.getProductImage(), product.getProductGrayImage());
             log.info("update row {} ", update);
         } else {
-            String insertSql = "INSERT ignore INTO product_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
-                    " probability, productImage, postCardImage, productGrayImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertSql = "INSERT ignore INTO product_v2_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
+                    " probability, productImage, productGrayImage) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
                     product.getIsSpecial(), product.getIsPresale(), product.getStock(), product.getProbability(),
-                    product.getProductImage(), product.getPostCardImage(), product.getProductGrayImage());
+                    product.getProductImage(), product.getProductGrayImage());
             log.info("update row {} ", update);
         }
     }
 
     public Optional<Product> getProductByID(String id) {
         log.info("Going to query product with id: {}", id);
-        List<Product> products = jdbcTemplate.query("SELECT * FROM product_tbl WHERE id = ?", rowMapper, id);
+        List<Product> products = jdbcTemplate.query("SELECT * FROM product_v2_tbl p " +
+                " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest " +
+                " on p.id = latest.id and p.version = latest.mversion " +
+                " WHERE p.id = ?", rowMapper, id);
         return products.stream().findFirst();
     }
 
     public List<Product> getProductBySeries(String id) {
         log.info("Going to query product with product series: {}", id);
-        return jdbcTemplate.query("SELECT * FROM product_tbl WHERE seriesID = ?", rowMapper, id);
+        return jdbcTemplate.query("SELECT * FROM product_v2_tbl p " +
+                " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest " +
+                " on p.id = latest.id and p.version = latest.mversion " +
+                " WHERE p.seriesID = ?", rowMapper, id);
     }
 
     public void createProduct(Product product) {
@@ -66,17 +72,27 @@ public class ProductRepository {
 
     public void deleteProduct(String id) {
         log.info("Delete product for {}", id);
-        jdbcTemplate.update("DELETE FROM product_tbl where id = ?", id);
+        jdbcTemplate.update("DELETE FROM product_v2_tbl where id = ?", id);
 
 
     }
 
     public void updateProduct(Product product) {
-        String updateSql = "UPDATE product_tbl " +
-                " SET name = ?, isSpecial = ?, stock = ?, probability = ?" +
-                " WHERE id = ?";
-        int update = jdbcTemplate.update(updateSql, product.getName(), product.getIsSpecial(),
-                product.getStock(), product.getProbability(), product.getId());
+        log.info("Change product as {} ", product);
+        String insertSql = "INSERT INTO product_v2_tbl (id, seriesID, name, isSpecial, isPresale, stock, " +
+                " probability, productImage, productGrayImage, version) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        int update = jdbcTemplate.update(insertSql,
+                product.getId(),
+                product.getSeriesID(),
+                product.getName(),
+                product.getIsSpecial(),
+                product.getIsPresale() != null ? product.getIsPresale() : false,
+                product.getStock(),
+                product.getProbability(),
+                product.getProductImage(),
+                product.getProductGrayImage(),
+                product.getVersion());
         log.info("update row {} ", update);
     }
 }

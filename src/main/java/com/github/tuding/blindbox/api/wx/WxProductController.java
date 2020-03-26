@@ -3,14 +3,18 @@ package com.github.tuding.blindbox.api.wx;
 import com.github.tuding.blindbox.api.wx.wxDto.DrawDTO;
 import com.github.tuding.blindbox.api.wx.wxDto.RoleDTO;
 import com.github.tuding.blindbox.api.wx.wxDto.SeriesDTO;
+import com.github.tuding.blindbox.domain.DrawService;
 import com.github.tuding.blindbox.domain.ProductService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
+import com.github.tuding.blindbox.infrastructure.Constant;
+import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +25,13 @@ import java.util.stream.Collectors;
 public class WxProductController {
 
     @Autowired
+    Jwt jwt;
+
+    @Autowired
     private ProductService productService;
+
+    @Autowired
+    private DrawService drawService;
 
     @GetMapping("/roles")
     @NeedWxVerifyToken
@@ -48,14 +58,15 @@ public class WxProductController {
     @PutMapping("/draw/{seriesId}")
     @NeedWxVerifyToken
     @ApiOperation(value = "under development")
-    public DrawDTO drawAProduct(@PathVariable("seriesId") String seriesId) {
-        return productService.putADraw(seriesId);
+    public DrawDTO drawAProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        return new DrawDTO(drawService.drawAProduct(jwt.getOpenIdFromToken(token),seriesId));
     }
 
     @PutMapping("/order/{drawId}")
     @NeedWxVerifyToken
     @ApiOperation(value = "under development")
     public DrawDTO confirmADraw(@PathVariable("drawId") String drawId) {
-        return productService.confirmADraw(drawId);
+        return new DrawDTO(drawService.confirmADraw(drawId));
     }
 }
