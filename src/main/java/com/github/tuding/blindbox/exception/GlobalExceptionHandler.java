@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = BizException.class)
     @ResponseBody
     public ResponseEntity<?> bizExceptionHandler(BizException e) {
-        log.warn("{}", e);
+        log.warn("Exception with error code {}", e.getErrorCode());
 
         if (e.getErrorCode().equals(ErrorCode.WX_USER_NOT_FOUND)) {
             return new ResponseEntity<>(JsonUtil.toJson(new Object()), HttpStatus.OK);
