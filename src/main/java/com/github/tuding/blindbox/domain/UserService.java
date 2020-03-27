@@ -5,6 +5,7 @@ import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.client.WxClient;
 import com.github.tuding.blindbox.infrastructure.repository.UserRepository;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,10 @@ public class UserService {
     public String login(String code) {
         final User user = wxClient.getUerWithOpenIdAndSKey(code)
                 .orElseThrow(() -> new BizException(ErrorCode.FAIL_TO_GET_OPENID));
+
+        if (Strings.isNullOrEmpty(user.getOpenId())) {
+            throw new BizException(ErrorCode.FAIL_TO_GET_OPENID);
+        }
 
         final Optional<User> userByOpenId = userRepository.getUserByOpenId(user.getOpenId());
         if (!userByOpenId.isPresent()) {
