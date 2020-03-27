@@ -30,4 +30,12 @@ class JwtTest {
         //then
         assertEquals("admin", subject);
     }
+
+    @Test
+    void generateToken() {
+        final Jwt jwt = new Jwt();
+        final String token = jwt.generateWxToken(new User("o4G6g4voOoZEkNeRuDDhVwf0p1IQ", "sessionKey"));
+
+        System.out.println(token);
+    }
 }

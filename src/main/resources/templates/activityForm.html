@@ -5,8 +5,12 @@
     <title>blindbox</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
+    <script th:src="@{/javascript/quill.js}"></script>
+
     <script type="text/javascript">
         $(document).ready(function(){
 
@@ -20,6 +24,30 @@
                 }
             });
 
+            //editor
+            var options = {
+                debug: 'info',
+                modules: {
+                    toolbar: ['bold', 'link', 'image']
+                },
+                placeholder: '输入活动内容介绍',
+                theme: 'snow'
+             };
+              var quill = new Quill('#editor', options);
+
+              quill.getModule('toolbar').addHandler('image', showImageUI);
+
+            var showImageUI = function(image, callback) {
+                var range = quill.getSelection();
+                var value = prompt('image URL');
+                this.quill.insertEmbed(range.index, 'image', value, Quill.sources.USER);
+            };
+
+            quill.on('editor-change', function(eventName, ...args) {
+                $('#content').val(quill.root.innerHTML)
+                //console.log($('#content').val())
+            });
+
          });
 
 
@@ -27,6 +55,13 @@
     <style>
         form {
             text-align: left;
+        }
+
+        .editor_container {
+            height: 200px;
+        }
+        .submit_btn {
+            margin-top: 80px;
         }
 
 
@@ -110,6 +145,14 @@
                 </div>
             </div>
 
+            <div class="field">
+                <div class="ui checkbox">
+                    <input id="showInAd-box" type="checkbox" th:field="*{shownInAd}"
+                           th:disabled="${activityForm.readOnly}">
+                    <label for="showInAd-box">是否马上展示在首页banner？</label>
+                </div>
+            </div>
+
             <div class="inline field required">
                 <label>活动主图</label>
                 <div th:if="*{mainImgAddr!=null and mainImgAddr!=''}">
@@ -120,28 +163,50 @@
                 <input type="text" th:field="*{mainImgAddr}" style="display: none">
             </div>
 
-
             <br/>
-            <div class="field">
-                <div class="ui checkbox">
-                    <input id="showInAd-box" type="checkbox" th:field="*{shownInAd}"
-                           th:disabled="${activityForm.readOnly}">
-                    <label for="showInAd-box">是否马上展示在首页banner？</label>
+            <div class="editor_container field">
+                <!-- Create the editor container -->
+                <div id="editor" th:readonly="${activityForm.readOnly}" th:utext="*{description}"
+                     th:name="*{description}">
                 </div>
             </div>
-
-            <div class="field">
-                <label>活动简介</label>
-                <input type="text" placeholder="Description" th:field="*{description}"
-                       th:readonly="${activityForm.readOnly}">
-            </div>
-            <div th:if="${!activityForm.readOnly}">
+            <div th:if="${!activityForm.readOnly}" class="submit_btn">
                 <button class="ui button">提交</button>
             </div>
         </form>
 
     </div>
 </div>
+
+<script type="text/javascript">
+    function submit (item){
+        console.log("******* Going to submit **********");
+        var editor_content = quill.container.innerHTML;
+        console.log(editor_content);
+        console.log(item);
+
+        $.ajax({
+            url: '/admin-ui/activities/form',
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: {
+                "activity": item
+            }
+        },
+            success: function (data, status) {
+                console.info("Got delete status " + status);
+                window.location = '/admin-ui/role/';
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+
+
+
+</script>
 
 </body>
 </html>

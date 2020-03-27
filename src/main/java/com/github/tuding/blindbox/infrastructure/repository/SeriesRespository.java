@@ -138,4 +138,14 @@ public class SeriesRespository {
         }
 
     }
+
+    public List<Series> queryAllNewSeries() {
+        log.info("Going to query all new series");
+        return jdbcTemplate.query("SELECT * FROM series_tbl where isNewSeries = true", rowMapper);
+    }
+
+    public List<Series> queryAllSeriesWithPaging(Integer limitPerPage, Integer numOfPage) {
+        log.info("Going to query all series");
+        return jdbcTemplate.query("SELECT * FROM series_tbl LIMIT ? OFFSET ?", rowMapper, limitPerPage, numOfPage);
+    }
 }

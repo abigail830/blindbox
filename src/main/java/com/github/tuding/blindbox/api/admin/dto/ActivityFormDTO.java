@@ -2,6 +2,7 @@ package com.github.tuding.blindbox.api.admin.dto;
 
 import com.github.tuding.blindbox.domain.Activity;
 import com.github.tuding.blindbox.infrastructure.Constant;
+import com.google.common.base.Strings;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,7 +39,7 @@ public class ActivityFormDTO {
     public ActivityFormDTO(Activity activity, Mode mode) {
         this.id = activity.getId();
         this.name = activity.getActivityName();
-        this.description = activity.getActivityDescription();
+        this.description = Strings.isNullOrEmpty(activity.getActivityDescription()) ? "" : activity.getActivityDescription();
         this.shownInAd = activity.getShownInAd();
         this.mainImgAddr = Constant.ADMIN_UI_IMAGE_PATH + activity.getMainImgAddr();
 

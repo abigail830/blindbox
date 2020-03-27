@@ -54,6 +54,22 @@ public class WxProductController {
         return new SeriesDTO(productService.getSeries(seriesId).get());
     }
 
+    @GetMapping("/series/new")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "获取所有新品系列(需要带token)")
+    public List<SeriesDTO> getAllNewSeries() {
+        return productService.getAllNewSeries().stream()
+                .map(SeriesDTO::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/series/all/paging")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "分页获取所有产品系列(需要带token), numOfPage start from 0")
+    public List<SeriesDTO> getAllNewSeries(@RequestParam Integer limitPerPage, Integer numOfPage) {
+        return productService.getAllSeries(limitPerPage, numOfPage).stream()
+                .map(SeriesDTO::new).collect(Collectors.toList());
+    }
+
 
     @PutMapping("/draw/{seriesId}")
     @NeedWxVerifyToken

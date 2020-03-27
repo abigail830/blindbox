@@ -1,6 +1,5 @@
 package com.github.tuding.blindbox.domain;
 
-import com.github.tuding.blindbox.api.wx.wxDto.DrawDTO;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
 import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -40,4 +38,12 @@ public class ProductService {
         return seriesRespository.querySeriesByID(seriesId);
     }
 
+
+    public List<Series> getAllNewSeries() {
+        return seriesRespository.queryAllNewSeries();
+    }
+
+    public List<Series> getAllSeries(Integer limitPerPage, Integer numOfPage) {
+        return seriesRespository.queryAllSeriesWithPaging(limitPerPage, numOfPage);
+    }
 }

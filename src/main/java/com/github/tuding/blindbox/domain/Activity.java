@@ -27,9 +27,9 @@ public class Activity {
 
     public Activity(String id, String name, String description, Boolean shownInAd,
                     Date activityStartDate, Date activityEndDate, MultipartFile mainImg, String mainImgAddr) {
-        if (!Strings.isNullOrEmpty(id)) this.id = id;
-        this.activityName = name;
-        this.activityDescription = description;
+        this.id = Strings.isNullOrEmpty(id) ? null : id;
+        this.activityName = Strings.isNullOrEmpty(name) ? null : name;
+        this.activityDescription = Strings.isNullOrEmpty(description) ? "" : description;
         this.shownInAd = shownInAd;
         if (activityStartDate != null) {
             this.activityStartDate = new Timestamp(activityStartDate.getTime());
