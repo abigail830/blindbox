@@ -11,21 +11,18 @@ import java.sql.Timestamp;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivityDTO {
+public class ActivityBriefDTO {
 
     String id;
     String activityName;
-    String activityDescription;
     Boolean shownInAd;
     Timestamp activityStartDate;
     Timestamp activityEndDate;
-    Timestamp lastUpdateTime;
     String mainImgUrl;
 
-    public ActivityDTO(Activity activity) {
+    public ActivityBriefDTO(Activity activity) {
         this.id = activity.getId();
         this.activityName = activity.getActivityName();
-        this.activityDescription = activity.getActivityDescription();
         this.shownInAd = activity.getShownInAd();
         this.activityStartDate = activity.getActivityStartDate();
         this.activityEndDate = activity.getActivityEndDate();

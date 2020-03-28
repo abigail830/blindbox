@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.domain;
 
+import com.github.tuding.blindbox.exception.ActivityNotFoundException;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
@@ -78,5 +79,10 @@ public class ActivityService {
         activity.get().addNotifier(openId);
         activityRepository.addNotification(activity.get());
 
+    }
+
+    public Activity getActivityDetail(String activityId) {
+        return activityRepository.queryActivityById(activityId)
+                .orElseThrow(ActivityNotFoundException::new);
     }
 }

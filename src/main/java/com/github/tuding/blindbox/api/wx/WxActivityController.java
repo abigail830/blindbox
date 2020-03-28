@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.api.wx;
 
-import com.github.tuding.blindbox.api.wx.wxDto.ActivityDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.ActivityBriefDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.ActivityDetailDTO;
 import com.github.tuding.blindbox.domain.ActivityService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
@@ -25,20 +26,28 @@ public class WxActivityController {
 
     @GetMapping("/front-page")
     @NeedWxVerifyToken
-    @ApiOperation(value = "获取需要显示在首页slider的活动信息(需要带token）")
-    public List<ActivityDTO> getActivityForFrontPage() {
+    @ApiOperation(value = "获取需要显示在首页slider的活动信息概要(需要带token）")
+    public List<ActivityBriefDTO> getActivityForFrontPage() {
         return activityService.getAllActivitiesShownInFrontPage().stream()
-                .map(ActivityDTO::new)
+                .map(ActivityBriefDTO::new)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/all")
     @NeedWxVerifyToken
-    @ApiOperation(value = "获取所有活动信息，已按活动开始日期排序(需要带token）")
-    public List<ActivityDTO> getAllActivity() {
+    @ApiOperation(value = "获取活动概要列表，已按活动开始日期排序(需要带token）")
+    public List<ActivityBriefDTO> getAllActivity() {
         return activityService.getAllActivities().stream()
-                .map(ActivityDTO::new)
+                .map(ActivityBriefDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/id/{activityId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "根据活动ID，获取活动详情(需要带token")
+    public ActivityDetailDTO getActivityDetail(HttpServletRequest request,
+                                               @PathVariable String activityId) {
+        return new ActivityDetailDTO(activityService.getActivityDetail(activityId));
     }
 
     @PutMapping("/id/{activityId}/accept-notify")
