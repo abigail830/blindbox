@@ -37,7 +37,7 @@ public class Activity {
     String mainImgAddr;
 
     String notify;
-
+    String notifyJumpPage;
 
     public Activity(String id, String name, String description, Boolean shownInAd,
                     Date activityStartDate, Date activityEndDate, MultipartFile mainImg, String mainImgAddr) {
