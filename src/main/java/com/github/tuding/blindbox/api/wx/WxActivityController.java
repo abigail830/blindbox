@@ -43,7 +43,7 @@ public class WxActivityController {
 
     @PutMapping("/id/{activityId}/accept-notify")
     @NeedWxVerifyToken
-    @ApiOperation(value = "接受活动开始通知(需要带token）- under development")
+    @ApiOperation(value = "接受活动开始通知(需要带token")
     public void registerForActivityNotify(HttpServletRequest request,
                                           @PathVariable String activityId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
