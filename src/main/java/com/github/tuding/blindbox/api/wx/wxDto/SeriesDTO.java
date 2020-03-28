@@ -41,9 +41,9 @@ public class SeriesDTO {
         this.isPresale = series.getIsPresale();
         this.price = series.getPrice();
         this.columnSize = series.getColumnSize();
-        this.seriesImage = Constant.WX_UI_STATIC_IMAGE_PATH + series.getSeriesImage();
-        this.matrixHeaderImage = Constant.WX_UI_STATIC_IMAGE_PATH + series.getMatrixHeaderImage();
-        this.matrixCellImage = Constant.WX_UI_STATIC_IMAGE_PATH + series.getMatrixCellImage();
-        this.longImage = Constant.WX_UI_STATIC_IMAGE_PATH + series.getLongImage();
+        this.seriesImage = Constant.WX_UI_IMAGE_PATH + series.getSeriesImage();
+        this.matrixHeaderImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixHeaderImage();
+        this.matrixCellImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixCellImage();
+        this.longImage = Constant.WX_UI_IMAGE_PATH + series.getLongImage();
     }
 }

@@ -29,6 +29,6 @@ public class ActivityDTO {
         this.shownInAd = activity.getShownInAd();
         this.activityStartDate = activity.getActivityStartDate();
         this.activityEndDate = activity.getActivityEndDate();
-        this.mainImgUrl = Constant.WX_UI_STATIC_IMAGE_PATH + activity.getMainImgAddr();
+        this.mainImgUrl = Constant.WX_UI_IMAGE_PATH + activity.getMainImgAddr();
     }
 }

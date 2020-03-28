@@ -22,6 +22,6 @@ public class RoleDTO {
         this.name = role.getName();
         this.category = role.getCategory();
         this.description = role.getDescription();
-        this.roleImage = Constant.WX_UI_STATIC_IMAGE_PATH + role.getRoleImage();
+        this.roleImage = Constant.WX_UI_IMAGE_PATH + role.getRoleImage();
     }
 }

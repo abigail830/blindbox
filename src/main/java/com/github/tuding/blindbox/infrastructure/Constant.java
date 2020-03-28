@@ -6,9 +6,7 @@ public class Constant {
 
     public static final String ADMIN_UI_IMAGE_PATH = "/admin-ui/image/?path=";
 
-    public static final String WX_UI_IMAGE_PATH = "/wx/img/?path=";
-
-    public static final String WX_UI_STATIC_IMAGE_PATH = "/images";
+    public static final String WX_UI_IMAGE_PATH = "/images";
 
     public static final int FIRST_LOGIN_BONUS = 5;
 
