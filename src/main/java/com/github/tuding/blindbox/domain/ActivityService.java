@@ -1,7 +1,10 @@
 package com.github.tuding.blindbox.domain;
 
+import com.github.tuding.blindbox.exception.BizException;
+import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ActivityRepository;
+import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,10 @@ public class ActivityService {
 
     @Autowired
     ActivityRepository activityRepository;
+
+    @Autowired
+    Jwt jwt;
+
 
     public void saveActivity(Activity activity) {
         UUID uuid = UUID.randomUUID();
@@ -58,5 +65,18 @@ public class ActivityService {
         }
 
         activityRepository.updateActivity(activity);
+    }
+
+    public void acceptActivityNotify(String token, String activityId) {
+        String openId = jwt.getOpenIdFromToken(token);
+        log.info("User[{}] register notify for activity[{}]", openId, activityId);
+        final Optional<Activity> activity = activityRepository.queryActivityById(activityId);
+        if (!activity.isPresent()) {
+            throw new BizException(ErrorCode.INVALID_ACTIVITY_ID);
+        }
+
+        activity.get().addNotifier(openId);
+        activityRepository.addNotification(activity.get());
+
     }
 }

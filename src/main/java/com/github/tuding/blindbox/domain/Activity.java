@@ -1,18 +1,29 @@
 package com.github.tuding.blindbox.domain;
 
+
+import com.github.tuding.blindbox.exception.BizException;
+import com.github.tuding.blindbox.exception.ErrorCode;
 import com.google.common.base.Strings;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class Activity {
+
+    public static final String NOTIFY_SEPARATOR = "|";
 
     String id;
     String activityName;
@@ -24,6 +35,9 @@ public class Activity {
 
     Timestamp lastUpdateTime;
     String mainImgAddr;
+
+    String notify;
+
 
     public Activity(String id, String name, String description, Boolean shownInAd,
                     Date activityStartDate, Date activityEndDate, MultipartFile mainImg, String mainImgAddr) {
@@ -56,17 +70,20 @@ public class Activity {
         this.mainImgAddr = mainImgAddr;
     }
 
-    @Override
-    public String toString() {
-        return "Activity{" +
-                "id='" + id + '\'' +
-                ", activityName='" + activityName + '\'' +
-                ", activityDescription='" + activityDescription + '\'' +
-                ", shownInAd=" + shownInAd +
-                ", activityStartDate=" + activityStartDate +
-                ", activityEndDate=" + activityEndDate +
-                ", lastUpdateTime=" + lastUpdateTime +
-                ", mainImgAddr='" + mainImgAddr + '\'' +
-                '}';
+    public void addNotifier(String openId) {
+
+        if (activityStartDate.toLocalDateTime().isBefore(LocalDateTime.now())) {
+            throw new BizException(ErrorCode.ACTIVITY_ALREADY_PASSED);
+        }
+
+        if (Strings.isNullOrEmpty(this.notify)) {
+            this.notify = openId;
+        } else {
+            final String[] splits = this.notify.split(Activity.NOTIFY_SEPARATOR, -2);
+            Set<String> notifySet = new HashSet<>(Arrays.asList(splits));
+            notifySet.add(openId);
+            this.notify = String.join(Activity.NOTIFY_SEPARATOR, notifySet);
+        }
     }
+
 }

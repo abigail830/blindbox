@@ -3,14 +3,14 @@ package com.github.tuding.blindbox.api.wx;
 import com.github.tuding.blindbox.api.wx.wxDto.ActivityDTO;
 import com.github.tuding.blindbox.domain.ActivityService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
+import com.github.tuding.blindbox.infrastructure.Constant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +39,16 @@ public class WxActivityController {
         return activityService.getAllActivities().stream()
                 .map(ActivityDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @PutMapping("/id/{activityId}/accept-notify")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "接受活动开始通知(需要带token）- under development")
+    public void registerForActivityNotify(HttpServletRequest request,
+                                          @PathVariable String activityId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        activityService.acceptActivityNotify(token, activityId);
+
     }
 
 }

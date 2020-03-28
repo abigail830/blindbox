@@ -11,7 +11,10 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -65,16 +68,6 @@ public class WxUserController {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
 
         userService.wxAuth(token, encryptedData, iv);
-    }
-
-    @PutMapping("/activities/id/{activityId}/accept-notify")
-    @NeedWxVerifyToken
-    @ApiOperation(value = "接受活动开始通知(需要带token）- under development")
-    public void registerForActivityNotify(HttpServletRequest request,
-                                          @PathVariable String activityId) {
-        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        userService.acceptActivityNotify(token, activityId);
-
     }
 
 }

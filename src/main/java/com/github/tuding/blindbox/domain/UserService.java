@@ -68,10 +68,4 @@ public class UserService {
         }
 
     }
-
-    public void acceptActivityNotify(String token, String activityId) {
-        String openId = jwt.getOpenIdFromToken(token);
-        log.info("User[{}] register notify for activity[{}]", openId, activityId);
-        //TODO: update DB
-    }
 }

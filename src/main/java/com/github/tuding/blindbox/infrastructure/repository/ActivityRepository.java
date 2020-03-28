@@ -95,4 +95,11 @@ public class ActivityRepository {
         return jdbcTemplate.query("SELECT * FROM activity_tbl WHERE shown_in_ad = true ORDER BY activity_start_date DESC", rowMapper);
 
     }
+
+    public void addNotification(Activity activity) {
+        log.info("Going to update notify for activity : {}", activity);
+        String updateSQL = "UPDATE activity_tbl SET notify=? WHERE id = ?";
+        int update = jdbcTemplate.update(updateSQL, activity.getNotify(), activity.getId());
+        log.info("update activity_tbl row {} ", update);
+    }
 }
