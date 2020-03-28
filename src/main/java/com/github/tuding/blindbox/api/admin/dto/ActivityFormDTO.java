@@ -4,15 +4,18 @@ import com.github.tuding.blindbox.domain.Activity;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.google.common.base.Strings;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Setter
 @Getter
+@Slf4j
 public class ActivityFormDTO {
 
     String id;
@@ -20,8 +23,9 @@ public class ActivityFormDTO {
     String description;
     MultipartFile mainImg;
     Boolean shownInAd;
-    Date activityStartDate;
-    Date activityEndDate;
+    private static final ThreadLocal<SimpleDateFormat> dateFormat
+            = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd kk:mm"));
+    String activityStartDate;
 
     String mainImgAddr;
 
@@ -29,10 +33,9 @@ public class ActivityFormDTO {
     String title;
     String mode;
     String errorMsg;
+    String activityEndDate;
 
     public ActivityFormDTO(Mode mode) {
-//        this.activityStartDate = new Date();
-//        this.activityEndDate = new Date();
         setupMode(mode);
     }
 
@@ -42,20 +45,26 @@ public class ActivityFormDTO {
         this.description = Strings.isNullOrEmpty(activity.getActivityDescription()) ? "" : activity.getActivityDescription();
         this.shownInAd = activity.getShownInAd();
         this.mainImgAddr = Constant.ADMIN_UI_IMAGE_PATH + activity.getMainImgAddr();
-
-        if (activity.getActivityStartDate() != null)
-            this.activityStartDate = new Date(activity.getActivityStartDate().getTime());
-
-        if (activity.getActivityEndDate() != null)
-            this.activityEndDate = new Date(activity.getActivityEndDate().getTime());
+        this.activityStartDate = dateFormat.get().format(activity.getActivityStartDate());
+        this.activityEndDate = dateFormat.get().format(activity.getActivityEndDate());
 
         setupMode(mode);
 
     }
 
+    public Timestamp getActivityStartDateAsTS() {
+        return Timestamp.valueOf(this.activityStartDate + ":00");
+    }
+
+    public Timestamp getActivityEndDateAsTS() {
+        return Timestamp.valueOf(this.activityEndDate + ":00");
+    }
+
     public Activity toActivity() {
+        log.info("{}", toString());
         return new Activity(id, name, description, shownInAd,
-                activityStartDate, activityEndDate, mainImg, mainImgAddr);
+                getActivityStartDateAsTS(), getActivityEndDateAsTS(),
+                mainImg, mainImgAddr);
     }
 
     public void setupMode(Mode mode) {

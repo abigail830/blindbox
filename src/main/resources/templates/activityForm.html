@@ -24,6 +24,34 @@
                 }
             });
 
+            $('#rangestart').calendar({
+                type: 'datetime',
+                ampm: false,
+                formatter: {
+                    date: function (datetime, settings) {
+                        if (!datetime) return '';
+                        var day = datetime.getDate();
+                        var month = datetime.getMonth() + 1;
+                        var year = datetime.getFullYear();
+                        return year + '-' + month + '-' + day;
+                    }
+                }
+            });
+
+            $('#rangeend').calendar({
+                type: 'datetime',
+                ampm: false,
+                formatter: {
+                    date: function (datetime, settings) {
+                        if (!datetime) return '';
+                        var day = datetime.getDate();
+                        var month = datetime.getMonth() + 1;
+                        var year = datetime.getFullYear();
+                        return year + '-' + month + '-' + day;
+                    }
+                }
+            });
+
             //editor
             var options = {
                 debug: 'info',

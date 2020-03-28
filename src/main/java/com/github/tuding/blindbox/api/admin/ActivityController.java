@@ -96,6 +96,14 @@ public class ActivityController {
             return "activityForm";
         }
 
+        if (activityForm.getActivityStartDateAsTS().after(activityForm.getActivityEndDateAsTS())) {
+            activityForm.setupMode(Mode.valueOf(activityForm.getMode()));
+            activityForm.setErrorMsg("活动开始日期不能晚于结束日期");
+            log.info("Activity start date < end date, redirect back to form [{}]", activityForm);
+            model.addAttribute("activityForm", activityForm);
+            return "activityForm";
+        }
+
         final Activity activity = activityForm.toActivity();
         log.info("activity {}", activity);
 
