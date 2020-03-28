@@ -23,9 +23,8 @@ public class ActivityFormDTO {
     String description;
     MultipartFile mainImg;
     Boolean shownInAd;
-    private static final ThreadLocal<SimpleDateFormat> dateFormat
-            = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd kk:mm"));
     String activityStartDate;
+    String activityEndDate;
 
     String mainImgAddr;
 
@@ -33,7 +32,9 @@ public class ActivityFormDTO {
     String title;
     String mode;
     String errorMsg;
-    String activityEndDate;
+
+    private static final ThreadLocal<SimpleDateFormat> dateFormat
+            = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd kk:mm"));
 
     public ActivityFormDTO(Mode mode) {
         setupMode(mode);
