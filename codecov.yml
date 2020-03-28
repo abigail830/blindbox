@@ -2,4 +2,4 @@ ignore:
 - "languages"
 - "bughunt"
 - "cocatest"
-- "/resources/static"
+- "*.js"
