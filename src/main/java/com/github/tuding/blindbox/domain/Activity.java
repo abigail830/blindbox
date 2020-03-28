@@ -73,7 +73,7 @@ public class Activity {
     public void addNotifier(String openId) {
 
         if (activityStartDate.toLocalDateTime().isBefore(LocalDateTime.now())) {
-            throw new BizException(ErrorCode.ACTIVITY_ALREADY_PASSED);
+            throw new BizException(ErrorCode.SHOULD_NOT_REG_NOTIFY_FOR_ACTIVITY_ALREADY_PASSED);
         }
 
         if (Strings.isNullOrEmpty(this.notify)) {
