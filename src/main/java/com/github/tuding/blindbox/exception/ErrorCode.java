@@ -3,6 +3,7 @@ package com.github.tuding.blindbox.exception;
 public enum ErrorCode {
 
     FAIL_TO_GET_OPENID,
+    FAIL_TO_GET_WXCHAT_ACCESS_TOKEN,
 
     INVALID_AES_KEY,
     INVALID_IV,
