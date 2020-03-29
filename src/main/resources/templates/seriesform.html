@@ -94,8 +94,8 @@
             </div>
 
 
-            <div class="three fields">
-                <div class="inline field required">
+            <div class="two fields">
+                <div class="field required">
                     <label>产品系列图</label>
                     <div th:if="*{id!=null}">
                         <img class="ui medium image"
@@ -112,7 +112,8 @@
                     </div>
                     <input type="file" name="matrixHeaderImageFile">
                 </div>
-
+            </div>
+            <div class="two fields">
                 <div class="field required">
                     <label>抽盒图</label>
                     <div th:if="*{id!=null}">
@@ -121,15 +122,16 @@
                     </div>
                     <input type="file" name="matrixCellImageFile">
                 </div>
-            </div>
-            <div class="field required">
-                <label>产品图鉴</label>
-                <div th:if="*{id!=null}">
-                    <img class="ui medium image"
-                         th:src="*{longImage}">
+                <div class="field required">
+                    <label>产品图鉴</label>
+                    <div th:if="*{id!=null}">
+                        <img class="ui medium image"
+                             th:src="*{longImage}">
+                    </div>
+                    <input type="file" name="longImageFile">
                 </div>
-                <input type="file" name="longImageFile">
             </div>
+
             <br/>
             <div class="field">
                 <div class="ui checkbox">

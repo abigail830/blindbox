@@ -44,9 +44,12 @@
         <div class="ui divider"></div>
 
         <div class="four wide column">
-            <h2 th:text="${role.name}"></h2>
-            <p th:text="${role.description}"></p>
-            <div align="center"><img class="ui small circular image" style="text-align: center" th:src="${role.roleImage}"></div>
+            <div align="center"><img class="ui tiny circular image" style="text-align: center"
+                                     th:src="${role.roleImage}"></div>
+            <div align="center">
+                <div th:text="${role.name}" class="header"></div>
+                <div class="description" th:text="${role.description}"></div>
+            </div>
 
         </div>
 
