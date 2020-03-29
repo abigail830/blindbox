@@ -1,0 +1,1 @@
+alter table activity_tbl add redirect_page varchar(200);

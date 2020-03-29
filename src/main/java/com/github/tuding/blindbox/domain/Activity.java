@@ -70,8 +70,20 @@ public class Activity {
         this.mainImgAddr = mainImgAddr;
     }
 
-    public void addNotifier(String openId) {
+    public void addNotifyInfo(String openId, String redirectPage) {
+        updateNotifier(openId);
+        updateRedirectPage(redirectPage);
+    }
 
+    private void updateRedirectPage(String redirectPage) {
+        if (Strings.isNullOrEmpty(redirectPage)) {
+            throw new BizException(ErrorCode.NOTIFY_REDIRECT_PAGE_SHOULD_NOT_BE_NULL_OR_EMPTY);
+        } else {
+            this.notifyJumpPage = redirectPage;
+        }
+    }
+
+    private void updateNotifier(String openId) {
         if (activityStartDate.toLocalDateTime().isBefore(LocalDateTime.now())) {
             throw new BizException(ErrorCode.SHOULD_NOT_REG_NOTIFY_FOR_ACTIVITY_ALREADY_PASSED);
         }

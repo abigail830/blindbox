@@ -54,10 +54,10 @@ public class WxActivityController {
     @NeedWxVerifyToken
     @ApiOperation(value = "接受活动开始通知(需要带token")
     public void registerForActivityNotify(HttpServletRequest request,
-                                          @PathVariable String activityId) {
+                                          @PathVariable String activityId,
+                                          @RequestParam String redirectPage) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        activityService.acceptActivityNotify(token, activityId);
-
+        activityService.acceptActivityNotify(token, activityId, redirectPage);
     }
 
 }

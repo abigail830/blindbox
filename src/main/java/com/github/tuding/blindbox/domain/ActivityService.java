@@ -3,6 +3,7 @@ package com.github.tuding.blindbox.domain;
 import com.github.tuding.blindbox.exception.ActivityNotFoundException;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
+import com.github.tuding.blindbox.infrastructure.client.WxClient;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ActivityRepository;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
@@ -23,6 +24,9 @@ public class ActivityService {
 
     @Autowired
     ActivityRepository activityRepository;
+
+    @Autowired
+    WxClient wxClient;
 
     @Autowired
     Jwt jwt;
@@ -68,17 +72,29 @@ public class ActivityService {
         activityRepository.updateActivity(activity);
     }
 
-    public void acceptActivityNotify(String token, String activityId) {
+    public void acceptActivityNotify(String token, String activityId, String redirectPage) {
         String openId = jwt.getOpenIdFromToken(token);
         log.info("User[{}] register notify for activity[{}]", openId, activityId);
+
         final Optional<Activity> activity = activityRepository.queryActivityById(activityId);
         if (!activity.isPresent()) {
             throw new BizException(ErrorCode.INVALID_ACTIVITY_ID);
         }
 
-        activity.get().addNotifier(openId);
-        activityRepository.addNotification(activity.get());
+        final Activity existingRecord = activity.get();
+        existingRecord.addNotifyInfo(openId, redirectPage);
+        activityRepository.addNotification(existingRecord);
 
+    }
+
+    public void sendActivityNotify(String openId, String activityId) {
+        final Optional<Activity> activity = activityRepository.queryActivityById(activityId);
+        if (activity.isPresent()) {
+            log.info("Going to send notification for activity {}", activity.get());
+            wxClient.sendActivityNotify(openId, activity.get());
+        } else {
+            throw new BizException(ErrorCode.INVALID_ACTIVITY_ID);
+        }
     }
 
     public Activity getActivityDetail(String activityId) {

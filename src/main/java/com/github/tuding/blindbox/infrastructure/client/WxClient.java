@@ -110,10 +110,11 @@ public class WxClient {
                 log.warn("fail to notify with response {}", response);
                 log.warn(response.message());
             } else {
+                log.debug(response.toString());
                 log.info("Notification sent successfully");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("WxClient sendNotify met IOException: {}", e.getMessage());
         }
     }
 }

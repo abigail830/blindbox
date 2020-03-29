@@ -98,8 +98,10 @@ public class ActivityRepository {
 
     public void addNotification(Activity activity) {
         log.info("Going to update notify for activity : {}", activity);
-        String updateSQL = "UPDATE activity_tbl SET notify=? WHERE id = ?";
-        int update = jdbcTemplate.update(updateSQL, activity.getNotify(), activity.getId());
+        String updateSQL = "UPDATE activity_tbl SET notify=?, redirect_page=? WHERE id = ?";
+        int update = jdbcTemplate.update(updateSQL,
+                activity.getNotify(), activity.getNotifyJumpPage(), activity.getId());
+
         log.info("update activity_tbl row {} ", update);
     }
 }
