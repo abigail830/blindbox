@@ -113,14 +113,20 @@ public class WxClient {
             final Response response = HttpClientUtil.instance().postBody(requestUrl, request, headers);
 
             if (!response.isSuccessful()) {
-                log.warn("fail to notify with response {}", response);
+                log.warn("fail to notify with response {}", response.body().string());
                 log.warn(response.message());
             } else {
-                log.debug(response.toString());
-                log.info("Notification sent successfully for user[{}]", notifierOpenId);
+                final String result = response.body().string();
+                if (result.contains("errcode")) {
+                    log.warn("Notify user[{}] met error: {}", notifierOpenId, result);
+                } else {
+                    log.info("Notification sent successfully for user[{}]", notifierOpenId);
+                }
             }
         } catch (IOException e) {
             log.error("WxClient sendNotify met IOException: {}", e.getMessage());
+        } catch (Exception e) {
+            log.error("WxClient sendNotify met Exception: {}", e.getMessage());
         }
     }
 }
