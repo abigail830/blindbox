@@ -84,8 +84,8 @@ public class Activity {
     }
 
     private void updateNotifier(String openId) {
-        if (activityStartDate.toLocalDateTime().isBefore(LocalDateTime.now())) {
-            throw new BizException(ErrorCode.SHOULD_NOT_REG_NOTIFY_FOR_ACTIVITY_ALREADY_PASSED);
+        if (!isFutureActivity()) {
+            throw new BizException(ErrorCode.SHOULD_NOT_REG_NOTIFY_FOR_ACTIVITY_WHEN_STARTED);
         }
 
         if (Strings.isNullOrEmpty(this.notify)) {
@@ -117,5 +117,13 @@ public class Activity {
         if (!Strings.isNullOrEmpty(notifier)) {
             this.notify = notifier;
         }
+    }
+
+    public Boolean isFutureActivity() {
+        return activityStartDate.toLocalDateTime().isAfter(LocalDateTime.now());
+    }
+
+    public Boolean isExpiriedActivity() {
+        return activityEndDate.toLocalDateTime().isBefore(LocalDateTime.now());
     }
 }

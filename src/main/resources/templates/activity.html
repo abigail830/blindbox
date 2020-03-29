@@ -63,11 +63,11 @@
                 <thead>
                 <tr>
                     <th>活动名称</th>
-                    <th>活动开始时间</th>
-                    <th>活动结束时间</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
                     <th>首页显示</th>
-                    <th>编辑活动</th>
-                    <th>订阅人数</th>
+                    <th>编辑</th>
+                    <th>订阅数</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -92,9 +92,11 @@
                     </td>
                     <td><span th:text="${activity.subscribeCount}"></span></td>
                     <td>
-                        <a th:attr="onclick=|sendNotify('${activity.id}')|" href="#" title="发送活动通知">
-                            <i class="envelope open icon"></i>发送活动通知
-                        </a>
+                        <div th:if="${activity.isFutureActivity}">
+                            <a th:attr="onclick=|sendNotify('${activity.id}')|" href="#" title="发送活动通知">
+                                <i class="envelope open icon"></i>发送活动通知
+                            </a>
+                        </div>
                     </td>
                 </tr>
                 </tbody>

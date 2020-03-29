@@ -17,6 +17,7 @@ public class ActivityBriefDTO {
     String startDate;
     String endDate;
     Integer subscribeCount;
+    Boolean isFutureActivity;
 
     public ActivityBriefDTO(Activity activity) {
         this.id = activity.getId();
@@ -25,5 +26,6 @@ public class ActivityBriefDTO {
         this.startDate = activity.getActivityStartDate().toLocalDateTime().toString();
         this.endDate = activity.getActivityEndDate().toLocalDateTime().toString();
         this.subscribeCount = activity.getNotifierAsSet().size();
+        this.isFutureActivity = activity.isFutureActivity();
     }
 }
