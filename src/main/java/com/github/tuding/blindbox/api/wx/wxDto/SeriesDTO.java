@@ -36,6 +36,8 @@ public class SeriesDTO {
 
     Integer productVolume;
 
+    String boxImage;
+
     public SeriesDTO (Series series, List<Product> productList) {
         this.id = series.getId();
         this.roleId = series.getRoleId();
@@ -49,6 +51,7 @@ public class SeriesDTO {
         this.matrixHeaderImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixHeaderImage();
         this.matrixCellImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixCellImage();
         this.longImage = Constant.WX_UI_IMAGE_PATH + series.getLongImage();
+        this.boxImage = Constant.WX_UI_IMAGE_PATH + series.getBoxImage();
         this.productVolume = productList.size();
     }
 
@@ -65,5 +68,6 @@ public class SeriesDTO {
         this.matrixHeaderImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixHeaderImage();
         this.matrixCellImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixCellImage();
         this.longImage = Constant.WX_UI_IMAGE_PATH + series.getLongImage();
+        this.boxImage = Constant.WX_UI_IMAGE_PATH + series.getBoxImage();
     }
 }

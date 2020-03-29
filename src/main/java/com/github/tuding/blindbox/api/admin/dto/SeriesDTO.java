@@ -39,6 +39,9 @@ public class SeriesDTO {
     String longImage;
     MultipartFile longImageFile;
 
+    String boxImage;
+    MultipartFile boxImageFile;
+
     public Series toDomainObject() {
         Series series = new Series();
         series.setId(id);
@@ -53,6 +56,7 @@ public class SeriesDTO {
         series.setMatrixCellImage(matrixCellImage);
         series.setColumnSize(columnSize);
         series.setLongImage(longImage);
+        series.setBoxImage(boxImage);
         return series;
     }
 
@@ -69,5 +73,6 @@ public class SeriesDTO {
         this.matrixHeaderImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixHeaderImage();
         this.matrixCellImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixCellImage();
         this.longImage = Constant.ADMIN_UI_IMAGE_PATH + series.getLongImage();
+        this.boxImage = Constant.ADMIN_UI_IMAGE_PATH + series.getBoxImage();
     }
 }

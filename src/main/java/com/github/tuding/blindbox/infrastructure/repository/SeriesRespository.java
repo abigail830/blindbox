@@ -30,8 +30,9 @@ public class SeriesRespository {
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO series_tbl " +
-                    " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage, columnSize, longImage) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, " +
+                    " matrixCellImage, columnSize, longImage, boxImage) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql,
                     series.getId(),
                     series.getRoleId(),
@@ -44,12 +45,14 @@ public class SeriesRespository {
                     series.getMatrixHeaderImage(),
                     series.getMatrixCellImage(),
                     series.getColumnSize(),
-                    series.getLongImage());
+                    series.getLongImage(),
+                    series.getBoxImage());
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO series_tbl " +
-                    " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, matrixCellImage, columnSize, longImage) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, " +
+                    " matrixCellImage, columnSize, longImage, boxImage) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql,
                     series.getId(),
                     series.getRoleId(),
@@ -62,7 +65,8 @@ public class SeriesRespository {
                     series.getMatrixHeaderImage(),
                     series.getMatrixCellImage(),
                     series.getColumnSize(),
-                    series.getLongImage());
+                    series.getLongImage(),
+                    series.getBoxImage());
             log.info("update row {} ", update);
         }
     }
@@ -112,7 +116,7 @@ public class SeriesRespository {
     public void updateSeries(Series series) {
         if (StringUtils.isNotBlank(series.getReleaseDate())) {
             String updateSql = "UPDATE series_tbl " +
-                    " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?" +
+                    " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?, boxImage = ?" +
                     " WHERE id = ? ";
             int update = jdbcTemplate.update(updateSql,
                     series.getName(),
@@ -121,11 +125,12 @@ public class SeriesRespository {
                     series.getIsPresale(),
                     series.getPrice(),
                     series.getColumnSize(),
+                    series.getBoxImage(),
                     series.getId());
             log.info("update row {} ", update);
         } else {
             String updateSql = "UPDATE series_tbl " +
-                    " SET name = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?" +
+                    " SET name = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?, boxImage = ?" +
                     " WHERE id = ? ";
             int update = jdbcTemplate.update(updateSql,
                     series.getName(),
@@ -133,6 +138,7 @@ public class SeriesRespository {
                     series.getIsPresale(),
                     series.getPrice(),
                     series.getColumnSize(),
+                    series.getBoxImage(),
                     series.getId());
             log.info("update row {} ", update);
         }

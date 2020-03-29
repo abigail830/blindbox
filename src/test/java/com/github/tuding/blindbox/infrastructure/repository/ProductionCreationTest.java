@@ -58,7 +58,8 @@ public class ProductionCreationTest {
                 "/app/data/series/header/testSeries.png",
                 "/app/data/series/cell/testSeries.png",
                 3,
-                "/app/data/series/cell/longImage.png"));
+                "/app/data/series/cell/longImage.png",
+                "/app/data/series/cell/boxImage.png"));
 
         seriesRespository.createSeries(new Series("seriesid2", rolesRepository.queryRolesByName("testRole1").get().getId(),
                 "testSeries2", "2020-03-13", false, false, BigDecimal.valueOf(30),
@@ -66,7 +67,8 @@ public class ProductionCreationTest {
                 "/app/data/series/header/testSeries2.png",
                 "/app/data/series/cell/testSeries2.png",
                 3,
-                "/app/data/series/cell/longImage.png"));
+                "/app/data/series/cell/longImage.png",
+                "/app/data/series/cell/boxImage.png"));
         assertTrue(seriesRespository.querySeriesByName("testSeries").isPresent());
 
         //product

@@ -31,4 +31,5 @@ public class Series {
     Integer columnSize;
     String longImage;
 
+    String boxImage;
 }

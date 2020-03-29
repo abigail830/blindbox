@@ -118,6 +118,13 @@ public class SeriesController {
                     seriesDTO.setLongImage(image);
                 }
 
+                if (seriesDTO.getBoxImageFile().getSize() > 0) {
+                    String image = imageRepository.saveImage(seriesDTO.getId() + "-boxImage", ImageCategory.SERIES, seriesDTO.getBoxImageFile());
+                    seriesDTO.setBoxImage(image);
+                } else {
+                    seriesDTO.setBoxImage(imageRepository.getPath(seriesDTO.getId() + "-boxImage",ImageCategory.SERIES));
+                }
+
                 seriesDTO.setRoleId(roleId);
                 seriesRespository.updateSeries(seriesDTO.toDomainObject());
 
@@ -135,6 +142,9 @@ public class SeriesController {
                 seriesDTO.setMatrixCellImage(image);
                 image = imageRepository.saveImage(seriesID.toString() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
                 seriesDTO.setLongImage(image);
+                image = imageRepository.saveImage(seriesID.toString() + "-boxImage", ImageCategory.SERIES, seriesDTO.getBoxImageFile());
+                seriesDTO.setBoxImage(image);
+
                 seriesDTO.setId(seriesID.toString());
                 seriesDTO.setRoleId(roleId);
                 seriesRespository.createSeries(seriesDTO.toDomainObject());

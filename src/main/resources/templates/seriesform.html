@@ -130,6 +130,14 @@
                     </div>
                     <input type="file" name="longImageFile">
                 </div>
+                <div class="field required">
+                    <label>产品外包装盒子图</label>
+                    <div th:if="*{id!=null}">
+                        <img class="ui medium image"
+                             th:src="*{boxImage}">
+                    </div>
+                    <input type="file" name="boxImageFile">
+                </div>
             </div>
 
             <br/>

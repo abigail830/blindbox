@@ -1,0 +1,1 @@
+alter table series_tbl add boxImage varchar(1000);
