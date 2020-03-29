@@ -2,6 +2,7 @@ package com.github.tuding.blindbox.infrastructure.client;
 
 
 import com.github.tuding.blindbox.domain.Activity;
+import com.github.tuding.blindbox.domain.Product;
 import com.github.tuding.blindbox.domain.User;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
@@ -46,6 +47,9 @@ public class WxClient {
 
     @Value("${app.appSecret}")
     private String appSecret;
+
+    @Value("${app.mchId}")
+    private String merchantId;
 
     public Optional<User> getUerWithOpenIdAndSKey(String code) {
         String url = LOGIN_MP_URL.replace(APPID, appId).replace(APPSECRET, appSecret).replace(CODE, code);
@@ -128,5 +132,9 @@ public class WxClient {
         } catch (Exception e) {
             log.error("WxClient sendNotify met Exception: {}", e.getMessage());
         }
+    }
+
+    void generatePayment(Product product) {
+
     }
 }

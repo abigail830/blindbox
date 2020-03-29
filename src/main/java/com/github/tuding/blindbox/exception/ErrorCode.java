@@ -2,22 +2,30 @@ package com.github.tuding.blindbox.exception;
 
 public enum ErrorCode {
 
+    // Wxchat related
     FAIL_TO_GET_OPENID,
     FAIL_TO_GET_WXCHAT_ACCESS_TOKEN,
-
     INVALID_AES_KEY,
     INVALID_IV,
     ILLEGAL_BUFFER,
     FAIL_TO_DECRYPT,
 
+    //User
     FAIL_TO_UPDATE_USER_INFO,
     WX_USER_NOT_FOUND,
     FAIL_TO_MODIFY_SHIPPING_ADDRESS,
+    BONUS_NOT_ENOUGH,
+    FAIL_TO_UPDATE_BONUS,
 
+    //Infra
     FAIL_TO_STORE_FILE,
 
+    //Activity
     INVALID_ACTIVITY_ID,
     SHOULD_NOT_REG_NOTIFY_FOR_ACTIVITY_WHEN_STARTED,
     NOTIFY_REDIRECT_PAGE_SHOULD_NOT_BE_NULL_OR_EMPTY,
+
+    //Product
+    FAIL_TO_GET_PRODUCT_PRICE_BY_ID,
 
 }

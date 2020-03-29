@@ -1,10 +1,12 @@
 package com.github.tuding.blindbox.api.wx;
 
+import com.github.tuding.blindbox.api.wx.wxDto.DiscountCouponDTO;
 import com.github.tuding.blindbox.api.wx.wxDto.DrawDTO;
 import com.github.tuding.blindbox.api.wx.wxDto.RoleDTO;
 import com.github.tuding.blindbox.api.wx.wxDto.SeriesDTO;
 import com.github.tuding.blindbox.domain.DrawService;
 import com.github.tuding.blindbox.domain.ProductService;
+import com.github.tuding.blindbox.domain.UserService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,9 @@ public class WxProductController {
 
     @Autowired
     private DrawService drawService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/roles")
     @NeedWxVerifyToken
@@ -84,5 +90,18 @@ public class WxProductController {
     @ApiOperation(value = "under development")
     public DrawDTO confirmADraw(@PathVariable("drawId") String drawId) {
         return new DrawDTO(drawService.confirmADraw(drawId));
+    }
+
+    @PostMapping("/use-discount/{productId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "扣减积分以兑换优惠券, 返回折后价格/折扣描述/剩余积分 (需要带token)")
+    public DiscountCouponDTO getDiscountByBonus(HttpServletRequest request,
+                                                @PathVariable String productId) {
+        BigDecimal priceAfterDiscount = productService.getProductPriceAfterDiscount(productId);
+
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        Integer remainBonus = userService.getDiscountByBonus(token, Constant.GET_COUPON_CONSUME_BONUS);
+
+        return new DiscountCouponDTO(priceAfterDiscount, remainBonus);
     }
 }

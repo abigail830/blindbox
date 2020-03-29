@@ -45,8 +45,7 @@ public class WxActivityController {
     @GetMapping("/id/{activityId}")
     @NeedWxVerifyToken
     @ApiOperation(value = "根据活动ID，获取活动详情(需要带token")
-    public ActivityDetailDTO getActivityDetail(HttpServletRequest request,
-                                               @PathVariable String activityId) {
+    public ActivityDetailDTO getActivityDetail(@PathVariable String activityId) {
         return new ActivityDetailDTO(activityService.getActivityDetail(activityId));
     }
 

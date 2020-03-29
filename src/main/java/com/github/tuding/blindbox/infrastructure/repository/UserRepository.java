@@ -1,6 +1,8 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.tuding.blindbox.domain.User;
+import com.github.tuding.blindbox.exception.BizException;
+import com.github.tuding.blindbox.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -63,5 +65,13 @@ public class UserRepository {
                 decryptUser.getUnionId(),
                 decryptUser.getOpenId()
         );
+    }
+
+    public void updateBonus(String openId, Integer bonus) {
+        log.info("Going to update bonus to {} for user[{}]", bonus, openId);
+        String updateSql = "UPDATE wx_user_tbl SET bonus=? where open_id=?";
+        int row = jdbcTemplate.update(updateSql, bonus, openId);
+        if (row != 1)
+            throw new BizException(ErrorCode.FAIL_TO_UPDATE_BONUS);
     }
 }

@@ -68,4 +68,18 @@ public class UserService {
         }
 
     }
+
+    public Integer getDiscountByBonus(String token, Integer consumeBonus) {
+        final String openId = jwt.getOpenIdFromToken(token);
+        final User user = userRepository.getUserByOpenId(openId)
+                .orElseThrow(() -> new BizException(ErrorCode.WX_USER_NOT_FOUND));
+
+        Integer remainBonus = user.getBonus() - consumeBonus;
+        if (remainBonus < 0) {
+            throw new BizException(ErrorCode.BONUS_NOT_ENOUGH);
+        } else {
+            userRepository.updateBonus(openId, remainBonus);
+            return remainBonus;
+        }
+    }
 }

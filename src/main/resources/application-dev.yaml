@@ -34,4 +34,5 @@ swagger:
 app:
   appId: "wx6603c6d1c018bfd1"
   appSecret: "39ee24b5832f4f68649df87f1bcb0110"
+  mchId: ""
   imagePath: "/opt/apps/blindbox"

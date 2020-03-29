@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.domain;
 
+import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
 import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
@@ -7,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,13 +24,12 @@ public class ProductService {
 
     @Autowired
     ProductRepository productRepository;
-    
+
     @Autowired
 
     public List<Role> getRoles() {
         return rolesRepository.queryRoles();
     }
-
 
     public List<Series> getSeriesList(String roleId) {
         return seriesRespository.queryByRoleID(roleId);
@@ -45,5 +46,10 @@ public class ProductService {
 
     public List<Series> getAllSeries(Integer limitPerPage, Integer numOfPage) {
         return seriesRespository.queryAllSeriesWithPaging(limitPerPage, numOfPage);
+    }
+
+    public BigDecimal getProductPriceAfterDiscount(String productId) {
+        BigDecimal oriPrice = productRepository.getProductPriceById(productId);
+        return oriPrice.multiply(Constant.DISCOUNT);
     }
 }
