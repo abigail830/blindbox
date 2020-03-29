@@ -1,0 +1,1 @@
+alter table product_v2_tbl drop isPresale;

@@ -17,7 +17,6 @@ public class ProductDTO {
     String seriesID;
     String name;
     Boolean isSpecial;
-    Boolean isPresale;
     Long stock;
     BigDecimal probability;
     //Image f
@@ -35,7 +34,6 @@ public class ProductDTO {
         product.setSeriesID(seriesID);
         product.setName(name);
         product.setIsSpecial(isSpecial);
-        product.setIsPresale(isPresale);
         product.setStock(stock);
         product.setProbability(probability);
         product.setProductImage(productImage);
@@ -49,7 +47,6 @@ public class ProductDTO {
         this.seriesID = product.getSeriesID();
         this.name = product.getName();
         this.isSpecial = product.getIsSpecial();
-        this.isPresale = product.getIsPresale();
         this.stock = product.getStock();
         this.probability = product.getProbability();
         this.version = product.getVersion();

@@ -35,7 +35,6 @@ product_v2_tbl:
     seriesID: seriesid1
     name: "product1"
     isSpecial: false
-    isPresale: false
     stock: 200
     probability: 0.2
     productImage: "/app/data/product/image/product1.png"
@@ -45,7 +44,6 @@ product_v2_tbl:
     seriesID: seriesid1
     name: "product2"
     isSpecial: false
-    isPresale: false
     stock: 200
     probability: 0.2
     productImage: "/app/data/product/image/product2.png"
@@ -55,7 +53,6 @@ product_v2_tbl:
     seriesID: seriesid1
     name: "product3"
     isSpecial: true
-    isPresale: false
     stock: 10
     probability: 0.01
     productImage: "/app/data/product/image/product3.png"

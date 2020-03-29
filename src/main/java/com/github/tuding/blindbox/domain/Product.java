@@ -14,7 +14,6 @@ public class Product {
     String seriesID;
     String name;
     Boolean isSpecial;
-    Boolean isPresale;
     Long stock;
     BigDecimal probability;
     //Image f
