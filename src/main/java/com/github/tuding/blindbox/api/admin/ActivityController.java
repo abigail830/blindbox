@@ -69,12 +69,18 @@ public class ActivityController {
         return "activityForm";
     }
 
+    @PostMapping("/id/{activityId}/send-notify")
+    public @ResponseBody
+    void sendActivityNotification(@PathVariable String activityId) {
+        activityService.sendActivityNotify(activityId);
+        log.info("Complete send notification for activity[{}]", activityId);
+    }
+
     @DeleteMapping("/id/{id}")
     public @ResponseBody
     void deleteActivity(@PathVariable String id) {
         activityService.deleteActivityById(id);
         log.info("Deleted activity {}", id);
-//        return "redirect:/admin-ui/activities/";
     }
 
     @GetMapping("/form")

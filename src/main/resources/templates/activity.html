@@ -67,6 +67,7 @@
                     <th>活动结束时间</th>
                     <th>显示在首页</th>
                     <th>更多操作</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -84,8 +85,13 @@
                         <a th:href="@{'/admin-ui/activities/edit/id/' + ${activity.id}}" title="编辑">
                             <i class="edit outline icon"></i>
                         </a>
-                        <a title="删除" href="#">
-                            <i class="trash alternate outline icon" th:attr="onclick=|delItem('${activity.id}')|"></i>
+                        <a title="删除" href="#" th:attr="onclick=|delItem('${activity.id}')|">
+                            <i class="trash alternate outline icon"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a th:attr="onclick=|sendNotify('${activity.id}')|" href="#" title="发送活动通知">
+                            <i class="envelope open icon"></i>发送活动通知
                         </a>
                     </td>
                 </tr>
@@ -121,6 +127,21 @@
             type: "DELETE",
             success: function (data, status) {
                 console.info("Got delete activity " + status);
+                window.location = '/admin-ui/activities/';
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        })
+    }
+
+     function sendNotify (id){
+        //$('.ui.basic.modal').modal('show');
+        $.ajax({
+            url: "/admin-ui/activities/id/" + id + "/send-notify",
+            type: "POST",
+            success: function (data, status) {
+                console.info("Notify sentuod " + status);
                 window.location = '/admin-ui/activities/';
             },
             error: function (e) {

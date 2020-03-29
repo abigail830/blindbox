@@ -69,35 +69,41 @@ public class WxClient {
     }
 
     private WxTokenResponse getWxToken() {
-        if (wxToken.isTokenValid()) {
+        if (null != wxToken && wxToken.isTokenValid()) {
             return this.wxToken;
         } else {
             String requestUrl = TOKEN_URL.replace(APPID, appId).replace(APPSECRET, appSecret);
             String resultData = HttpClientUtil.instance().getData(requestUrl);
             final WxTokenResponse result = JsonUtil.toObject(resultData, WxTokenResponse.class);
+            result.setExpiryInstant();
+
             if (Strings.isNullOrEmpty(result.getAccess_token())) {
                 log.warn("{}", resultData);
                 throw new BizException(ErrorCode.FAIL_TO_GET_WXCHAT_ACCESS_TOKEN);
             } else {
                 this.wxToken = result;
+                log.info("New wxToken received: {}", wxToken);
                 return this.wxToken;
             }
         }
     }
 
     //TODO: need further update the template and map and page
-    public void sendActivityNotify(String openId, Activity activity) {
+    public void sendActivityNotify(Activity activity) {
         final String access_token = getWxToken().getAccess_token();
+        log.info("Going to send notification for activity {}", activity);
 
-        Map<String, TemplateData> data = new HashMap<>();
-        data.put("key1", new TemplateData(activity.getActivityName()));
-        final WxNotifyRequest request = new WxNotifyRequest(access_token, activity.getNotifyJumpPage(),
-                openId, TEMPLATE_ID, data);
+        activity.getNotifierAsSet().forEach(notifierOpenId -> {
+            Map<String, TemplateData> data = new HashMap<>();
+            data.put("key1", new TemplateData(activity.getActivityName()));
 
-        sendNotify(JsonUtil.toJson(request));
+            final WxNotifyRequest request = new WxNotifyRequest(access_token, activity.getNotifyJumpPage(),
+                    notifierOpenId, TEMPLATE_ID, data);
+            sendNotify(JsonUtil.toJson(request), notifierOpenId);
+        });
     }
 
-    private void sendNotify(String request) {
+    private void sendNotify(String request, String notifierOpenId) {
         final String access_token = getWxToken().getAccess_token();
         String requestUrl = NOTIFICATION_URL.replace(ACCESS_TOKEN, access_token);
         try {
@@ -111,7 +117,7 @@ public class WxClient {
                 log.warn(response.message());
             } else {
                 log.debug(response.toString());
-                log.info("Notification sent successfully");
+                log.info("Notification sent successfully for user[{}]", notifierOpenId);
             }
         } catch (IOException e) {
             log.error("WxClient sendNotify met IOException: {}", e.getMessage());

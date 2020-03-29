@@ -87,14 +87,10 @@ public class ActivityService {
 
     }
 
-    public void sendActivityNotify(String openId, String activityId) {
-        final Optional<Activity> activity = activityRepository.queryActivityById(activityId);
-        if (activity.isPresent()) {
-            log.info("Going to send notification for activity {}", activity.get());
-            wxClient.sendActivityNotify(openId, activity.get());
-        } else {
-            throw new BizException(ErrorCode.INVALID_ACTIVITY_ID);
-        }
+    public void sendActivityNotify(String activityId) {
+        final Activity activity = activityRepository.queryActivityById(activityId)
+                .orElseThrow(() -> new BizException(ErrorCode.INVALID_ACTIVITY_ID));
+        wxClient.sendActivityNotify(activity);
     }
 
     public Activity getActivityDetail(String activityId) {

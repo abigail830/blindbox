@@ -29,4 +29,8 @@ public class WxTokenResponse {
         return !Strings.isNullOrEmpty(access_token)
                 && Instant.now().isBefore(expiryInstant);
     }
+
+    public void setExpiryInstant() {
+        this.expiryInstant = Instant.now().plusSeconds(expires_in);
+    }
 }
