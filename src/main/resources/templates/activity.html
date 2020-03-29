@@ -65,8 +65,9 @@
                     <th>活动名称</th>
                     <th>活动开始时间</th>
                     <th>活动结束时间</th>
-                    <th>显示在首页</th>
-                    <th>更多操作</th>
+                    <th>首页显示</th>
+                    <th>编辑活动</th>
+                    <th>订阅人数</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -89,6 +90,7 @@
                             <i class="trash alternate outline icon"></i>
                         </a>
                     </td>
+                    <td><span th:text="${activity.subscribeCount}"></span></td>
                     <td>
                         <a th:attr="onclick=|sendNotify('${activity.id}')|" href="#" title="发送活动通知">
                             <i class="envelope open icon"></i>发送活动通知

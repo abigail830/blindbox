@@ -97,11 +97,12 @@ public class Activity {
         }
     }
 
+
     public Set<String> getNotifierAsSet() {
         if (Strings.isNullOrEmpty(this.notify)) {
             return new HashSet<>();
         } else {
-            final String[] splits = this.notify.split(Activity.NOTIFY_SEPARATOR, -2);
+            final String[] splits = this.notify.split("\\" + Activity.NOTIFY_SEPARATOR, -2);
             return new HashSet<>(Arrays.asList(splits));
         }
     }
@@ -109,6 +110,12 @@ public class Activity {
     public void setNotify(Set<String> notifySet) {
         if (null != notifySet && !notifySet.isEmpty()) {
             this.notify = String.join(Activity.NOTIFY_SEPARATOR, notifySet);
+        }
+    }
+
+    public void setNotify(String notifier) {
+        if (!Strings.isNullOrEmpty(notifier)) {
+            this.notify = notifier;
         }
     }
 }
