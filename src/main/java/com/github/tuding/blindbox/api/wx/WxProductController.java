@@ -100,7 +100,7 @@ public class WxProductController {
         BigDecimal priceAfterDiscount = productService.getProductPriceAfterDiscount(productId);
 
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        Integer remainBonus = userService.getDiscountByBonus(token, Constant.GET_COUPON_CONSUME_BONUS);
+        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_COUPON_CONSUME_BONUS);
 
         return new DiscountCouponDTO(priceAfterDiscount, remainBonus);
     }
