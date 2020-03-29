@@ -36,7 +36,6 @@ product_v2_tbl:
     name: "product1"
     isSpecial: false
     stock: 200
-    probability: 0.2
     productImage: "/app/data/product/image/product1.png"
     productGrayImage: "/app/data/product/image/grayproduct1.png"
     version: 0
@@ -45,7 +44,6 @@ product_v2_tbl:
     name: "product2"
     isSpecial: false
     stock: 200
-    probability: 0.2
     productImage: "/app/data/product/image/product2.png"
     productGrayImage: "/app/data/product/image/grayproduct2.png"
     version: 0
@@ -54,7 +52,6 @@ product_v2_tbl:
     name: "product3"
     isSpecial: true
     stock: 10
-    probability: 0.01
     productImage: "/app/data/product/image/product3.png"
     productGrayImage: "/app/data/product/image/grayproduct3.png"
     version: 0

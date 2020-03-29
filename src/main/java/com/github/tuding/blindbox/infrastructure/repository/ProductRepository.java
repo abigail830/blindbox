@@ -31,18 +31,18 @@ public class ProductRepository {
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO product_v2_tbl (id, seriesID, name, isSpecial, stock, " +
-                    " probability, productImage, productGrayImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    " productImage, productGrayImage) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
-                    product.getIsSpecial(), product.getStock(), product.getProbability(),
+                    product.getIsSpecial(), product.getStock(),
                     product.getProductImage(), product.getProductGrayImage());
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO product_v2_tbl (id, seriesID, name, isSpecial, stock, " +
-                    " probability, productImage, productGrayImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    " productImage, productGrayImage) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
-                    product.getIsSpecial(), product.getStock(), product.getProbability(),
+                    product.getIsSpecial(), product.getStock(),
                     product.getProductImage(), product.getProductGrayImage());
             log.info("update row {} ", update);
         }
@@ -83,15 +83,14 @@ public class ProductRepository {
     public void updateProduct(Product product) {
         log.info("Change product as {} ", product);
         String insertSql = "INSERT INTO product_v2_tbl (id, seriesID, name, isSpecial, stock, " +
-                " probability, productImage, productGrayImage, version) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                " productImage, productGrayImage, version) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         int update = jdbcTemplate.update(insertSql,
                 product.getId(),
                 product.getSeriesID(),
                 product.getName(),
                 product.getIsSpecial(),
                 product.getStock(),
-                product.getProbability(),
                 product.getProductImage(),
                 product.getProductGrayImage(),
                 product.getVersion());

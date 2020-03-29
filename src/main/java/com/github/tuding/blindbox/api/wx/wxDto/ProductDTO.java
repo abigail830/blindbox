@@ -17,7 +17,6 @@ public class ProductDTO {
     String name;
     Boolean isSpecial;
     Long stock;
-    BigDecimal probability;
     //Image f
     String productImage;
 
@@ -31,7 +30,6 @@ public class ProductDTO {
         this.name = product.getName();
         this.isSpecial = product.getIsSpecial();
         this.stock = product.getStock();
-        this.probability = product.getProbability();
         this.productImage = Constant.WX_UI_IMAGE_PATH + product.getProductImage();
         this.productGrayImage = Constant.WX_UI_IMAGE_PATH + product.getProductGrayImage();
 

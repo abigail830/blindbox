@@ -52,4 +52,8 @@ public class ProductService {
         BigDecimal oriPrice = productRepository.getProductPriceById(productId);
         return oriPrice.multiply(Constant.DISCOUNT);
     }
+
+    public List<Product> getProduct(String seriesId) {
+        return productRepository.getProductBySeries(seriesId);
+    }
 }

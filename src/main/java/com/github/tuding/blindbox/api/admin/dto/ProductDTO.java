@@ -18,7 +18,6 @@ public class ProductDTO {
     String name;
     Boolean isSpecial;
     Long stock;
-    BigDecimal probability;
     //Image f
     String productImage;
     MultipartFile productImageFile;
@@ -35,7 +34,6 @@ public class ProductDTO {
         product.setName(name);
         product.setIsSpecial(isSpecial);
         product.setStock(stock);
-        product.setProbability(probability);
         product.setProductImage(productImage);
         product.setProductGrayImage(productGrayImage);
         product.setVersion(version);
@@ -48,7 +46,6 @@ public class ProductDTO {
         this.name = product.getName();
         this.isSpecial = product.getIsSpecial();
         this.stock = product.getStock();
-        this.probability = product.getProbability();
         this.version = product.getVersion();
         this.productImage = Constant.ADMIN_UI_IMAGE_PATH + product.getProductImage();
         this.productGrayImage = Constant.ADMIN_UI_IMAGE_PATH + product.getProductGrayImage();

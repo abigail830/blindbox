@@ -58,7 +58,6 @@
                     <th>产品名称</th>
                     <th>珍稀产品</th>
                     <th>库存</th>
-                    <th>抽中%（如有特殊比率设置）</th>
                     <th>更多操作</th>
                 </tr>
                 </thead>
@@ -70,7 +69,6 @@
                     </td>
                     <td><span th:text="${item.stock}">库存</span></td>
 
-                    <td><span th:text="${item.probability}">抽中%</span></td>
                     <td>
                         <a th:href="@{'/admin-ui/product/productform/' + ${item.id}}" title="编辑">
                             <i class="edit outline icon"></i>

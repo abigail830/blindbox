@@ -55,9 +55,9 @@ public class WxProductController {
 
     @GetMapping("/series/{seriesId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "根据ID，获取指定产品系列(需要带token)")
+    @ApiOperation(value = "根据ID，获取指定产品系列， 包括产品数量(需要带token)")
     public SeriesDTO getSeries(@PathVariable("seriesId") String seriesId) {
-        return new SeriesDTO(productService.getSeries(seriesId).get());
+        return new SeriesDTO(productService.getSeries(seriesId).get(), productService.getProduct(seriesId));
     }
 
     @GetMapping("/series/new")

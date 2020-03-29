@@ -15,7 +15,6 @@ public class Product {
     String name;
     Boolean isSpecial;
     Long stock;
-    BigDecimal probability;
     //Image f
     String productImage;
 

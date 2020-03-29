@@ -74,7 +74,6 @@ public class ProductionCreationTest {
                 seriesRespository.querySeriesByName("testSeries").get().getId(),
                 "product1", false,
                 200L,
-                BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product1.png",
                 "/app/data/product/image/grayproduct1.png",
                 0L));
@@ -83,7 +82,6 @@ public class ProductionCreationTest {
                 seriesRespository.querySeriesByName("testSeries").get().getId(),
                 "product2", false,
                 200L,
-                BigDecimal.valueOf(0.2),
                 "/app/data/product/image/product2.png",
                 "/app/data/product/image/grayproduct2.png",
                 0L));
@@ -92,7 +90,6 @@ public class ProductionCreationTest {
         productRepository.createProduct(new Product("productid3", seriesRespository.querySeriesByName("testSeries").get().getId(),
                 "product3", true,
                 10L,
-                BigDecimal.valueOf(0.01),
                 "/app/data/product/image/product3.png",
                 "/app/data/product/image/grayproduct3.png",
                 0L));
