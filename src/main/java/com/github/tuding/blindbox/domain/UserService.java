@@ -28,13 +28,12 @@ public class UserService {
 
     @Transactional
     public String login(String code) {
-//        final User user = wxClient.getUerWithOpenIdAndSKey(code)
-//                .orElseThrow(() -> new BizException(ErrorCode.FAIL_TO_GET_OPENID));
-//
-//        if (Strings.isNullOrEmpty(user.getOpenId())) {
-//            throw new BizException(ErrorCode.FAIL_TO_GET_OPENID);
-//        }
-        User user = new User("test", "test");
+        final User user = wxClient.getUerWithOpenIdAndSKey(code)
+                .orElseThrow(() -> new BizException(ErrorCode.FAIL_TO_GET_OPENID));
+
+        if (Strings.isNullOrEmpty(user.getOpenId())) {
+            throw new BizException(ErrorCode.FAIL_TO_GET_OPENID);
+        }
 
         final Optional<User> userByOpenId = userRepository.getUserByOpenId(user.getOpenId());
         if (!userByOpenId.isPresent()) {
