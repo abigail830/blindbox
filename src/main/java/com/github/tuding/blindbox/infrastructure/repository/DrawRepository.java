@@ -1,7 +1,7 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
-import com.github.tuding.blindbox.domain.Draw;
-import com.github.tuding.blindbox.domain.Product;
+import com.github.tuding.blindbox.domain.product.Draw;
+import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

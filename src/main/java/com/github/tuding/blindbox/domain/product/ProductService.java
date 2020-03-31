@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.domain;
+package com.github.tuding.blindbox.domain.product;
 
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;

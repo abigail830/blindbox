@@ -1,16 +1,12 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
-import com.github.tuding.blindbox.api.admin.dto.ProductDTO;
-import com.github.tuding.blindbox.domain.Product;
-import com.github.tuding.blindbox.infrastructure.util.Toggle;
+import com.github.tuding.blindbox.domain.product.Product;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 

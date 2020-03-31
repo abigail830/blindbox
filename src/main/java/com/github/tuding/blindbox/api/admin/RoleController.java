@@ -2,7 +2,7 @@ package com.github.tuding.blindbox.api.admin;
 
 import com.github.tuding.blindbox.api.admin.dto.RoleDTO;
 import com.github.tuding.blindbox.domain.ImageCategory;
-import com.github.tuding.blindbox.domain.Role;
+import com.github.tuding.blindbox.domain.product.Role;
 import com.github.tuding.blindbox.exception.RolesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;

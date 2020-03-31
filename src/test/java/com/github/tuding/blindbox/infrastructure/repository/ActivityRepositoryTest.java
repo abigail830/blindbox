@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
-import com.github.tuding.blindbox.domain.Activity;
+import com.github.tuding.blindbox.domain.activity.Activity;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

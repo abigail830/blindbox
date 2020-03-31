@@ -2,7 +2,7 @@ package com.github.tuding.blindbox.api.wx;
 
 import com.github.tuding.blindbox.api.wx.wxDto.ActivityBriefDTO;
 import com.github.tuding.blindbox.api.wx.wxDto.ActivityDetailDTO;
-import com.github.tuding.blindbox.domain.ActivityService;
+import com.github.tuding.blindbox.domain.activity.ActivityService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import io.swagger.annotations.Api;

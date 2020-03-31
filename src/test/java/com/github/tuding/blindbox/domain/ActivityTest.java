@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.domain;
 
+import com.github.tuding.blindbox.domain.activity.Activity;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;

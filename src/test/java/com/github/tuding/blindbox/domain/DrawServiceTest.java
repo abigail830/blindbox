@@ -1,12 +1,13 @@
 package com.github.tuding.blindbox.domain;
 
+import com.github.tuding.blindbox.domain.product.Product;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.tuding.blindbox.domain.DrawService.drawAProduct;
-import static org.junit.jupiter.api.Assertions.*;
+import static com.github.tuding.blindbox.domain.product.DrawService.drawAProduct;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DrawServiceTest {
 

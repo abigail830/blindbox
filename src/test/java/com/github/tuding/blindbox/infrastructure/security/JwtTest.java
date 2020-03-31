@@ -1,7 +1,7 @@
 package com.github.tuding.blindbox.infrastructure.security;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.github.tuding.blindbox.domain.User;
+import com.github.tuding.blindbox.domain.user.User;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

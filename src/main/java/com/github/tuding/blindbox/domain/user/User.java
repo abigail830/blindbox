@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.domain;
+package com.github.tuding.blindbox.domain.user;
 
 import com.github.tuding.blindbox.infrastructure.Constant;
 import lombok.Getter;
@@ -54,7 +54,7 @@ public class User {
     }
 
     public void adjustBonusAndLastLoginDate() {
-        if (lastLoginDate == null) {
+        if (isNewUser()) {
             bonus = Constant.FIRST_LOGIN_BONUS;
         } else {
             if (isFirstLoginToday()) {
@@ -62,6 +62,10 @@ public class User {
             }
         }
         lastLoginDate = Timestamp.valueOf(LocalDateTime.now());
+    }
+
+    private boolean isNewUser() {
+        return lastLoginDate == null;
     }
 
     private Boolean isFirstLoginToday() {

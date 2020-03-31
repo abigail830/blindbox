@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
-import com.github.tuding.blindbox.domain.User;
+import com.github.tuding.blindbox.domain.user.User;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;

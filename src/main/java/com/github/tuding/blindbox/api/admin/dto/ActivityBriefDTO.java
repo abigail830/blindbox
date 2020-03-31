@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.api.admin.dto;
 
-import com.github.tuding.blindbox.domain.Activity;
+import com.github.tuding.blindbox.domain.activity.Activity;
 import lombok.*;
 
 @AllArgsConstructor

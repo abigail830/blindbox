@@ -1,8 +1,6 @@
-package com.github.tuding.blindbox.domain;
+package com.github.tuding.blindbox.domain.product;
 
 import lombok.*;
-
-import java.math.BigDecimal;
 
 @NoArgsConstructor
 @AllArgsConstructor

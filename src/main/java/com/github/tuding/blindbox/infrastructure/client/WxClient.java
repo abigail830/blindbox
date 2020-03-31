@@ -1,9 +1,9 @@
 package com.github.tuding.blindbox.infrastructure.client;
 
 
-import com.github.tuding.blindbox.domain.Activity;
-import com.github.tuding.blindbox.domain.Product;
-import com.github.tuding.blindbox.domain.User;
+import com.github.tuding.blindbox.domain.activity.Activity;
+import com.github.tuding.blindbox.domain.product.Product;
+import com.github.tuding.blindbox.domain.user.User;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.util.HttpClientUtil;

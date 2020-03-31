@@ -1,12 +1,11 @@
 package com.github.tuding.blindbox.api.admin.dto;
 
-import com.github.tuding.blindbox.domain.Series;
+import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor

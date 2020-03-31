@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.client;
 
-import com.github.tuding.blindbox.domain.User;
+import com.github.tuding.blindbox.domain.user.User;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

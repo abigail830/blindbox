@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.api.wx.wxDto;
 
-import com.github.tuding.blindbox.domain.ShippingAddress;
+import com.github.tuding.blindbox.domain.user.ShippingAddress;
 import lombok.*;
 
 @Getter

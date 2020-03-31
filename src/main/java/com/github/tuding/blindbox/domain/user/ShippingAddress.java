@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.domain;
+package com.github.tuding.blindbox.domain.user;
 
 import lombok.*;
 

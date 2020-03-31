@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.api.wx.wxDto;
 
-import com.github.tuding.blindbox.domain.Draw;
+import com.github.tuding.blindbox.domain.product.Draw;
 import lombok.*;
 
 import java.util.Date;

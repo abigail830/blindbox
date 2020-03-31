@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.api.wx.wxDto;
 
-import com.github.tuding.blindbox.domain.Role;
+import com.github.tuding.blindbox.domain.product.Role;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import lombok.*;
 

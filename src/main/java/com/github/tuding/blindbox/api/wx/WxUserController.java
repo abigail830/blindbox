@@ -1,7 +1,7 @@
 package com.github.tuding.blindbox.api.wx;
 
-import com.github.tuding.blindbox.domain.User;
-import com.github.tuding.blindbox.domain.UserService;
+import com.github.tuding.blindbox.domain.user.User;
+import com.github.tuding.blindbox.domain.user.UserService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.util.JsonUtil;

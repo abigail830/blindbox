@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.client;
 
-import com.github.tuding.blindbox.domain.User;
+import com.github.tuding.blindbox.domain.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 

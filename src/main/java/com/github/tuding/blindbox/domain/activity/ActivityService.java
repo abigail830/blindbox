@@ -1,5 +1,6 @@
-package com.github.tuding.blindbox.domain;
+package com.github.tuding.blindbox.domain.activity;
 
+import com.github.tuding.blindbox.domain.ImageCategory;
 import com.github.tuding.blindbox.exception.ActivityNotFoundException;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;

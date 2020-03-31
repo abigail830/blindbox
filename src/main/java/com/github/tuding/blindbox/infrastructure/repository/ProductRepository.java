@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
-import com.github.tuding.blindbox.domain.Product;
+import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;

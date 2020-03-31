@@ -2,9 +2,9 @@ package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
-import com.github.tuding.blindbox.domain.Product;
-import com.github.tuding.blindbox.domain.Role;
-import com.github.tuding.blindbox.domain.Series;
+import com.github.tuding.blindbox.domain.product.Product;
+import com.github.tuding.blindbox.domain.product.Role;
+import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

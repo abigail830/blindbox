@@ -2,6 +2,8 @@ package com.github.tuding.blindbox.domain;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
+import com.github.tuding.blindbox.domain.user.User;
+import com.github.tuding.blindbox.domain.user.UserService;
 import com.github.tuding.blindbox.infrastructure.client.WxClient;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import org.junit.jupiter.api.Test;
