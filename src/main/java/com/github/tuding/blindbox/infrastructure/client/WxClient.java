@@ -57,7 +57,11 @@ public class WxClient {
             String resultData = HttpClientUtil.instance().getData(url);
             log.info("Getting wxchat response for code[{}]: {}", code, resultData);
             final WxLoginResponse wxLoginResponse = JsonUtil.toObject(resultData, WxLoginResponse.class);
-            return Optional.ofNullable(wxLoginResponse.toUser());
+            if (null != wxLoginResponse && Strings.isNullOrEmpty(wxLoginResponse.getOpenid())) {
+                return Optional.empty();
+            } else {
+                return Optional.ofNullable(wxLoginResponse.toUser());
+            }
         } catch (Exception ex) {
             return Optional.empty();
         }
