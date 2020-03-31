@@ -2,6 +2,8 @@ package com.github.tuding.blindbox.domain.product;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -19,4 +21,6 @@ public class Product {
     String productGrayImage;
 
     Long version;
+    BigDecimal price;
+
 }

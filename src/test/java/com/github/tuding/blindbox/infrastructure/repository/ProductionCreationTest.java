@@ -78,7 +78,8 @@ public class ProductionCreationTest {
                 200L,
                 "/app/data/product/image/product1.png",
                 "/app/data/product/image/grayproduct1.png",
-                0L));
+                0L,
+                null));
 
         productRepository.createProduct(new Product("productid2",
                 seriesRespository.querySeriesByName("testSeries").get().getId(),
@@ -86,7 +87,8 @@ public class ProductionCreationTest {
                 200L,
                 "/app/data/product/image/product2.png",
                 "/app/data/product/image/grayproduct2.png",
-                0L));
+                0L,
+                null));
 
 
         productRepository.createProduct(new Product("productid3", seriesRespository.querySeriesByName("testSeries").get().getId(),
@@ -94,7 +96,8 @@ public class ProductionCreationTest {
                 10L,
                 "/app/data/product/image/product3.png",
                 "/app/data/product/image/grayproduct3.png",
-                0L));
+                0L,
+                null));
 
         assertTrue(productRepository.getProductByID("productid1").isPresent());
         assertTrue(productRepository.getProductByID("productid2").isPresent());

@@ -1,9 +1,6 @@
 package com.github.tuding.blindbox.api.wx;
 
-import com.github.tuding.blindbox.api.wx.wxDto.DiscountCouponDTO;
-import com.github.tuding.blindbox.api.wx.wxDto.DrawDTO;
-import com.github.tuding.blindbox.api.wx.wxDto.RoleDTO;
-import com.github.tuding.blindbox.api.wx.wxDto.SeriesDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.*;
 import com.github.tuding.blindbox.domain.product.DrawService;
 import com.github.tuding.blindbox.domain.product.ProductService;
 import com.github.tuding.blindbox.domain.user.UserService;
@@ -59,6 +56,13 @@ public class WxProductController {
     public SeriesDTO getSeries(@PathVariable("seriesId") String seriesId) {
         return new SeriesDTO(productService.getSeries(seriesId).get(), productService.getProduct(seriesId));
     }
+    @GetMapping("/series/{seriesId}/products")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "根据产品系列ID，获取产品列表(需要带token)")
+    public List<ProductDTO> getProductBySeriesId(@PathVariable("seriesId") String seriesId) {
+        return productService.getProductWithPrice(seriesId).stream().map(ProductDTO::new).collect(Collectors.toList());
+    }
+
 
     @GetMapping("/series/new")
     @NeedWxVerifyToken

@@ -56,4 +56,8 @@ public class ProductService {
     public List<Product> getProduct(String seriesId) {
         return productRepository.getProductBySeries(seriesId);
     }
+
+    public List<Product> getProductWithPrice(String seriesId) {
+        return productRepository.getProductWithPriceBySeriesID(seriesId);
+    }
 }

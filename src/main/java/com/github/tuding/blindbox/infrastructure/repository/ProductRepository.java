@@ -106,4 +106,12 @@ public class ProductRepository {
             throw new BizException(ErrorCode.FAIL_TO_GET_PRODUCT_PRICE_BY_ID);
         }
     }
+
+    public List<Product> getProductWithPriceBySeriesID(String id) {
+        log.info("Going to query product with product series: {}", id);
+        return jdbcTemplate.query(" SELECT p.id, p.seriesId, p.name, p.productImage, p.productGrayImage, price FROM product_v2_tbl p " +
+                " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion " +
+                " inner join series_tbl as series on p.seriesId = series.id " +
+                " WHERE p.seriesID = ?", rowMapper, id);
+    }
 }
