@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class WxClient {
             "&appid=APPID&secret=APPSECRET";
 
     private final static String NOTIFICATION_URL = "https://api.weixin.qq.com/cgi-bin/message/subscribe/send?access_token=ACCESS_TOKEN";
-    private final static String TEMPLATE_ID = "iOYn0MAVCf5w9bdy5V3aA_jA_-f2xXt9uTRE5_pggt4";
+    private final static String TEMPLATE_ID = "EtU35HZ2aNqUGpLdHl5PBc9VV1P9tqD-bgCIIIXGjes";
 
     private static final String APPID = "APPID";
     private static final String APPSECRET = "APPSECRET";
@@ -95,14 +96,20 @@ public class WxClient {
         }
     }
 
-    //TODO: need further update the template and map and page
     public void sendActivityNotify(Activity activity) {
         final String access_token = getWxToken().getAccess_token();
         log.info("Going to send notification for activity {}", activity);
 
+        SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleTimeFormatter = new SimpleDateFormat("hh:mm");
+
         activity.getNotifierAsSet().forEach(notifierOpenId -> {
             Map<String, TemplateData> data = new HashMap<>();
-            data.put("key1", new TemplateData(activity.getActivityName()));
+            data.put("thing1", new TemplateData(activity.getActivityName()));
+            data.put("thing4", new TemplateData("这是一个活动规则"));
+            data.put("date6", new TemplateData(simpleDateFormatter.format(activity.getActivityStartDate())));
+            data.put("time8", new TemplateData(simpleTimeFormatter.format(activity.getActivityStartDate())));
+            data.put("thing13", new TemplateData("这是奖励礼品"));
 
             final WxNotifyRequest request = new WxNotifyRequest(access_token, activity.getNotifyJumpPage(),
                     notifierOpenId, TEMPLATE_ID, data);

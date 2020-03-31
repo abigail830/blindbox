@@ -6,7 +6,6 @@ import com.github.tuding.blindbox.api.admin.dto.Mode;
 import com.github.tuding.blindbox.domain.activity.Activity;
 import com.github.tuding.blindbox.domain.activity.ActivityService;
 import com.github.tuding.blindbox.exception.ActivityImgNotFoundException;
-import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +32,6 @@ public class ActivityController {
 
     @Autowired
     ActivityService activityService;
-
-    @Autowired
-    ImageRepository imageRepository;
 
     @GetMapping("/")
     public String homepage(Model model) {
