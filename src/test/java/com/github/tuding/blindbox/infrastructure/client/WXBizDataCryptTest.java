@@ -1,6 +1,6 @@
-package com.github.tuding.blindbox.infrastructure.util;
+package com.github.tuding.blindbox.infrastructure.client;
 
-import com.github.tuding.blindbox.infrastructure.client.WxDecryptResponse;
+import com.github.tuding.blindbox.infrastructure.util.JsonUtil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

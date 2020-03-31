@@ -8,7 +8,6 @@ import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.util.HttpClientUtil;
 import com.github.tuding.blindbox.infrastructure.util.JsonUtil;
-import com.github.tuding.blindbox.infrastructure.util.WXBizDataCrypt;
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;

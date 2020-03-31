@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.infrastructure.util;
+package com.github.tuding.blindbox.infrastructure.client;
 
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
