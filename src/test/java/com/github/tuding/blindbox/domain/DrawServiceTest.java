@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.tuding.blindbox.domain.product.DrawService.drawAProduct;
+import static com.github.tuding.blindbox.domain.product.DrawService.drawAProductBaseOnStock;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DrawServiceTest {
@@ -33,7 +33,7 @@ class DrawServiceTest {
         //Draw
         for(int i=0; i<10000; i++) {
 
-            Product product = drawAProduct(products);
+            Product product = drawAProductBaseOnStock(products);
             if (product.getId().equals("1")){
                 product1Count ++;
             }
@@ -50,6 +50,10 @@ class DrawServiceTest {
         double product1Prob = (double)product1Count/10000;
         double product2Prob = (double)product2Count/10000;
         double product3Prob = (double)product3Count/10000;
+
+        System.out.println(product1Prob);
+        System.out.println(product2Prob);
+        System.out.println(product3Prob);
 
         assertTrue(Math.abs(product1Prob - 0.2) < 0.01);
         assertTrue(Math.abs(product2Prob - 0.3) < 0.01);
