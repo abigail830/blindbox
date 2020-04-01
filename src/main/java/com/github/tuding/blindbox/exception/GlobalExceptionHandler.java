@@ -26,11 +26,12 @@ public class GlobalExceptionHandler {
         }
     }
 
-    @ExceptionHandler(value = Exception.class)
-    @ResponseBody
-    public ResponseEntity<?> genericExceptionHandler(Exception e) {
-        log.warn("{}", e);
-        final ErrorResponse errorResponse = new ErrorResponse("UNKNOWN");
-        return new ResponseEntity<>(JsonUtil.toJson(errorResponse), HttpStatus.UNPROCESSABLE_ENTITY);
-    }
+//TODO: comment it for now, as it hijack the specific http code
+//    @ExceptionHandler(value = Exception.class)
+//    @ResponseBody
+//    public ResponseEntity<?> genericExceptionHandler(Exception e) {
+//        log.warn("{}", e);
+//        final ErrorResponse errorResponse = new ErrorResponse("UNKNOWN");
+//        return new ResponseEntity<>(JsonUtil.toJson(errorResponse), HttpStatus.UNPROCESSABLE_ENTITY);
+//    }
 }

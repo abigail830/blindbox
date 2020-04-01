@@ -1,32 +1,96 @@
 package com.github.tuding.blindbox.domain.product;
 
+import com.github.tuding.blindbox.exception.DrawNotFoundException;
 import com.github.tuding.blindbox.infrastructure.repository.DrawRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
+import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
 import com.github.tuding.blindbox.infrastructure.util.RetryUtil;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static com.github.tuding.blindbox.infrastructure.Constant.DRAW_INIT_STATUS;
 
 @Service
 @Slf4j
 public class DrawService {
+    //1 day
+    public static long DRAW_TIMEOUT = 86400000;
+
     @Autowired
     ProductRepository productRepository;
 
     @Autowired
+    SeriesRespository seriesRespository;
+
+    @Autowired
     DrawRepository drawRepository;
+
+
+    private final ScheduledExecutorService scheduledExecutorService
+            = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("draw-auto-scan-thread-%d").build());
+
+    public DrawService() {
+        scheduledExecutorService.scheduleWithFixedDelay(this::deleteTimeoutDraw, 1, 24, TimeUnit.HOURS);
+    }
+
+    public void deleteTimeoutDraw() {
+        log.info("Start to scan timeout draw. ");
+        List<Draw> draws = drawRepository.getDraws();
+        List<Draw> timeoutDraw = draws.stream()
+                .filter(item -> System.currentTimeMillis() - item.getDrawTime().getTime() > DRAW_TIMEOUT)
+                .collect(Collectors.toList());
+        for (Draw draw : timeoutDraw) {
+            log.info("Cancel the timeout draw {}", draw);
+            cancelADraw(draw);
+        }
+    }
 
     public Draw drawAProduct(String openId, String seriesId) {
         log.info("Draw a product for {}", seriesId);
-        Draw draw = RetryUtil.retryOnTimes(() -> handleDrawing(openId, seriesId), 10, 0);
+        cancelADrawByOpenID(openId);
+        Optional<Series> series = seriesRespository.querySeriesByID(seriesId);
+        Draw draw = RetryUtil.retryOnTimes(() -> handleDrawing(openId, seriesId, series.get()), 10, 0);
         log.info("Draw is made as {}", draw);
         return draw;
+    }
+
+    public void cancelADrawByOpenID(String openId) {
+        log.info("Cancel a draw for {}", openId);
+        Optional<Draw> drawOptional = drawRepository.getDrawByOpenID(openId);
+        if (drawOptional.isPresent()) {
+            cancelADraw(drawOptional.get());
+        } else {
+            log.warn("Can not find draw for openId ID {}", openId);
+        }
+    }
+
+    private void cancelADraw(Draw draw) {
+        Optional<Product> productOptional = productRepository.getProductByID(draw.productId);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            product.setVersion(product.version + 1);
+            product.setStock(product.stock + 1);
+            drawRepository.cancelADraw(product, draw);
+        } else {
+            log.warn("Can not find product for product ID {}", draw.productId);
+        }
+    }
+
+
+    public Draw getDrawByOpenID(String openId) {
+        return drawRepository.getDrawByOpenID(openId).orElseThrow(DrawNotFoundException::new);
     }
 
     public Draw confirmADraw(String drawId) {
@@ -34,7 +98,7 @@ public class DrawService {
         return null;
     }
 
-    public Draw handleDrawing(String openId, String seriesId) {
+    public Draw handleDrawing(String openId, String seriesId, Series series) {
         List<Product> productBySeries = productRepository.getProductBySeries(seriesId);
         Product selected = drawAProductBaseOnStock(productBySeries);
         if (selected.stock > 0L) {
@@ -42,7 +106,8 @@ public class DrawService {
             selected.setStock(selected.getStock() - 1);
             selected.setVersion(selected.getVersion() + 1);
             Draw draw = new Draw(openId, drawID.toString(), DRAW_INIT_STATUS,
-                    selected.getId(), seriesId, new Date());
+                    selected.getId(), seriesId, new Date(), series.price, series.boxImage,
+                    selected.isSpecial, selected.productImage);
             drawRepository.persistADraw(selected, draw);
             return draw;
         } else {

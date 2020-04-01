@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.api.wx;
 
 import com.github.tuding.blindbox.api.wx.wxDto.*;
+import com.github.tuding.blindbox.domain.product.Draw;
 import com.github.tuding.blindbox.domain.product.DrawService;
 import com.github.tuding.blindbox.domain.product.ProductService;
 import com.github.tuding.blindbox.domain.user.UserService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -87,6 +89,22 @@ public class WxProductController {
     public DrawDTO drawAProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return new DrawDTO(drawService.drawAProduct(jwt.getOpenIdFromToken(token),seriesId));
+    }
+
+    @GetMapping("/draw/")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "under development")
+    public DrawDTO getADrawForUserOpenID(HttpServletRequest request) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        return new DrawDTO(drawService.getDrawByOpenID(jwt.getOpenIdFromToken(token)));
+    }
+
+    @DeleteMapping("/draw/")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "under development")
+    public void cancelADrawForUserOpenID(HttpServletRequest request) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        drawService.cancelADrawByOpenID(jwt.getOpenIdFromToken(token));
     }
 
     @PutMapping("/order/{drawId}")

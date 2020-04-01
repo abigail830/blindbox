@@ -2,6 +2,7 @@ package com.github.tuding.blindbox.domain.product;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Getter
@@ -9,7 +10,7 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Draw {
+public class  Draw {
     String openId;
     String drawId;
     String drawStatus;
@@ -18,4 +19,8 @@ public class Draw {
     Date drawTime;
 
 
+    BigDecimal price;
+    String boxImage;
+    Boolean isSpecial;
+    String productImage;
 }
