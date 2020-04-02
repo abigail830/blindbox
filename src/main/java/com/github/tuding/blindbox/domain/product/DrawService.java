@@ -11,10 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -107,7 +104,7 @@ public class DrawService {
             selected.setVersion(selected.getVersion() + 1);
             Draw draw = new Draw(openId, drawID.toString(), DRAW_INIT_STATUS,
                     selected.getId(), seriesId, new Date(), series.price, series.boxImage,
-                    selected.isSpecial, selected.productImage);
+                    selected.isSpecial, selected.productImage, series.name);
             drawRepository.persistADraw(selected, draw);
             return draw;
         } else {
@@ -126,5 +123,24 @@ public class DrawService {
             }
         }
         throw new RuntimeException("Failed to draw a product");
+    }
+
+    public Product getExcludedProduct(String drawId) {
+        Draw draw = drawRepository.getDrawByDrawID(drawId).get();
+        List<Product> productBySeries = productRepository.getProductBySeries(draw.seriesId);
+        List<Product> excludedList = productBySeries.stream()
+                .filter(item -> !item.getId().equalsIgnoreCase(draw.productId))
+                .collect(Collectors.toList());
+        Random random = new Random();
+        Product excludedProduct = excludedList.get(random.nextInt(excludedList.size()));
+        excludedProduct.setPrice(draw.getPrice());
+        return excludedProduct;
+    }
+
+    public Product getDrawProduct(String drawId) {
+        Draw draw = drawRepository.getDrawByDrawID(drawId).get();
+        Product productByID = productRepository.getProductByID(draw.productId).get();
+        productByID.setPrice(draw.getPrice());
+        return productByID;
     }
 }

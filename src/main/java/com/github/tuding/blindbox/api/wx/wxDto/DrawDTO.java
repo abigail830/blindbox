@@ -18,6 +18,7 @@ public class DrawDTO {
     Date drawTime;
     String boxImage;
     BigDecimal price;
+    String seriesName;
 
 
     public DrawDTO (Draw draw) {
@@ -27,5 +28,6 @@ public class DrawDTO {
         this.drawTime = draw.getDrawTime();
         this.boxImage = draw.getBoxImage();
         this.price = draw.getPrice();
+        this.seriesName = draw.getSeriesName();
     }
 }

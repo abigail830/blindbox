@@ -61,16 +61,16 @@ public class DrawRepository {
         log.info("Going to insert draw_tbl for {}", draw);
 
         if (Toggle.TEST_MODE.isON()) {
-            String insertSql = "INSERT INTO draw_tbl (openId, drawId, drawStatus, productId, seriesId, boxImage, price) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String insertSql = "INSERT INTO draw_tbl (openId, drawId, drawStatus, productId, seriesId, boxImage, price, seriesName) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, draw.getOpenId(), draw.getDrawId(), draw.getDrawStatus(),
-                    draw.getProductId(), draw.getSeriesId(), draw.getBoxImage(), draw.getPrice());
+                    draw.getProductId(), draw.getSeriesId(), draw.getBoxImage(), draw.getPrice(), draw.getSeriesName());
             log.info("update row {} ", update);
         } else {
-            String insertSql = "INSERT ignore INTO draw_tbl (openId, drawId, drawStatus, productId, seriesId, boxImage, price) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String insertSql = "INSERT ignore INTO draw_tbl (openId, drawId, drawStatus, productId, seriesId, boxImage, price, seriesName) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, draw.getOpenId(), draw.getDrawId(), draw.getDrawStatus(),
-                    draw.getProductId(), draw.getSeriesId(), draw.getBoxImage(), draw.getPrice());
+                    draw.getProductId(), draw.getSeriesId(), draw.getBoxImage(), draw.getPrice(), draw.getSeriesName());
             log.info("update row {} ", update);
         }
     }

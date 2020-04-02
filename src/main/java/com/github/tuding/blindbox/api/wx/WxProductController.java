@@ -3,6 +3,7 @@ package com.github.tuding.blindbox.api.wx;
 import com.github.tuding.blindbox.api.wx.wxDto.*;
 import com.github.tuding.blindbox.domain.product.Draw;
 import com.github.tuding.blindbox.domain.product.DrawService;
+import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.domain.product.ProductService;
 import com.github.tuding.blindbox.domain.user.UserService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
@@ -85,7 +86,7 @@ public class WxProductController {
 
     @PutMapping("/draw/{seriesId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "under development")
+    @ApiOperation(value = "在指定产品系列下抽一盒， 返回抽盒信息(需要带token)")
     public DrawDTO drawAProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return new DrawDTO(drawService.drawAProduct(jwt.getOpenIdFromToken(token),seriesId));
@@ -93,7 +94,7 @@ public class WxProductController {
 
     @GetMapping("/draw/")
     @NeedWxVerifyToken
-    @ApiOperation(value = "under development")
+    @ApiOperation(value = "获取当前的抽盒 (需要带token)")
     public DrawDTO getADrawForUserOpenID(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return new DrawDTO(drawService.getDrawByOpenID(jwt.getOpenIdFromToken(token)));
@@ -101,7 +102,7 @@ public class WxProductController {
 
     @DeleteMapping("/draw/")
     @NeedWxVerifyToken
-    @ApiOperation(value = "under development")
+    @ApiOperation(value = "取消已有的抽盒 (需要带token)")
     public void cancelADrawForUserOpenID(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         drawService.cancelADrawByOpenID(jwt.getOpenIdFromToken(token));
@@ -126,4 +127,27 @@ public class WxProductController {
 
         return new DiscountCouponDTO(priceAfterDiscount, remainBonus);
     }
+
+    @PostMapping("/use-tips/{drawId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "扣减积分以兑换提示券, 返回提示信息/剩余积分 (需要带token)")
+    public TipsCouponDTO getTipsByBonus(HttpServletRequest request,
+                                                @PathVariable String drawId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_COUPON_CONSUME_BONUS);
+        Product excludedProduct = drawService.getExcludedProduct(drawId);
+        return new TipsCouponDTO(excludedProduct, remainBonus);
+    }
+
+    @PostMapping("/use-display/{drawId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "扣减积分以兑换提示券, 返回抽中产品信息/剩余积分 (需要带token)")
+    public DisplayCouponDTO getDisplayByBonus(HttpServletRequest request,
+                                        @PathVariable String drawId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_COUPON_CONSUME_BONUS);
+        Product excludedProduct = drawService.getDrawProduct(drawId);
+        return new DisplayCouponDTO(excludedProduct, remainBonus);
+    }
+
 }

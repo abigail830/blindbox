@@ -23,4 +23,6 @@ public class  Draw {
     String boxImage;
     Boolean isSpecial;
     String productImage;
+    String seriesName;
+
 }
