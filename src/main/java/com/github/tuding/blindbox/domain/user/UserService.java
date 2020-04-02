@@ -32,11 +32,11 @@ public class UserService {
 
         final Optional<User> userByOpenId = userRepository.getUserByOpenId(user.getOpenId());
         if (!userByOpenId.isPresent()) {
-            user.adjustBonusAndLastLoginDate();
+            user.updateLoginBonus();
             userRepository.addUserWithOpenIdWithBonus(user);
         } else {
             final User existUser = userByOpenId.get();
-            existUser.adjustBonusAndLastLoginDate();
+            existUser.updateLoginBonus();
             userRepository.updateLastLoginDateAndBonus(existUser);
         }
 
@@ -77,4 +77,25 @@ public class UserService {
             return remainBonus;
         }
     }
+
+    public void shareActivity(String token, String activityId) {
+        final String openId = jwt.getOpenIdFromToken(token);
+        log.info("User[{}] share activity {}", openId, activityId);
+
+        final User user = userRepository.getUserByOpenId(openId)
+                .orElseThrow(() -> new BizException(ErrorCode.WX_USER_NOT_FOUND));
+        user.shareActivity();
+        userRepository.updateLastShareActivityBonus(user);
+    }
+
+    public void shareCollection(String token, String seriesId) {
+        final String openId = jwt.getOpenIdFromToken(token);
+        log.info("User[{}] share collection for series {}", openId, seriesId);
+
+        final User user = userRepository.getUserByOpenId(openId)
+                .orElseThrow(() -> new BizException(ErrorCode.WX_USER_NOT_FOUND));
+        user.shareCollection();
+        userRepository.updateLastShareCollectionBonus(user);
+    }
+
 }

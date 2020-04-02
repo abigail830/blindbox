@@ -39,6 +39,27 @@ public class UserRepository {
                 user.getOpenId());
     }
 
+    public int updateLastShareCollectionBonus(User user) {
+        String updateSql = "UPDATE wx_user_tbl SET last_share_collection_date=?, bonus=? WHERE open_id=?";
+        return jdbcTemplate.update(updateSql,
+                user.getLastShareCollectionDate(),
+                user.getBonus(),
+                user.getOpenId());
+    }
+
+    public int updateLastShareActivityBonus(User user) {
+        String updateSql = "UPDATE wx_user_tbl SET last_share_activity_date=?, bonus=? WHERE open_id=?";
+        return jdbcTemplate.update(updateSql,
+                user.getLastShareActivityDate(),
+                user.getBonus(),
+                user.getOpenId());
+    }
+
+    public int addBonus(String openId, Integer bonus) {
+        String updateSql = "UPDATE wx_user_tbl SET bonus=bonus+? WHERE open_id=?";
+        return jdbcTemplate.update(updateSql, bonus, openId);
+    }
+
     public Optional<User> getUserByOpenId(String openId) {
         List<User> users = jdbcTemplate.query("SELECT * FROM wx_user_tbl WHERE open_id = ?", rowMapper, openId);
         return users.stream().findFirst();

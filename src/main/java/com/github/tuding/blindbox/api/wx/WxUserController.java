@@ -11,10 +11,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -68,6 +65,22 @@ public class WxUserController {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
 
         userService.wxAuth(token, encryptedData, iv);
+    }
+
+    @PostMapping("/share-activity/{activityId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "用户分享了活动咨询(需要带token，每日首次积分+10)")
+    public void shareActivity(HttpServletRequest request, @PathVariable String activityId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        userService.shareActivity(token, activityId);
+    }
+
+    @PostMapping("/share-collection/{seriesId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "用户分享了图鉴(需要带token，每日首次积分+10)")
+    public void shareCollection(HttpServletRequest request, @PathVariable String seriesId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        userService.shareCollection(token, seriesId);
     }
 
 }
