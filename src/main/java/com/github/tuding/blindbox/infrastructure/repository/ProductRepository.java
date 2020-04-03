@@ -104,16 +104,13 @@ public class ProductRepository {
     }
 
     public Optional<Product> getProductByDrawID(String drawId) {
-
-        String sql = "select p.ID, p.seriesID, p.name, p.isSpecial, p.stock, p.productImage, p.productGrayImage," +
+        String sql = "select p.id, p.seriesID, p.name, p.isSpecial, p.stock, p.productImage, p.productGrayImage," +
                 " p.update_time, p.version from product_v2_tbl p" +
                 " left join draw_tbl d on p.ID = d.productId" +
                 " where d.drawId = ? order by p.version DESC limit 1";
 
-        final List<Product> result = jdbcTemplate.query("SELECT * FROM draw_tbl WHERE drawId = ?",
-                rowMapper, drawId);
+        final List<Product> result = jdbcTemplate.query(sql, rowMapper, drawId);
 
         return result.stream().findFirst();
-
     }
 }

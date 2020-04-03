@@ -1,12 +1,13 @@
 package com.github.tuding.blindbox.infrastructure.client;
 
 import com.github.tuding.blindbox.domain.product.Product;
+import com.google.common.base.Strings;
 import lombok.*;
-import org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -39,23 +40,22 @@ public class WxPaymentRequest {
     private String key;
     private String openId;
 
-    public WxPaymentRequest(String appid, String mch_id, String key, Product product, String out_trade_no,
-                            String spbill_create_ip, String notify_url, String openId) {
+    public WxPaymentRequest(String appid, String merchantId, String merchantSecret, String notifyUrl,
+                            Product product, String orderId, String ip, String openId) {
         this.appid = appid;
-        this.mch_id = mch_id;
-        this.key = key;
+        this.mch_id = merchantId;
+        this.key = merchantSecret;
         this.openId = openId;
         this.nonce_str = getRandomStringByLength(32);
-        this.body = product.getName();
-        this.out_trade_no = out_trade_no;
-        this.total_fee = product.getPrice().multiply(BigDecimal.valueOf(100)).intValue();
-        this.spbill_create_ip = spbill_create_ip;
-        this.notify_url = notify_url;
+        this.body = !Strings.isNullOrEmpty(product.getName()) ? product.getName() : null;
+        this.out_trade_no = orderId;
+        this.total_fee = (product.getPrice() != null) ?
+                product.getPrice().multiply(BigDecimal.valueOf(100)).intValue() : 0;
+        this.spbill_create_ip = ip;
+        this.notify_url = notifyUrl;
     }
 
-
-    public String convertToXml() {
-        setSign();
+    public String convertToXmlWithSign() {
         return "<xml>" + "<appid>" + appid + "</appid>"
                 + "<body><![CDATA[" + body + "]]></body>"
                 + "<mch_id>" + mch_id + "</mch_id>"
@@ -66,41 +66,13 @@ public class WxPaymentRequest {
                 + "<spbill_create_ip>" + spbill_create_ip + "</spbill_create_ip>"
                 + "<total_fee>" + total_fee + "</total_fee>"
                 + "<trade_type>" + trade_type + "</trade_type>"
-                + "<sign>" + sign + "</sign>"
+                + "<sign>" + generateSign() + "</sign>"
                 + "</xml>";
     }
 
-    void setSign() {
-        final Map<String, String> paymentMap = toPaymentMap();
-        final String link = createLinkString(paymentMap);
-        this.sign = sign(link, this.key, "utf-8").toUpperCase();
-    }
-
-    String getRandomStringByLength(int length) {
-        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
-        }
-        return sb.toString();
-    }
-
-    String createLinkString(Map<String, String> params) {
-        List<String> keys = new ArrayList<>(params.keySet());
-        Collections.sort(keys);
-        String prestr = "";
-        for (int i = 0; i < keys.size(); i++) {
-            String key = keys.get(i);
-            String value = params.get(key);
-            if (i == keys.size() - 1) {// 拼接时，不包括最后一个&字符
-                prestr = prestr + key + "=" + value;
-            } else {
-                prestr = prestr + key + "=" + value + "&";
-            }
-        }
-        return prestr;
+    private String generateSign() {
+        this.sign = SignUtil.sign(toPaymentMap(), this.key, "utf-8").toUpperCase();
+        return this.sign;
     }
 
     private Map<String, String> toPaymentMap() {
@@ -118,21 +90,15 @@ public class WxPaymentRequest {
         return packageParams;
     }
 
-    String sign(String text, String key, String input_charset) {
-        text = text + "&key=" + key;
-        return DigestUtils.md5Hex(getContentBytes(text, input_charset));
-    }
-
-    private byte[] getContentBytes(String content, String charset) {
-        if (charset == null || "".equals(charset)) {
-            return content.getBytes();
+    private String getRandomStringByLength(int length) {
+        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(base.length());
+            sb.append(base.charAt(number));
         }
-        try {
-            return content.getBytes(charset);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("MD5签名过程中出现错误,指定的编码集不对,您目前指定的编码集是:" + charset);
-        }
+        return sb.toString();
     }
-
 
 }

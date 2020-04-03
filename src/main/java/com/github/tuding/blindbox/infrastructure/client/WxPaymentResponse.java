@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.infrastructure.client;
 
 import com.github.tuding.blindbox.domain.order.PreOrder;
+import com.google.common.base.Strings;
 import lombok.*;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -58,7 +59,8 @@ public class WxPaymentResponse {
     }
 
     public Boolean isSuccessPrePayment() {
-        return this.result_code.equals(SUCCESS) && this.return_code.equals(SUCCESS);
+        return this.result_code.equals(SUCCESS) && !Strings.isNullOrEmpty(result_code) &&
+                this.return_code.equals(SUCCESS) && !Strings.isNullOrEmpty(return_code);
     }
 
     public PreOrder toDomain() {
