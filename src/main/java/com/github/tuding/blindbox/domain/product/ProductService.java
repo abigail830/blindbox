@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.domain.product;
 
 import com.github.tuding.blindbox.infrastructure.Constant;
+import com.github.tuding.blindbox.infrastructure.repository.DrawRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
 import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
@@ -26,6 +27,9 @@ public class ProductService {
     ProductRepository productRepository;
 
     @Autowired
+    DrawRepository drawRepository;
+
+    @Autowired
 
     public List<Role> getRoles() {
         return rolesRepository.queryRoles();
@@ -48,8 +52,8 @@ public class ProductService {
         return seriesRespository.queryAllSeriesWithPaging(limitPerPage, numOfPage);
     }
 
-    public BigDecimal getProductPriceAfterDiscount(String productId) {
-        BigDecimal oriPrice = productRepository.getProductPriceById(productId);
+    public BigDecimal getProductPriceAfterDiscount(String drawId) {
+        BigDecimal oriPrice = drawRepository.getPriceByDrawId(drawId);
         return oriPrice.multiply(Constant.DISCOUNT);
     }
 

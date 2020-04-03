@@ -1,8 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.tuding.blindbox.domain.product.Product;
-import com.github.tuding.blindbox.exception.BizException;
-import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -97,15 +94,6 @@ public class ProductRepository {
         log.info("update row {} ", update);
     }
 
-    public BigDecimal getProductPriceById(String productId) {
-        String querySql = "select s.price from series_tbl s" +
-                " left join product_v2_tbl p on s.ID = p.seriesID where p.ID = ?";
-        try {
-            return jdbcTemplate.queryForObject(querySql, new Object[]{productId}, BigDecimal.class);
-        } catch (Exception ex) {
-            throw new BizException(ErrorCode.FAIL_TO_GET_PRODUCT_PRICE_BY_ID);
-        }
-    }
 
     public List<Product> getProductWithPriceBySeriesID(String id) {
         log.info("Going to query product with product series: {}", id);

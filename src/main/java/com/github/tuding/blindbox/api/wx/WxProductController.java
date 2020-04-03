@@ -1,7 +1,6 @@
 package com.github.tuding.blindbox.api.wx;
 
 import com.github.tuding.blindbox.api.wx.wxDto.*;
-import com.github.tuding.blindbox.domain.product.Draw;
 import com.github.tuding.blindbox.domain.product.DrawService;
 import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.domain.product.ProductService;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -115,12 +113,12 @@ public class WxProductController {
         return new DrawDTO(drawService.confirmADraw(drawId));
     }
 
-    @PostMapping("/use-discount/{productId}")
+    @PostMapping("/use-discount/{drawId}")
     @NeedWxVerifyToken
     @ApiOperation(value = "扣减积分以兑换优惠券, 返回折后价格/折扣描述/剩余积分 (需要带token)")
     public DiscountCouponDTO getDiscountByBonus(HttpServletRequest request,
-                                                @PathVariable String productId) {
-        BigDecimal priceAfterDiscount = productService.getProductPriceAfterDiscount(productId);
+                                                @PathVariable String drawId) {
+        BigDecimal priceAfterDiscount = productService.getProductPriceAfterDiscount(drawId);
 
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_COUPON_CONSUME_BONUS);
