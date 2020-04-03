@@ -1,7 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.client.payment;
 
-import com.github.tuding.blindbox.domain.order.PreOrder;
-import com.github.tuding.blindbox.domain.product.Product;
+import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.util.HttpClientUtil;
@@ -37,10 +36,10 @@ public class WxPayment {
     @Value("${app.mchSecret}")
     private String merchantSecret;
 
-    public PreOrder generatePayment(String openId, Product product, String orderId, String ipAddr) throws BizException {
+    public Order generatePayment(Order order, String ipAddr) throws BizException {
 
-        final WxPaymentRequest wxPaymentRequest = new WxPaymentRequest(appId, merchantId, merchantSecret, CALL_BACK_URL,
-                product, orderId, ipAddr, openId);
+        final WxPaymentRequest wxPaymentRequest = new WxPaymentRequest(appId, merchantId, merchantSecret,
+                CALL_BACK_URL, ipAddr, order);
         final String xml = wxPaymentRequest.convertToXmlWithSign();
 
         try {
@@ -52,7 +51,9 @@ public class WxPayment {
                 Map<String, String> resultMap = XmlUtil.xmlToMap(response.body().string());
                 final WxPaymentResponse wxPaymentResponse = new WxPaymentResponse(resultMap, merchantSecret);
                 if (wxPaymentResponse.isSuccessPrePayment()) {
-                    return wxPaymentResponse.toDomain();
+                    order.updateWxPayInfo(wxPaymentResponse.getPrepay_id(), wxPaymentResponse.getNonce_str(),
+                            wxPaymentResponse.getPreOrderTime(), appId, merchantSecret);
+                    return order;
                 } else {
                     log.error("{}", wxPaymentResponse.getReturn());
                     throw new BizException(ErrorCode.FAIL_TO_PRE_ORDER);

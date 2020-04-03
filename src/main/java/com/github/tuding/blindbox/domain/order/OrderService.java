@@ -31,9 +31,11 @@ public class OrderService {
         String orderId = UUID.randomUUID().toString();
         log.info("Going to place order[{}] for product: {}", orderId, product);
 
-        //TODO: post to wxchat client - pending id for test
-        wxPayment.generatePayment(openId, product, orderId, ipAddress);
+        //TODO: pending id for test
+        try {
+            wxPayment.generatePayment(new Order(orderId, product, openId, drawId), ipAddress);
+        } catch (Exception e) {
 
-
+        }
     }
 }

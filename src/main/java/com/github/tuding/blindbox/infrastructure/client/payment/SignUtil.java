@@ -15,7 +15,7 @@ public class SignUtil {
         return sign(text, key, input_charset);
     }
 
-    static String sign(String text, String key, String input_charset) {
+    public static String sign(String text, String key, String input_charset) {
         text = text + "&key=" + key;
         return DigestUtils.md5Hex(getContentBytes(text, input_charset));
     }

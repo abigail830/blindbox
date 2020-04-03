@@ -1,11 +1,9 @@
 package com.github.tuding.blindbox.infrastructure.client.payment;
 
-import com.github.tuding.blindbox.domain.order.PreOrder;
+import com.github.tuding.blindbox.domain.order.Order;
 import com.google.common.base.Strings;
 import lombok.*;
-import org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @Getter
@@ -63,32 +61,11 @@ public class WxPaymentResponse {
                 this.return_code.equals(SUCCESS) && !Strings.isNullOrEmpty(return_code);
     }
 
-    public PreOrder toDomain() {
-        String stringSignTemp = "appId=" + appid + "&nonceStr=" + nonce_str + "&package=prepay_id=" + prepay_id +
-                "&signType=MD5&timeStamp=" + preOrderTime;
-
-        //再次签名，这个签名用于小程序端调用wx.requesetPayment方法
-        String paySign = sign(stringSignTemp, key, "utf-8").toUpperCase();
-
-        return new PreOrder(prepay_id, nonce_str, preOrderTime, paySign);
+    public Order addWxPayInfo(Order order, String appid, String key) {
+        order.updateWxPayInfo(prepay_id, nonce_str, preOrderTime, appid, key);
+        return order;
     }
 
-
-    private String sign(String text, String key, String input_charset) {
-        text = text + "&key=" + key;
-        return DigestUtils.md5Hex(getContentBytes(text, input_charset));
-    }
-
-    private byte[] getContentBytes(String content, String charset) {
-        if (charset == null || "".equals(charset)) {
-            return content.getBytes();
-        }
-        try {
-            return content.getBytes(charset);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("MD5签名过程中出现错误,指定的编码集不对,您目前指定的编码集是:" + charset);
-        }
-    }
 
     public String getReturn() {
         return "Return Info: {" +

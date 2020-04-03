@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.client.payment;
 
-import com.github.tuding.blindbox.domain.product.Product;
+import com.github.tuding.blindbox.domain.order.Order;
 import com.google.common.base.Strings;
 import lombok.*;
 
@@ -41,16 +41,17 @@ public class WxPaymentRequest {
     private String openId;
 
     public WxPaymentRequest(String appid, String merchantId, String merchantSecret, String notifyUrl,
-                            Product product, String orderId, String ip, String openId) {
+                            String ip, Order order) {
         this.appid = appid;
         this.mch_id = merchantId;
         this.key = merchantSecret;
-        this.openId = openId;
+        this.openId = order.getOpenId();
         this.nonce_str = getRandomStringByLength(32);
-        this.body = !Strings.isNullOrEmpty(product.getName()) ? product.getName() : null;
-        this.out_trade_no = orderId;
-        this.total_fee = (product.getPrice() != null) ?
-                product.getPrice().multiply(BigDecimal.valueOf(100)).intValue() : 0;
+        this.out_trade_no = order.getOrderId();
+        this.body = !Strings.isNullOrEmpty(order.getProduct().getName()) ?
+                order.getProduct().getName() : null;
+        this.total_fee = (order.getProduct().getPrice() != null) ?
+                order.getProduct().getPrice().multiply(BigDecimal.valueOf(100)).intValue() : 0;
         this.spbill_create_ip = ip;
         this.notify_url = notifyUrl;
     }
