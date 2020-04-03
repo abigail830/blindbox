@@ -7,6 +7,7 @@ import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -20,15 +21,17 @@ public class OrderService {
     @Autowired
     ProductRepository productRepository;
 
-    public void createOrder(String openId, String productId, String ipAddress) {
+    @Transactional
+    public void createOrder(String openId, String drawId, String ipAddress) {
 
-        final Product product = productRepository.getProductByID(productId)
+        final Product product = productRepository.getProductByDrawID(drawId)
                 .orElseThrow(ProductNotFoundException::new);
 
         //TODO: generate order and save in DB?
         String orderId = UUID.randomUUID().toString();
+        log.info("Going to place order[{}] for product: {}", orderId, product);
 
-        //post to wxchat client
+        //TODO: post to wxchat client - pending id for test
         wxPayment.generatePayment(openId, product, orderId, ipAddress);
 
 

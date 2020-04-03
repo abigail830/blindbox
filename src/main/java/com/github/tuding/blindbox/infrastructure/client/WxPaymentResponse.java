@@ -39,7 +39,7 @@ public class WxPaymentResponse {
     private String preOrderTime;
 
     public WxPaymentResponse(Map<String, String> returnMap, String key) {
-        this.result_code = returnMap.getOrDefault("return_code", "");
+        this.return_code = returnMap.getOrDefault("return_code", "");
         this.return_msg = returnMap.getOrDefault("return_msg", "");
 
         this.result_code = returnMap.getOrDefault("result_code", "");
@@ -88,5 +88,10 @@ public class WxPaymentResponse {
         }
     }
 
-
+    public String getReturn() {
+        return "Return Info: {" +
+                "return_code='" + return_code + '\'' +
+                ", return_msg='" + return_msg + '\'' +
+                '}';
+    }
 }

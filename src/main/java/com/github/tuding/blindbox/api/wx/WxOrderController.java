@@ -5,6 +5,7 @@ import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import com.github.tuding.blindbox.infrastructure.util.IpUtil;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,15 +29,16 @@ public class WxOrderController {
     @Autowired
     Jwt jwt;
 
-    @PostMapping("/{productId}")
+    @PostMapping("/{drawId}")
     @NeedWxVerifyToken
-    public void placeOrder(HttpServletRequest request, @PathVariable String productId) {
+    @ApiOperation(value = "下单准备支付(需要带token) - under development")
+    public void placeOrder(HttpServletRequest request, @PathVariable String drawId) {
         final String ipAddr = ipUtil.getIpAddr(request);
 
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         final String openId = jwt.getOpenIdFromToken(token);
 
-        orderService.createOrder(openId, productId, ipAddr);
+        orderService.createOrder(openId, drawId, ipAddr);
 
     }
 }

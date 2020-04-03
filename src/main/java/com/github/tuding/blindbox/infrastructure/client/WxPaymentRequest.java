@@ -5,6 +5,7 @@ import lombok.*;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Getter
@@ -27,7 +28,7 @@ public class WxPaymentRequest {
     //商户订单号
     String out_trade_no;
     //标价金额
-    String total_fee;
+    Integer total_fee;
     //终端IP
     String spbill_create_ip;
     //通知地址
@@ -47,7 +48,7 @@ public class WxPaymentRequest {
         this.nonce_str = getRandomStringByLength(32);
         this.body = product.getName();
         this.out_trade_no = out_trade_no;
-        this.total_fee = product.getPrice().toString();
+        this.total_fee = product.getPrice().multiply(BigDecimal.valueOf(100)).intValue();
         this.spbill_create_ip = spbill_create_ip;
         this.notify_url = notify_url;
     }
@@ -109,7 +110,7 @@ public class WxPaymentRequest {
         packageParams.put("nonce_str", this.nonce_str);
         packageParams.put("body", this.body);
         packageParams.put("out_trade_no", this.out_trade_no);
-        packageParams.put("total_fee", this.total_fee);
+        packageParams.put("total_fee", this.total_fee.toString());
         packageParams.put("spbill_create_ip", this.spbill_create_ip);
         packageParams.put("notify_url", this.notify_url);
         packageParams.put("trade_type", this.trade_type);

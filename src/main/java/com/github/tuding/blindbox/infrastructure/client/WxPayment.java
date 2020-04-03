@@ -13,6 +13,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -23,15 +24,14 @@ import java.util.Map;
 @Slf4j
 public class WxPayment {
 
-    public static final String SIGNTYPE = "MD5";
     //交易类型，小程序支付的固定值为JSAPI
     public static final String TRADETYPE = "JSAPI";
     //微信支付的商户密钥
-    public static final String KEY = "";
+    public static final String KEY = "KEY";
     //微信统一下单接口地址
     public static final String PAY_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
-    public static final String CALL_BACK_URL = "";
+    public static final String CALL_BACK_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     @Autowired
     IpUtil ipUtil;
     @Value("${app.appId}")
@@ -48,7 +48,9 @@ public class WxPayment {
         final String xml = wxPaymentRequest.convertToXml();
 
         try {
-            final Response response = HttpClientUtil.instance().postBody(PAY_URL, xml, null);
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Content-Type", MediaType.APPLICATION_XML_VALUE);
+            final Response response = HttpClientUtil.instance().postBody(PAY_URL, xml, headers);
             if (null != response.body()) {
                 String result = response.body().string();
                 Map<String, String> resultMap = parseXml(result);
@@ -56,6 +58,7 @@ public class WxPayment {
                 if (wxPaymentResponse.isSuccessPrePayment()) {
                     return wxPaymentResponse.toDomain();
                 } else {
+                    log.error("{}", wxPaymentResponse.getReturn());
                     throw new BizException(ErrorCode.FAIL_TO_PRE_ORDER);
                 }
             } else {
