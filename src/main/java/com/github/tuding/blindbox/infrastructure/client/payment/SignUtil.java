@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.infrastructure.client;
+package com.github.tuding.blindbox.infrastructure.client.payment;
 
 import org.apache.commons.codec.digest.DigestUtils;
 

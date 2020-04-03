@@ -2,7 +2,7 @@ package com.github.tuding.blindbox.domain.order;
 
 import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.exception.ProductNotFoundException;
-import com.github.tuding.blindbox.infrastructure.client.WxPayment;
+import com.github.tuding.blindbox.infrastructure.client.payment.WxPayment;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

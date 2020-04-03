@@ -1,4 +1,4 @@
-package com.github.tuding.blindbox.infrastructure.client;
+package com.github.tuding.blindbox.infrastructure.client.payment;
 
 import com.github.tuding.blindbox.domain.order.PreOrder;
 import com.github.tuding.blindbox.domain.product.Product;
