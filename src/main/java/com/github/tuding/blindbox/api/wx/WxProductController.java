@@ -106,13 +106,6 @@ public class WxProductController {
         drawService.cancelADrawByOpenID(jwt.getOpenIdFromToken(token));
     }
 
-    @PutMapping("/order/{drawId}")
-    @NeedWxVerifyToken
-    @ApiOperation(value = "under development")
-    public DrawDTO confirmADraw(@PathVariable("drawId") String drawId) {
-        return new DrawDTO(drawService.confirmADraw(drawId));
-    }
-
     @PostMapping("/use-discount/{drawId}")
     @NeedWxVerifyToken
     @ApiOperation(value = "扣减积分以兑换优惠券, 返回折后价格/折扣描述/剩余积分 (需要带token)")

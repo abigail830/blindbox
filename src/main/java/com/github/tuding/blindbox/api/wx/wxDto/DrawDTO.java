@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.api.wx.wxDto;
 
 import com.github.tuding.blindbox.domain.product.Draw;
+import com.github.tuding.blindbox.infrastructure.Constant;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -19,6 +20,9 @@ public class DrawDTO {
     String boxImage;
     BigDecimal price;
     String seriesName;
+    Integer tipsCouponCost = Constant.GET_TIPS_COUPON_CONSUME_BONUS;
+    Integer displayCouponCost = Constant.GET_DISPLAY_COUPON_CONSUME_BONUS;
+    Integer discountCouponCost = Constant.GET_COUPON_CONSUME_BONUS;
 
 
     public DrawDTO (Draw draw) {

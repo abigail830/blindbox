@@ -90,10 +90,6 @@ public class DrawService {
         return drawRepository.getDrawByOpenID(openId).orElseThrow(DrawNotFoundException::new);
     }
 
-    public Draw confirmADraw(String drawId) {
-        //TODO: update draw to confirm
-        return null;
-    }
 
     public Draw handleDrawing(String openId, String seriesId, Series series) {
         List<Product> productBySeries = productRepository.getProductBySeries(seriesId);
