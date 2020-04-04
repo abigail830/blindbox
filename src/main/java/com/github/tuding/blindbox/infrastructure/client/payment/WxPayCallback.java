@@ -2,11 +2,13 @@ package com.github.tuding.blindbox.infrastructure.client.payment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tuding.blindbox.domain.order.OrderService;
+import com.github.tuding.blindbox.domain.product.DrawService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,14 +22,17 @@ import java.util.Map;
 @RequestMapping("/wx/payment")
 public class WxPayCallback {
 
+    //交易类型，小程序支付的固定值为JSAPI
+    public static final String TRADETYPE = "JSAPI";
+
     @Value("${app.appId}")
     private String appId;
 
     @Value("${app.mchId}")
     private String merchantId;
+    @Autowired
+    DrawService drawService;
 
-    //交易类型，小程序支付的固定值为JSAPI
-    public static final String TRADETYPE = "JSAPI";
     @Autowired
     OrderService orderService;
     @Value("${app.mchSecret}")
@@ -36,6 +41,7 @@ public class WxPayCallback {
     @PostMapping(value = "/callback",
             produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
+    @Transactional
     WxPayCallbackRes paymentCallback(@RequestBody WxPayCallbackReq wxPayCallbackReq) {
         log.info("{}", wxPayCallbackReq);
 
@@ -44,11 +50,11 @@ public class WxPayCallback {
             return WxPayCallbackRes.buildFail("参数格式校验错误");
         }
 
-        //TODO: to update order DB record
         if (wxPayCallbackReq.isSuccessPay()) {
-
+            orderService.updateOrderToPaySuccess(wxPayCallbackReq.getOut_trade_no());
         } else {
-
+            orderService.updateOrderToPayFail(wxPayCallbackReq.getOut_trade_no());
+            drawService.cancelADrawByOpenID(wxPayCallbackReq.getOpenid());
         }
         return WxPayCallbackRes.buildSuccess();
     }

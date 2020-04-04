@@ -20,4 +20,7 @@ public class OrderRepository {
     public void save(Order order) {
         log.info("Going to save order {}", order);
     }
+
+    public void updateOrderStatusById(String orderId, String name) {
+    }
 }
