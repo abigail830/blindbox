@@ -38,7 +38,7 @@ public class WxPayCallback {
     @Value("${app.mchSecret}")
     private String merchantSecret;
 
-    @PostMapping(value = "/callback",
+    @PostMapping(value = "/product/callback",
             produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
     @Transactional
