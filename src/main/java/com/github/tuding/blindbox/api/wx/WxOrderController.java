@@ -52,7 +52,7 @@ public class WxOrderController {
     @PostMapping("/transport")
     @NeedWxVerifyToken
     @ApiOperation(value = "支付运费(需要带token) - pending wx test")
-    public void payTransportFee(HttpServletRequest request, @RequestBody PayTransportReq payTransportReq) {
+    public PlaceOrderResponse payTransportFee(HttpServletRequest request, @RequestBody PayTransportReq payTransportReq) {
 
         final String ipAddr = ipUtil.getIpAddr(request);
 
@@ -64,6 +64,7 @@ public class WxOrderController {
 
         final TransportOrder orders = payTransportReq.toTransportOrder(openId, transportFee);
 
-        orderService.payTransportOrder(orders, ipAddr);
+        final TransportOrder transportOrder = orderService.payTransportOrder(orders, ipAddr);
+        return new PlaceOrderResponse(transportOrder);
     }
 }

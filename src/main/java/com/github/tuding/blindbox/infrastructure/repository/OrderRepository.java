@@ -26,23 +26,21 @@ public class OrderRepository {
         log.info("Going to save order {}", order);
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO order_tbl (orderId, openId, drawId, productName, productPrice, " +
-                    " prepayId, nonceStr, preOrderTime, paySign, receiver, mobile, area, associateCode," +
+                    " receiver, mobile, area, associateCode," +
                     " detailAddress, status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, order.getOrderId(), order.getOpenId(), order.getDrawId(),
-                    order.getProductName(), order.getProductPrice(), order.getPrepayId(), order.getNonceStr(),
-                    order.getPreOrderTime(), order.getPaySign(), order.getReceiver(),
+                    order.getProductName(), order.getProductPrice(), order.getReceiver(),
                     order.getMobile(), order.getArea(), order.getAssociateCode(), order.getDetailAddress(),
                     order.getStatus());
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO order_tbl (orderId, openId, drawId, productName, productPrice, " +
-                    " prepayId, nonceStr, preOrderTime, paySign, receiver, mobile, area, associateCode," +
+                    " receiver, mobile, area, associateCode," +
                     " detailAddress, status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, order.getOrderId(), order.getOpenId(), order.getDrawId(),
-                    order.getProductName(), order.getProductPrice(), order.getPrepayId(), order.getNonceStr(),
-                    order.getPreOrderTime(), order.getPaySign(), order.getReceiver(),
+                    order.getProductName(), order.getProductPrice(), order.getReceiver(),
                     order.getMobile(), order.getArea(), order.getAssociateCode(), order.getDetailAddress(),
                     order.getStatus());
             log.info("update row {} ", update);
@@ -73,7 +71,22 @@ public class OrderRepository {
     }
 
     public void updateOrderStatusAndAddress(TransportOrder transportOrder) {
+        transportOrder.getProductOrders().forEach(orderId -> {
+            updateOrderStatusAndAddress(OrderStatus.NEW_TRANSPORT.name(), orderId, transportOrder);
+        });
+    }
 
+    private void updateOrderStatusAndAddress(String status, String orderId, TransportOrder transportOrder) {
+        String sql = "UPDATE order_tbl SET status = ?, receiver = ?,mobile = ?, area = ?, associateCode = ?," +
+                " detailAddress=?, tranportOrderId = ? WHERE orderId = ?";
+        jdbcTemplate.update(sql, status, transportOrder.getReceiver(), transportOrder.getMobile(),
+                transportOrder.getArea(), transportOrder.getAssociateCode(),
+                transportOrder.getDetailAddress(), transportOrder.getOrderId(), orderId);
+    }
+
+    public void updateOrderStatusByTransportOrderId(String transportOrderId, String status) {
+        String sql = "UPDATE order_tbl SET status = ? WHERE tranportOrderId = ?";
+        jdbcTemplate.update(sql, status, transportOrderId);
 
     }
 }

@@ -57,8 +57,19 @@ public class OrderService {
         orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_FAIL.name());
     }
 
-    public void payTransportOrder(TransportOrder transportOrder, String ipAddr) {
-        wxPayment.generatePayment(transportOrder, ipAddr);
-        orderRepository.updateOrderStatusAndAddress(transportOrder);
+    public TransportOrder payTransportOrder(TransportOrder transportOrder, String ipAddr) {
+        final TransportOrder tOrder = (TransportOrder) wxPayment.generatePayment(transportOrder, ipAddr);
+        orderRepository.updateOrderStatusAndAddress(tOrder);
+        return tOrder;
+    }
+
+    public void updateOrderToTransportPaySuccess(String transportOrderId) {
+        orderRepository.updateOrderStatusByTransportOrderId(transportOrderId,
+                OrderStatus.PAY_TRANSPORT_SUCCESS.name());
+    }
+
+    public void updateOrderToTransportPayFail(String transportOrderId) {
+        orderRepository.updateOrderStatusByTransportOrderId(transportOrderId,
+                OrderStatus.PAY_TRANSPORT_FAIL.name());
     }
 }

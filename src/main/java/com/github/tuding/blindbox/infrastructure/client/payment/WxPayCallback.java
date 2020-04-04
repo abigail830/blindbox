@@ -59,6 +59,26 @@ public class WxPayCallback {
         return WxPayCallbackRes.buildSuccess();
     }
 
+    @PostMapping(value = "/transport/callback",
+            produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
+    @ResponseBody
+    @Transactional
+    WxPayCallbackRes tranportCallback(@RequestBody WxPayCallbackReq wxPayCallbackReq) {
+        log.info("{}", wxPayCallbackReq);
+
+        if (!wxPayCallbackReq.isSuccessReq() || !validSign(wxPayCallbackReq) ||
+                !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
+            return WxPayCallbackRes.buildFail("参数格式校验错误");
+        }
+
+        if (wxPayCallbackReq.isSuccessPay()) {
+            orderService.updateOrderToTransportPaySuccess(wxPayCallbackReq.getOut_trade_no());
+        } else {
+            orderService.updateOrderToTransportPayFail(wxPayCallbackReq.getOut_trade_no());
+        }
+        return WxPayCallbackRes.buildSuccess();
+    }
+
     @SuppressWarnings("unchecked")
     private Boolean validSign(WxPayCallbackReq wxPayCallbackReq) {
         ObjectMapper oMapper = new ObjectMapper();

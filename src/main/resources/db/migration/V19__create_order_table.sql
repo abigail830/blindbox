@@ -4,10 +4,6 @@ create TABLE order_tbl (
   drawId varchar(100),
   productName varchar(100),
   productPrice double,
-  prepayId varchar(1000),
-  nonceStr varchar(1000),
-  preOrderTime varchar(1000),
-  paySign varchar(1000),
   address varchar(100),
   receiver varchar(100),
   mobile varchar(100),
@@ -16,6 +12,7 @@ create TABLE order_tbl (
   detailAddress varchar(100),
   createTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   status varchar(25) NOT NULL,
+  tranportOrderId varchar(100),
   PRIMARY KEY (orderId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
