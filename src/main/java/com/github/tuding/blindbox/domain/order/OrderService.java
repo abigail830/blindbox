@@ -29,7 +29,7 @@ public class OrderService {
     OrderRepository orderRepository;
 
     @Transactional
-    public void createOrder(String openId, String drawId, String ipAddress, Boolean useCoupon) {
+    public Order createProductOrder(String openId, String drawId, String ipAddress, Boolean useCoupon) {
 
         final Product product = productRepository.getProductWithPriceByDrawID(drawId)
                 .orElseThrow(ProductNotFoundException::new);
@@ -37,13 +37,14 @@ public class OrderService {
         log.info("Going to place order[{}] for product: {}", orderId, product);
 
         try {
-            Order oriOder = new Order(orderId, product.getName(), product.getPrice(), openId, drawId);
-            ;
+            Order preOder = new Order(orderId, product.getName(), product.getPrice(), openId, drawId);
             if (useCoupon) {
-                oriOder.setProductPrice(product.getPrice().multiply(Constant.DISCOUNT));
+                preOder.setProductPrice(product.getPrice().multiply(Constant.DISCOUNT));
             }
-            final Order order = wxPayment.generatePayment(oriOder, ipAddress);
-            orderRepository.save(order);
+
+            final Order orderWithWxInfo = wxPayment.generatePayment(preOder, ipAddress);
+            orderRepository.save(orderWithWxInfo);
+            return orderWithWxInfo;
         } catch (Exception e) {
             throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER);
         }
