@@ -34,7 +34,7 @@ public class Order {
     String associateCode;
     String detailAddress;
 
-    String status = "NEW";
+    String status;
     Date createTime;
 
 
@@ -45,6 +45,7 @@ public class Order {
         this.productPrice = productPrice;
         this.openId = openId;
         this.drawId = drawId;
+        this.status = OrderStatus.CREATED.name();
     }
 
     public void updateWxPayInfo(String prepayId, String nonceStr, String preOrderTime, String paySign) {

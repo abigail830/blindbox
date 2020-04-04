@@ -44,4 +44,14 @@ public class OrderService {
             throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER);
         }
     }
+
+    public void updateOrderToPaySuccess(String orderId) {
+        log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
+        orderRepository.updateOrderStatusById(orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
+    }
+
+    public void updateOrderToPayFail(String orderId) {
+        log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_FAIL.name());
+        orderRepository.updateOrderStatusById(orderId, OrderStatus.PAY_PRODUCT_FAIL.name());
+    }
 }

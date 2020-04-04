@@ -68,4 +68,7 @@ public class OrderRepository {
         jdbcTemplate.update("UPDATE order_tbl SET status = ? WHERE orderId = ?", status, orderId);
 
     }
+
+    public void updateOrderStatusById(String orderId, String name) {
+    }
 }
