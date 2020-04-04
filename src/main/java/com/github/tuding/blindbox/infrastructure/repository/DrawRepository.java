@@ -61,7 +61,7 @@ public class DrawRepository {
         return draws.stream().findFirst();
     }
 
-    private void saveDraw(Draw draw) {
+    public void saveDraw(Draw draw) {
         log.info("Going to insert draw_tbl for {}", draw);
 
         if (Toggle.TEST_MODE.isON()) {

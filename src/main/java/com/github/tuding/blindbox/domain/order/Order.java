@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -25,6 +26,17 @@ public class Order {
     String nonceStr;
     String preOrderTime;
     String paySign;
+
+    String address;
+    String receiver;
+    String mobile;
+    String area;
+    String associateCode;
+    String detailAddress;
+
+    String status = "NEW";
+    Date createTime;
+
 
 
     public Order(String orderId, String productName, BigDecimal productPrice, String openId, String drawId) {

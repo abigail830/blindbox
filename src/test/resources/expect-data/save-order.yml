@@ -1,0 +1,27 @@
+draw_tbl:
+  - openId: 'test'
+    drawId: 'd7493a65-1b22-479e-b3fe-decd80abe325'
+    drawStatus: 'NEW'
+    productId: '4340f163-f26d-4847-9d05-c33ff4134d75'
+    seriesId: 'f22be55f-dd01-456f-93c7-31e16618c83e'
+#    drawTime: '2020-04-03 11:34:18'
+    boxImage: '/series/f22be55f-dd01-456f-93c7-31e16618c83e-boxImage.png'
+    price: 100
+    seriesName: 'sport'
+order_tbl:
+  - orderId: 'testOrderID'
+    openId: 'test'
+    drawId: 'd7493a65-1b22-479e-b3fe-decd80abe325'
+    productName: 'test'
+    productPrice: 100
+    prepayId: 'test'
+    nonceStr: 'test'
+    preOrderTime: 'test'
+    paySign: 'test'
+    address: 'Address'
+    receiver: 'receiver'
+    mobile: '12345678901'
+    area: 'area'
+    associateCode: 'associateCode'
+    detailAddress: 'detailAddress'
+    status: 'NEW'
