@@ -37,7 +37,9 @@ public class OrderService {
 
         try {
             Order preOder = new Order(orderId, product.getName(), product.getPrice(), openId, drawId);
+            //place order to wxchat
             final Order orderWithWxInfo = wxPayment.generatePayment(preOder, ipAddress);
+            //TODO: now addr info null should cause problem in save?
             orderRepository.save(orderWithWxInfo);
             return orderWithWxInfo;
         } catch (Exception e) {
