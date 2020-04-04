@@ -4,7 +4,6 @@ import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.exception.ProductNotFoundException;
-import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.client.payment.WxPayment;
 import com.github.tuding.blindbox.infrastructure.repository.OrderRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
@@ -29,7 +28,7 @@ public class OrderService {
     OrderRepository orderRepository;
 
     @Transactional
-    public Order createProductOrder(String openId, String drawId, String ipAddress, Boolean useCoupon) {
+    public Order createProductOrder(String openId, String drawId, String ipAddress) {
 
         final Product product = productRepository.getProductWithPriceByDrawID(drawId)
                 .orElseThrow(ProductNotFoundException::new);
@@ -38,10 +37,6 @@ public class OrderService {
 
         try {
             Order preOder = new Order(orderId, product.getName(), product.getPrice(), openId, drawId);
-            if (useCoupon) {
-                preOder.setProductPrice(product.getPrice().multiply(Constant.DISCOUNT));
-            }
-
             final Order orderWithWxInfo = wxPayment.generatePayment(preOder, ipAddress);
             orderRepository.save(orderWithWxInfo);
             return orderWithWxInfo;
