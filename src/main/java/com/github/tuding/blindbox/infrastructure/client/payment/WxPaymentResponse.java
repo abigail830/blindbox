@@ -61,9 +61,19 @@ public class WxPaymentResponse {
                 this.return_code.equals(SUCCESS) && !Strings.isNullOrEmpty(return_code);
     }
 
-    public Order addWxPayInfo(Order order, String appid, String key) {
-        order.updateWxPayInfo(prepay_id, nonce_str, preOrderTime, appid, key);
+    public Order toOrderWithPayInfo(Order order, String appid, String key) {
+        String stringSignTemp = "appId=" + appid + "&nonceStr=" + nonce_str + "&package=prepay_id=" + prepay_id +
+                "&signType=MD5&timeStamp=" + preOrderTime;
+        String paySign = SignUtil.sign(stringSignTemp, key).toUpperCase();
+        order.updateWxPayInfo(prepay_id, nonce_str, preOrderTime, paySign);
         return order;
+    }
+
+    public void sign(String appid, String key) {
+        String stringSignTemp = "appId=" + appid + "&nonceStr=" + nonce_str + "&package=prepay_id=" + prepay_id +
+                "&signType=MD5&timeStamp=" + preOrderTime;
+        String paySign = SignUtil.sign(stringSignTemp, key).toUpperCase();
+
     }
 
 

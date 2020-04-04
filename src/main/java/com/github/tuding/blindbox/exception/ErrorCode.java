@@ -9,7 +9,8 @@ public enum ErrorCode {
     INVALID_IV,
     ILLEGAL_BUFFER,
     FAIL_TO_DECRYPT,
-    FAIL_TO_PRE_ORDER,
+    FAIL_TO_PLACE_ORDER,
+    INVALID_SIGN,
 
     //User
     FAIL_TO_UPDATE_USER_INFO,

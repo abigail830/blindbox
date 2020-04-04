@@ -22,7 +22,7 @@ public class WxPayment {
     //微信统一下单接口地址
     public static final String PAY_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
-    public static final String CALL_BACK_URL = "http://47.104.146.206//wx/payment/callback";
+    public static final String CALL_BACK_URL = "http://47.104.146.206/wx/payment/callback";
 
     @Value("${app.appId}")
     private String appId;
@@ -51,19 +51,17 @@ public class WxPayment {
                 Map<String, String> resultMap = XmlUtil.xmlToMap(response.body().string());
                 final WxPaymentResponse wxPaymentResponse = new WxPaymentResponse(resultMap, merchantSecret);
                 if (wxPaymentResponse.isSuccessPrePayment()) {
-                    order.updateWxPayInfo(wxPaymentResponse.getPrepay_id(), wxPaymentResponse.getNonce_str(),
-                            wxPaymentResponse.getPreOrderTime(), appId, merchantSecret);
-                    return order;
+                    return wxPaymentResponse.toOrderWithPayInfo(order, appId, merchantSecret);
                 } else {
                     log.error("{}", wxPaymentResponse.getReturn());
-                    throw new BizException(ErrorCode.FAIL_TO_PRE_ORDER);
+                    throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER);
                 }
             } else {
                 log.warn("Fail to get response from wxchat payment");
-                throw new BizException(ErrorCode.FAIL_TO_PRE_ORDER);
+                throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER);
             }
         } catch (Exception e) {
-            throw new BizException(ErrorCode.FAIL_TO_PRE_ORDER);
+            throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER);
         }
     }
 

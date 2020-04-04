@@ -1,9 +1,10 @@
 package com.github.tuding.blindbox.domain.order;
 
-import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.infrastructure.client.payment.SignUtil;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -14,32 +15,36 @@ import lombok.extern.slf4j.Slf4j;
 public class Order {
 
     String orderId;
-    Product product;
     String openId;
     String drawId;
+
+    String productName;
+    BigDecimal productPrice;
 
     String prepayId;
     String nonceStr;
     String preOrderTime;
     String paySign;
 
-    public Order(String orderId, Product product, String openId, String drawId) {
+
+    public Order(String orderId, String productName, BigDecimal productPrice, String openId, String drawId) {
         this.orderId = orderId;
-        this.product = product;
+        this.productName = productName;
+        this.productPrice = productPrice;
         this.openId = openId;
         this.drawId = drawId;
     }
 
-    public void updateWxPayInfo(String prepayId, String nonceStr, String preOrderTime, String appId, String key) {
+    public void updateWxPayInfo(String prepayId, String nonceStr, String preOrderTime, String paySign) {
         this.prepayId = prepayId;
         this.nonceStr = nonceStr;
         this.preOrderTime = preOrderTime;
-        sign(appId, key);
+        this.paySign = paySign;
     }
 
     public void sign(String appid, String key) {
         String stringSignTemp = "appId=" + appid + "&nonceStr=" + nonceStr + "&package=prepay_id=" + prepayId +
                 "&signType=MD5&timeStamp=" + preOrderTime;
-        this.paySign = SignUtil.sign(stringSignTemp, key, "utf-8").toUpperCase();
+        this.paySign = SignUtil.sign(stringSignTemp, key).toUpperCase();
     }
 }

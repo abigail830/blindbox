@@ -10,14 +10,16 @@ import java.util.Map;
 
 public class SignUtil {
 
-    static String sign(Map<String, String> paymentMap, String key, String input_charset) {
+    private static final String UTF_8 = "utf-8";
+
+    static String sign(Map<String, String> paymentMap, String key) {
         String text = createLinkString(paymentMap);
-        return sign(text, key, input_charset);
+        return sign(text, key);
     }
 
-    public static String sign(String text, String key, String input_charset) {
+    public static String sign(String text, String key) {
         text = text + "&key=" + key;
-        return DigestUtils.md5Hex(getContentBytes(text, input_charset));
+        return DigestUtils.md5Hex(getContentBytes(text, UTF_8));
     }
 
     static String createLinkString(Map<String, String> params) {

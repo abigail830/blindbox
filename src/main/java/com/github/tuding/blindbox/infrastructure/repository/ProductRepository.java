@@ -103,11 +103,11 @@ public class ProductRepository {
                 " WHERE p.seriesID = ?", rowMapper, id);
     }
 
-    public Optional<Product> getProductByDrawID(String drawId) {
-        String sql = "select p.id, p.seriesID, p.name, p.isSpecial, p.stock, p.productImage, p.productGrayImage," +
-                " p.update_time, p.version from product_v2_tbl p" +
-                " left join draw_tbl d on p.ID = d.productId" +
-                " where d.drawId = ? order by p.version DESC limit 1";
+    public Optional<Product> getProductWithPriceByDrawID(String drawId) {
+        String sql = "SELECT p.*, series.price FROM product_v2_tbl p" +
+                " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
+                " inner join series_tbl as series on p.seriesId = series.id" +
+                " left join draw_tbl d on p.ID = d.productId where d.drawId =?";
 
         final List<Product> result = jdbcTemplate.query(sql, rowMapper, drawId);
 

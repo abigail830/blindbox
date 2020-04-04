@@ -48,10 +48,9 @@ public class WxPaymentRequest {
         this.openId = order.getOpenId();
         this.nonce_str = getRandomStringByLength(32);
         this.out_trade_no = order.getOrderId();
-        this.body = !Strings.isNullOrEmpty(order.getProduct().getName()) ?
-                order.getProduct().getName() : null;
-        this.total_fee = (order.getProduct().getPrice() != null) ?
-                order.getProduct().getPrice().multiply(BigDecimal.valueOf(100)).intValue() : 0;
+        this.body = !Strings.isNullOrEmpty(order.getProductName()) ? order.getProductName() : null;
+        this.total_fee = (order.getProductPrice() != null) ?
+                order.getProductPrice().multiply(BigDecimal.valueOf(100)).intValue() : 0;
         this.spbill_create_ip = ip;
         this.notify_url = notifyUrl;
     }
@@ -72,7 +71,7 @@ public class WxPaymentRequest {
     }
 
     private String generateSign() {
-        this.sign = SignUtil.sign(toPaymentMap(), this.key, "utf-8").toUpperCase();
+        this.sign = SignUtil.sign(toPaymentMap(), this.key).toUpperCase();
         return this.sign;
     }
 
