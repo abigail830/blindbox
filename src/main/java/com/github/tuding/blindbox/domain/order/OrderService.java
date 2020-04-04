@@ -47,11 +47,16 @@ public class OrderService {
 
     public void updateOrderToPaySuccess(String orderId) {
         log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
-        orderRepository.updateOrderStatusById(orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
+        orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
     }
 
     public void updateOrderToPayFail(String orderId) {
         log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_FAIL.name());
-        orderRepository.updateOrderStatusById(orderId, OrderStatus.PAY_PRODUCT_FAIL.name());
+        orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_FAIL.name());
+    }
+
+    public void payTransportOrder(TransportOrder transportOrder, String ipAddr) {
+        wxPayment.generatePayment(transportOrder, ipAddr);
+        orderRepository.updateOrderStatusAndAddress(transportOrder);
     }
 }

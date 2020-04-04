@@ -27,7 +27,6 @@ public class Order {
     String preOrderTime;
     String paySign;
 
-    String address;
     String receiver;
     String mobile;
     String area;
@@ -38,14 +37,13 @@ public class Order {
     Date createTime;
 
 
-
     public Order(String orderId, String productName, BigDecimal productPrice, String openId, String drawId) {
         this.orderId = orderId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.openId = openId;
         this.drawId = drawId;
-        this.status = OrderStatus.CREATED.name();
+        this.status = OrderStatus.NEW.name();
     }
 
     public void updateWxPayInfo(String prepayId, String nonceStr, String preOrderTime, String paySign) {

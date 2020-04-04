@@ -3,10 +3,8 @@ package com.github.tuding.blindbox.infrastructure.repository;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.domain.order.Order;
+import com.github.tuding.blindbox.domain.order.OrderStatus;
 import com.github.tuding.blindbox.domain.product.Draw;
-import com.github.tuding.blindbox.domain.product.Product;
-import com.github.tuding.blindbox.domain.product.Role;
-import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +14,9 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertTrue;
 
 @SpringBootTest
 @DBRider
@@ -55,8 +50,8 @@ public class OrderCreationTest {
         orderRepository.save(new Order("testOrderID", "test",
                 "d7493a65-1b22-479e-b3fe-decd80abe325", "test",
                 BigDecimal.valueOf(100), "test", "test", "test", "test",
-                "Address", "receiver", "12345678901", "area", "associateCode",
-                "detailAddress", "NEW", new Date()));
+                "receiver", "12345678901", "area", "associateCode",
+                "detailAddress", OrderStatus.NEW.name(), new Date()));
 
         assertThat(orderRepository.getAllOutstandingOrderByOpenId("test").get(0).getOrderId(), is("testOrderID"));
 

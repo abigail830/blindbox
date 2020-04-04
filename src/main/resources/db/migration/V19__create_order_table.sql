@@ -15,7 +15,7 @@ create TABLE order_tbl (
   associateCode varchar(100),
   detailAddress varchar(100),
   createTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-  status varchar(10) NOT NULL,
+  status varchar(25) NOT NULL,
   PRIMARY KEY (orderId)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -66,5 +67,10 @@ public class ShippingAddressService {
                     shippingAddress.getId(), shippingAddress.getOpenId());
             throw new BizException(ErrorCode.FAIL_TO_MODIFY_SHIPPING_ADDRESS);
         }
+    }
+
+    public BigDecimal getTransportFeeByArea(String area) {
+        //TODO: to query fee mapping
+        return BigDecimal.valueOf(1);
     }
 }

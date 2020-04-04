@@ -1,8 +1,11 @@
 package com.github.tuding.blindbox.api.wx;
 
+import com.github.tuding.blindbox.api.wx.wxDto.PayTransportReq;
 import com.github.tuding.blindbox.api.wx.wxDto.PlaceOrderResponse;
 import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderService;
+import com.github.tuding.blindbox.domain.order.TransportOrder;
+import com.github.tuding.blindbox.domain.user.ShippingAddressService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
@@ -10,12 +13,10 @@ import com.github.tuding.blindbox.infrastructure.util.IpUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 
 @RestController
 @Slf4j
@@ -24,6 +25,9 @@ public class WxOrderController {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    ShippingAddressService shippingAddressService;
 
     @Autowired
     IpUtil ipUtil;
@@ -43,6 +47,23 @@ public class WxOrderController {
 
         final Order order = orderService.createProductOrder(openId, drawId, ipAddr);
         return new PlaceOrderResponse(order);
+    }
 
+    @PostMapping("/transport")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "支付运费(需要带token) - pending wx test")
+    public void payTransportFee(HttpServletRequest request, @RequestBody PayTransportReq payTransportReq) {
+
+        final String ipAddr = ipUtil.getIpAddr(request);
+
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        final String openId = jwt.getOpenIdFromToken(token);
+
+        //TODO: to query transport fee
+        BigDecimal transportFee = shippingAddressService.getTransportFeeByArea(payTransportReq.getArea());
+
+        final TransportOrder orders = payTransportReq.toTransportOrder(openId, transportFee);
+
+        orderService.payTransportOrder(orders, ipAddr);
     }
 }
