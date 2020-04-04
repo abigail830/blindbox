@@ -96,4 +96,7 @@ public class DrawRepository {
         }
     }
 
+    public void updateDrawPriceById(BigDecimal priceAfterDiscount, String drawId) {
+        jdbcTemplate.update("UPDATE draw_tbl SET price = ? WHERE drawId = ?", priceAfterDiscount, drawId);
+    }
 }

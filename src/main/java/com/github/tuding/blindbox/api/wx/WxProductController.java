@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -109,12 +110,15 @@ public class WxProductController {
     @PostMapping("/use-discount/{drawId}")
     @NeedWxVerifyToken
     @ApiOperation(value = "扣减积分以兑换优惠券, 返回折后价格/折扣描述/剩余积分 (需要带token)")
+    @Transactional
     public DiscountCouponDTO getDiscountByBonus(HttpServletRequest request,
                                                 @PathVariable String drawId) {
         BigDecimal priceAfterDiscount = productService.getProductPriceAfterDiscount(drawId);
 
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_COUPON_CONSUME_BONUS);
+
+        drawService.updateDrawPriceById(priceAfterDiscount, drawId);
 
         return new DiscountCouponDTO(priceAfterDiscount, remainBonus);
     }

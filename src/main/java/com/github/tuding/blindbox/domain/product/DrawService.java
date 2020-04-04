@@ -6,11 +6,11 @@ import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
 import com.github.tuding.blindbox.infrastructure.util.RetryUtil;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -138,5 +138,9 @@ public class DrawService {
         Product productByID = productRepository.getProductByID(draw.productId).get();
         productByID.setPrice(draw.getPrice());
         return productByID;
+    }
+
+    public void updateDrawPriceById(BigDecimal priceAfterDiscount, String drawId) {
+        drawRepository.updateDrawPriceById(priceAfterDiscount, drawId);
     }
 }
