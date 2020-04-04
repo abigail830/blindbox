@@ -104,7 +104,7 @@ public class ProductRepository {
     }
 
     public Optional<Product> getProductWithPriceByDrawID(String drawId) {
-        String sql = "SELECT p.*, series.price FROM product_v2_tbl p" +
+        String sql = "SELECT p.*, d.price FROM product_v2_tbl p" +
                 " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
                 " inner join series_tbl as series on p.seriesId = series.id" +
                 " left join draw_tbl d on p.ID = d.productId where d.drawId =?";
