@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -77,7 +78,13 @@ public class ShippingAddressService {
     }
 
     public BigDecimal getTransportFeeByArea(String area) {
-        //TODO: to query fee mapping
-        return BigDecimal.valueOf(1);
+        final List<TransportFee> transportFeeList = transportFeeRepository.getTransportFeeList();
+        final Optional<TransportFee> fee = transportFeeList.stream()
+                .filter(transportFee -> area.equals(transportFee.getArea())).findFirst();
+        if (fee.isPresent()) {
+            return fee.get().getTransportFee();
+        } else {
+            throw new BizException(ErrorCode.TRANSPORT_AREA_NOT_SUPPORT);
+        }
     }
 }

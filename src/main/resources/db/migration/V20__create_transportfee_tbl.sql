@@ -37,4 +37,4 @@ insert into transport_fee_tbl (area, transport_fee) values ('浙江省',10.0);
 insert into transport_fee_tbl (area, transport_fee) values ('内蒙古自治区',15.0);
 insert into transport_fee_tbl (area, transport_fee) values ('新疆维吾尔族自治区',15.0);
 insert into transport_fee_tbl (area, transport_fee) values ('西藏自治区',15.0);
-insert into transport_fee_tbl (area, transport_fee, remarks) values ('港澳',null,'到付');
+insert into transport_fee_tbl (area, transport_fee, remarks) values ('港澳',0.0,'到付');

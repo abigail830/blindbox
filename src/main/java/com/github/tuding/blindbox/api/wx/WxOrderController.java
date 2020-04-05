@@ -59,10 +59,8 @@ public class WxOrderController {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         final String openId = jwt.getOpenIdFromToken(token);
 
-        //TODO: to query transport fee
         BigDecimal transportFee = shippingAddressService.getTransportFeeByArea(payTransportReq.getArea());
-
-        final TransportOrder orders = payTransportReq.toTransportOrder(openId, transportFee);
+        final TransportOrder orders = payTransportReq.generateTransportOrder(openId, transportFee);
 
         final TransportOrder transportOrder = orderService.payTransportOrder(orders, ipAddr);
         return new PlaceOrderResponse(transportOrder);

@@ -57,14 +57,14 @@ public class WxPayment {
                     return orderWithPayInfo;
                 } else {
                     log.error("{}", wxPaymentResponse.getReturn());
-                    throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER);
+                    throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER_TO_WX);
                 }
             } else {
                 log.warn("Fail to get response from wxchat payment");
-                throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER);
+                throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER_TO_WX);
             }
         } catch (Exception e) {
-            throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER);
+            throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER_TO_WX);
         }
     }
 

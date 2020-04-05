@@ -9,7 +9,7 @@ public enum ErrorCode {
     INVALID_IV,
     ILLEGAL_BUFFER,
     FAIL_TO_DECRYPT,
-    FAIL_TO_PLACE_ORDER,
+    FAIL_TO_PLACE_ORDER_TO_WX,
     INVALID_SIGN,
 
     //User
@@ -18,6 +18,7 @@ public enum ErrorCode {
     FAIL_TO_MODIFY_SHIPPING_ADDRESS,
     BONUS_NOT_ENOUGH,
     FAIL_TO_UPDATE_BONUS,
+    TRANSPORT_AREA_NOT_SUPPORT,
 
     //Infra
     FAIL_TO_STORE_FILE,

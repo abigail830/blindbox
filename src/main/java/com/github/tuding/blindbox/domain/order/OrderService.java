@@ -43,7 +43,7 @@ public class OrderService {
             orderRepository.save(orderWithWxInfo);
             return orderWithWxInfo;
         } catch (Exception e) {
-            throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER);
+            throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER_TO_WX);
         }
     }
 

@@ -21,7 +21,7 @@ public class PayTransportReq {
     String associateCode;
     String detailAddress;
 
-    public TransportOrder toTransportOrder(String openId, BigDecimal transportFee) {
+    public TransportOrder generateTransportOrder(String openId, BigDecimal transportFee) {
         return new TransportOrder(orderIdList, openId, receiver, mobile, area, associateCode, detailAddress, transportFee);
     }
 
