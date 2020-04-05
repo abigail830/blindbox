@@ -23,7 +23,7 @@ class ShippingAddressRepositoryTest {
     void saveAddress() {
         //given
         final ShippingAddress shippingAddress = new ShippingAddress("receiver", "12345678901", "area",
-                "associateCode", "detailAddress", Boolean.TRUE);
+                "associateCode", "detailAddress", Boolean.TRUE, "province");
         shippingAddress.setOpenId("openId");
         //when
         final ShippingAddress address = shippingAddressRepository.saveAddress(shippingAddress);

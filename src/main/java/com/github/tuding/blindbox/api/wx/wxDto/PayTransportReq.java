@@ -15,6 +15,7 @@ public class PayTransportReq {
 
     List<String> orderIdList;
 
+    String province;
     String receiver;
     String mobile;
     String area;

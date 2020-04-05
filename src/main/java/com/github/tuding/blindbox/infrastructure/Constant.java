@@ -25,4 +25,5 @@ public class Constant {
 
 
     public static final String DRAW_INIT_STATUS = "NEW";
+    public static final int FREE_DELIVER = 3;
 }

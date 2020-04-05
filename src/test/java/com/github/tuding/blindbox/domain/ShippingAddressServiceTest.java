@@ -29,7 +29,8 @@ class ShippingAddressServiceTest {
         //given
         final String token = jwt.generateWxToken(new User("openId1", "skey"));
         final ShippingAddress shippingAddress = new ShippingAddress("receiver", "12345678901",
-                "area", "associateCode", "detailAddress", Boolean.TRUE);
+                "area", "associateCode", "detailAddress",
+                Boolean.TRUE, "province");
         //when
         shippingAddressService.addAddress(token, shippingAddress);
         //then
@@ -44,7 +45,8 @@ class ShippingAddressServiceTest {
         //given
         final String token = jwt.generateWxToken(new User("openId", "skey"));
         final ShippingAddress shippingAddress = new ShippingAddress("receiver2", "12345678902",
-                "area2", "associateCode2", "detailAddress2", Boolean.TRUE);
+                "area2", "associateCode2", "detailAddress2",
+                Boolean.TRUE, "province");
         //when
         shippingAddressService.addAddress(token, shippingAddress);
 

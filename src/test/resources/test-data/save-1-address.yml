@@ -7,5 +7,6 @@ shipping_addr_tbl:
   detail_address: 'detailAddress'
   is_default_address: true
   open_id: 'openId'
+  province: 'province'
 
 

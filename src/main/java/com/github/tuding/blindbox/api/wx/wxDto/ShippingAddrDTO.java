@@ -22,6 +22,7 @@ public class ShippingAddrDTO {
     String detailAddress;
     Boolean isDefaultAddress;
     BigDecimal transportFee;
+    String province;
 
     public ShippingAddrDTO(ShippingAddress shippingAddress) {
         this.id = shippingAddress.getId();
@@ -31,6 +32,7 @@ public class ShippingAddrDTO {
         this.associateCode = shippingAddress.getAssociateCode();
         this.detailAddress = shippingAddress.getDetailAddress();
         this.isDefaultAddress = shippingAddress.getIsDefaultAddress();
+        this.province = shippingAddress.getProvince();
 
         updateTransportFee(shippingAddress);
     }
@@ -46,10 +48,10 @@ public class ShippingAddrDTO {
     }
 
     public ShippingAddress toDomainObjWithoutId() {
-        return new ShippingAddress(receiver, mobile, area, associateCode, detailAddress, isDefaultAddress);
+        return new ShippingAddress(receiver, mobile, area, associateCode, detailAddress, isDefaultAddress, province);
     }
 
     public ShippingAddress toDomainObjWithId() {
-        return new ShippingAddress(id, receiver, mobile, area, associateCode, detailAddress, isDefaultAddress);
+        return new ShippingAddress(id, receiver, mobile, area, associateCode, detailAddress, isDefaultAddress, province);
     }
 }

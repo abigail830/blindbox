@@ -7,6 +7,7 @@ shipping_addr_tbl:
   detail_address: 'detailAddress'
   is_default_address: false
   open_id: 'openId3'
+  province: 'province1'
 - id: 2
   receiver: 'receiver2'
   mobile: '12345678902'
@@ -15,5 +16,6 @@ shipping_addr_tbl:
   detail_address: 'detailAddress2'
   is_default_address: true
   open_id: 'openId3'
+  province: 'province2'
 
 
