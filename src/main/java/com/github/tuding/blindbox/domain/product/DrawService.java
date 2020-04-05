@@ -56,13 +56,13 @@ public class DrawService {
 
     public Draw drawAProduct(String openId, String seriesId) {
         log.info("Draw a product for {}", seriesId);
-        cancelADrawByOpenID(openId);
         Optional<Series> series = seriesRespository.querySeriesByID(seriesId);
         Draw draw = RetryUtil.retryOnTimes(() -> handleDrawing(openId, seriesId, series.get()), 10, 0);
         log.info("Draw is made as {}", draw);
         return draw;
     }
 
+    @Deprecated
     public void cancelADrawByOpenID(String openId) {
         log.info("Cancel a draw for {}", openId);
         Optional<Draw> drawOptional = drawRepository.getDrawByOpenID(openId);
@@ -70,6 +70,16 @@ public class DrawService {
             cancelADraw(drawOptional.get());
         } else {
             log.warn("Can not find draw for openId ID {}", openId);
+        }
+    }
+
+    public void cancelADrawByDrawId(String drawId) {
+        log.info("Cancel a draw for draw Id {}", drawId);
+        Optional<Draw> drawOptional = drawRepository.getDrawByDrawID(drawId);
+        if (drawOptional.isPresent()) {
+            cancelADraw(drawOptional.get());
+        } else {
+            log.warn("Can not find draw for draw ID {}", drawId);
         }
     }
 
@@ -88,6 +98,10 @@ public class DrawService {
 
     public Draw getDrawByOpenID(String openId) {
         return drawRepository.getDrawByOpenID(openId).orElseThrow(DrawNotFoundException::new);
+    }
+
+    public Draw getDrawByDrawID(String drawId) {
+        return drawRepository.getDrawByDrawID(drawId).orElseThrow(DrawNotFoundException::new);
     }
 
 

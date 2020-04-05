@@ -1,9 +1,7 @@
 package com.github.tuding.blindbox.domain.order;
 
 import com.github.tuding.blindbox.domain.product.Product;
-import com.github.tuding.blindbox.exception.BizException;
-import com.github.tuding.blindbox.exception.ErrorCode;
-import com.github.tuding.blindbox.exception.ProductNotFoundException;
+import com.github.tuding.blindbox.exception.*;
 import com.github.tuding.blindbox.infrastructure.client.payment.WxPayment;
 import com.github.tuding.blindbox.infrastructure.repository.OrderRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
@@ -45,6 +43,10 @@ public class OrderService {
         } catch (Exception e) {
             throw new BizException(ErrorCode.FAIL_TO_PLACE_ORDER_TO_WX);
         }
+    }
+
+    public Order getOrder(String orderId) {
+        return orderRepository.getOrder(orderId).orElseThrow(OrderNotFoundException::new);
     }
 
     public void updateOrderToPaySuccess(String orderId) {

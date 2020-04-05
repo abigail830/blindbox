@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -88,5 +89,12 @@ public class OrderRepository {
         String sql = "UPDATE order_tbl SET status = ? WHERE tranportOrderId = ?";
         jdbcTemplate.update(sql, status, transportOrderId);
 
+    }
+
+    public Optional<Order> getOrder(String orderId) {
+        log.info("Get all order by id {}", orderId);
+        List<Order> orders = jdbcTemplate.query("SELECT * FROM order_tbl WHERE orderId = ?", rowMapper,
+                orderId);
+        return orders.stream().findFirst();
     }
 }

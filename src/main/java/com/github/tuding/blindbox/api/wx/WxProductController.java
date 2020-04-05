@@ -93,18 +93,32 @@ public class WxProductController {
 
     @GetMapping("/draw/")
     @NeedWxVerifyToken
-    @ApiOperation(value = "获取当前的抽盒 (需要带token)")
+    @ApiOperation(value = "获取当前的抽盒 (需要带token) - 此接口已停用")
     public DrawDTO getADrawForUserOpenID(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return new DrawDTO(drawService.getDrawByOpenID(jwt.getOpenIdFromToken(token)));
     }
 
+    @GetMapping("/draw/{drawId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "获取当前的抽盒 (需要带token)")
+    public DrawDTO getADrawForDrawId (@PathVariable String drawId) {
+        return new DrawDTO(drawService.getDrawByDrawID(drawId));
+    }
+
     @DeleteMapping("/draw/")
     @NeedWxVerifyToken
-    @ApiOperation(value = "取消已有的抽盒 (需要带token)")
+    @ApiOperation(value = "取消已有的抽盒 (需要带token) - 此接口已停用")
     public void cancelADrawForUserOpenID(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         drawService.cancelADrawByOpenID(jwt.getOpenIdFromToken(token));
+    }
+
+    @DeleteMapping("/draw/{drawId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "取消已有的抽盒 (需要带token)")
+    public void cancelADrawForDrawID(@PathVariable String drawId) {
+        drawService.cancelADrawByDrawId(drawId);
     }
 
     @PostMapping("/use-discount/{drawId}")

@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.infrastructure.client.payment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderService;
 import com.github.tuding.blindbox.domain.product.DrawService;
 import lombok.extern.slf4j.Slf4j;
@@ -50,11 +51,13 @@ public class WxPayCallback {
             return WxPayCallbackRes.buildFail("参数格式校验错误");
         }
 
+        String orderId = wxPayCallbackReq.getOut_trade_no();
         if (wxPayCallbackReq.isSuccessPay()) {
-            orderService.updateOrderToPaySuccess(wxPayCallbackReq.getOut_trade_no());
+            orderService.updateOrderToPaySuccess(orderId);
         } else {
-            orderService.updateOrderToPayFail(wxPayCallbackReq.getOut_trade_no());
-            drawService.cancelADrawByOpenID(wxPayCallbackReq.getOpenid());
+            orderService.updateOrderToPayFail(orderId);
+            Order order = orderService.getOrder(orderId);
+            drawService.cancelADrawByDrawId(order.getDrawId());
         }
         return WxPayCallbackRes.buildSuccess();
     }
