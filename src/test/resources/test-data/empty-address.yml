@@ -1,2 +1,6 @@
 shipping_addr_tbl:
 
+transport_fee_tbl:
+- area: 'area'
+  transport_fee: 10.0
+

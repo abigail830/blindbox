@@ -2,6 +2,10 @@ package com.github.tuding.blindbox.domain.user;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
 @Getter
 @Setter
 @ToString
@@ -17,6 +21,7 @@ public class ShippingAddress {
     String detailAddress;
     Boolean isDefaultAddress;
     String openId;
+    BigDecimal transportFee;
 
 
     public ShippingAddress(long id, String receiver, String mobile, String area,
@@ -44,4 +49,10 @@ public class ShippingAddress {
         this.openId = openId;
     }
 
+    public void setTransportFee(List<TransportFee> transportFeeList) {
+        final Optional<TransportFee> transportFee = transportFeeList.stream()
+                .filter(transportFee1 -> transportFee1.getArea().equals(this.area))
+                .findFirst();
+        transportFee.ifPresent(transportFee1 -> this.transportFee = transportFee1.getTransportFee());
+    }
 }

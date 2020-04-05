@@ -33,9 +33,9 @@ class ShippingAddressServiceTest {
         //when
         shippingAddressService.addAddress(token, shippingAddress);
         //then
-        assertEquals(1, shippingAddressService.getAddressByToken(token).size());
-        assertEquals("openId1", shippingAddressService.getAddressByToken(token).get(0).getOpenId());
-        assertEquals(Boolean.TRUE, shippingAddressService.getAddressByToken(token).get(0).getIsDefaultAddress());
+        assertEquals(1, shippingAddressService.getAddressWithTransportFeeByToken(token).size());
+        assertEquals("openId1", shippingAddressService.getAddressWithTransportFeeByToken(token).get(0).getOpenId());
+        assertEquals(Boolean.TRUE, shippingAddressService.getAddressWithTransportFeeByToken(token).get(0).getIsDefaultAddress());
     }
 
     @Test
@@ -48,7 +48,7 @@ class ShippingAddressServiceTest {
         //when
         shippingAddressService.addAddress(token, shippingAddress);
 
-        final long count = shippingAddressService.getAddressByToken(token)
+        final long count = shippingAddressService.getAddressWithTransportFeeByToken(token)
                 .stream().filter(addr -> addr.getIsDefaultAddress() == Boolean.TRUE).count();
         assertEquals(1, count);
     }
@@ -74,6 +74,6 @@ class ShippingAddressServiceTest {
         shippingAddressService.deleteAddress(token, 1);
 
         System.out.println(shippingAddressService.getAllAddress());
-        assertEquals(0, shippingAddressService.getAddressByToken(token).size());
+        assertEquals(0, shippingAddressService.getAddressWithTransportFeeByToken(token).size());
     }
 }

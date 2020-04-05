@@ -3,6 +3,7 @@ package com.github.tuding.blindbox.domain.user;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.repository.ShippingAddressRepository;
+import com.github.tuding.blindbox.infrastructure.repository.TransportFeeRepository;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class ShippingAddressService {
     @Autowired
     ShippingAddressRepository shippingAddressRepository;
 
+    @Autowired
+    TransportFeeRepository transportFeeRepository;
+
     @Transactional
     public void addAddress(String token, ShippingAddress shippingAddress) {
         final String openIdFromToken = jwt.getOpenIdFromToken(token);
@@ -38,9 +42,12 @@ public class ShippingAddressService {
         return shippingAddressRepository.getAllAddress();
     }
 
-    public List<ShippingAddress> getAddressByToken(String token) {
+    public List<ShippingAddress> getAddressWithTransportFeeByToken(String token) {
         final String openIdFromToken = jwt.getOpenIdFromToken(token);
-        return shippingAddressRepository.getAddressByOpenId(openIdFromToken);
+        final List<ShippingAddress> addresses = shippingAddressRepository.getAddressByOpenId(openIdFromToken);
+        final List<TransportFee> transportFeeList = transportFeeRepository.getTransportFeeList();
+        addresses.forEach(address -> address.setTransportFee(transportFeeList));
+        return addresses;
     }
 
     @Transactional

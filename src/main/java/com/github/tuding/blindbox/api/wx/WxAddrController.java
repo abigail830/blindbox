@@ -54,7 +54,7 @@ public class WxAddrController {
     @ApiOperation(value = "根据token查询关联发货地址(需要带token）")
     public List<ShippingAddrDTO> getAddressByToken(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        return shippingAddressService.getAddressByToken(token).stream()
+        return shippingAddressService.getAddressWithTransportFeeByToken(token).stream()
                 .map(ShippingAddrDTO::new)
                 .collect(Collectors.toList());
     }
