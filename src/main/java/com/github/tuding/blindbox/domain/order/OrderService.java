@@ -3,6 +3,7 @@ package com.github.tuding.blindbox.domain.order;
 import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.exception.*;
 import com.github.tuding.blindbox.infrastructure.client.payment.WxPayment;
+import com.github.tuding.blindbox.infrastructure.repository.DrawRepository;
 import com.github.tuding.blindbox.infrastructure.repository.OrderRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,9 @@ public class OrderService {
     @Autowired
     OrderRepository orderRepository;
 
+    @Autowired
+    DrawRepository drawRepository;
+
     @Transactional
     public Order createProductOrder(String openId, String drawId, String ipAddress) {
 
@@ -38,6 +42,7 @@ public class OrderService {
             //place order to wxchat
             final Order orderWithWxInfo = wxPayment.generatePayment(preOder, ipAddress);
             //TODO: now addr info null should cause problem in save?
+            drawRepository.confirmDrawToOrder(drawId);
             orderRepository.save(orderWithWxInfo);
             return orderWithWxInfo;
         } catch (Exception e) {

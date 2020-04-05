@@ -4,6 +4,7 @@ import com.github.tuding.blindbox.domain.product.Draw;
 import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
+import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,9 @@ public class DrawRepository {
 
 
     private void cancelDraw(Draw draw) {
-        jdbcTemplate.update("UPDATE draw_tbl SET drawStatus = 'CANCELLED' WHERE drawId = ?", draw.getDrawId());
+        jdbcTemplate.update("UPDATE draw_tbl SET drawStatus = ? WHERE drawId = ?",
+                Constant.DRAW_CANCELLED_STATUS,
+                draw.getDrawId());
     }
 
     public BigDecimal getPriceByDrawId(String drawId) {
@@ -98,5 +101,10 @@ public class DrawRepository {
 
     public void updateDrawPriceById(BigDecimal priceAfterDiscount, String drawId) {
         jdbcTemplate.update("UPDATE draw_tbl SET price = ? WHERE drawId = ?", priceAfterDiscount, drawId);
+    }
+
+    public void confirmDrawToOrder(String drawId) {
+        jdbcTemplate.update("UPDATE draw_tbl SET drawStatus = ? WHERE drawId = ?", Constant.DRAW_ORDER_STATUS, drawId);
+
     }
 }

@@ -1,6 +1,7 @@
 package com.github.tuding.blindbox.domain.product;
 
 import com.github.tuding.blindbox.exception.DrawNotFoundException;
+import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.repository.DrawRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
@@ -39,13 +40,14 @@ public class DrawService {
             = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("draw-auto-scan-thread-%d").build());
 
     public DrawService() {
-        scheduledExecutorService.scheduleWithFixedDelay(this::deleteTimeoutDraw, 1, 24, TimeUnit.HOURS);
+        scheduledExecutorService.scheduleWithFixedDelay(this::deleteTimeoutDraw, 1, 2, TimeUnit.HOURS);
     }
 
     public void deleteTimeoutDraw() {
         log.info("Start to scan timeout draw. ");
         List<Draw> draws = drawRepository.getDraws();
         List<Draw> timeoutDraw = draws.stream()
+                .filter(item -> item.getDrawStatus().equalsIgnoreCase(DRAW_INIT_STATUS))
                 .filter(item -> System.currentTimeMillis() - item.getDrawTime().getTime() > DRAW_TIMEOUT)
                 .collect(Collectors.toList());
         for (Draw draw : timeoutDraw) {
