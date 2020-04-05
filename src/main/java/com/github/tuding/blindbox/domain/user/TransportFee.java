@@ -13,5 +13,5 @@ public class TransportFee {
 
     String area;
     BigDecimal transportFee;
-    String remarks;
+    Boolean uPay; //到付
 }

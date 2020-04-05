@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ShippingAddrDTO {
 
+    private static final int NOT_SUPPORT = -2;
+    private static final int U_PAY_WHEN_ARRIVED = -1;
     Long id;
     String receiver;
     String mobile;
@@ -29,7 +31,18 @@ public class ShippingAddrDTO {
         this.associateCode = shippingAddress.getAssociateCode();
         this.detailAddress = shippingAddress.getDetailAddress();
         this.isDefaultAddress = shippingAddress.getIsDefaultAddress();
-        this.transportFee = shippingAddress.getTransportFee();
+
+        updateTransportFee(shippingAddress);
+    }
+
+    private void updateTransportFee(ShippingAddress shippingAddress) {
+        if (null == shippingAddress.getTransportFee()) {
+            this.transportFee = BigDecimal.valueOf(NOT_SUPPORT);
+        } else if (shippingAddress.getTransportFee().getUPay()) {
+            this.transportFee = BigDecimal.valueOf(U_PAY_WHEN_ARRIVED);
+        } else {
+            this.transportFee = shippingAddress.getTransportFee().getTransportFee();
+        }
     }
 
     public ShippingAddress toDomainObjWithoutId() {
