@@ -40,19 +40,23 @@ public class DrawService {
             = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("draw-auto-scan-thread-%d").build());
 
     public DrawService() {
-        scheduledExecutorService.scheduleWithFixedDelay(this::deleteTimeoutDraw, 1, 2, TimeUnit.HOURS);
+        scheduledExecutorService.scheduleWithFixedDelay(this::scanExpiredDraw, 1, 2, TimeUnit.HOURS);
     }
 
-    public void deleteTimeoutDraw() {
-        log.info("Start to scan timeout draw. ");
-        List<Draw> draws = drawRepository.getDraws();
-        List<Draw> timeoutDraw = draws.stream()
-                .filter(item -> item.getDrawStatus().equalsIgnoreCase(DRAW_INIT_STATUS))
-                .filter(item -> System.currentTimeMillis() - item.getDrawTime().getTime() > DRAW_TIMEOUT)
-                .collect(Collectors.toList());
-        for (Draw draw : timeoutDraw) {
-            log.info("Cancel the timeout draw {}", draw);
-            cancelADraw(draw);
+    public void scanExpiredDraw() {
+        try {
+            log.info("Start to scan timeout draw. ");
+            List<Draw> draws = drawRepository.getDraws();
+            List<Draw> timeoutDraw = draws.stream()
+                    .filter(item -> item.getDrawStatus().equalsIgnoreCase(DRAW_INIT_STATUS))
+                    .filter(item -> System.currentTimeMillis() - item.getDrawTime().getTime() > DRAW_TIMEOUT)
+                    .collect(Collectors.toList());
+            for (Draw draw : timeoutDraw) {
+                log.info("Cancel the timeout draw {}", draw);
+                cancelADraw(draw);
+            }
+        }catch (Exception ex) {
+            log.error("Failed to handle draw scan. ", ex);
         }
     }
 
