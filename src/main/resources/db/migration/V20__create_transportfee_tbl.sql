@@ -1,5 +1,5 @@
 create TABLE transport_fee_tbl (
-  area varchar(1000) NOT NULL unique,
+  area varchar(100) NOT NULL unique,
   transport_fee double,
   update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   uPay boolean DEFAULT false,
@@ -37,4 +37,6 @@ insert into transport_fee_tbl (area, transport_fee) values ('浙江省',10.0);
 insert into transport_fee_tbl (area, transport_fee) values ('内蒙古自治区',15.0);
 insert into transport_fee_tbl (area, transport_fee) values ('新疆维吾尔族自治区',15.0);
 insert into transport_fee_tbl (area, transport_fee) values ('西藏自治区',15.0);
-insert into transport_fee_tbl (area, transport_fee, uPay) values ('港澳',0.0,'true');
+insert into transport_fee_tbl (area, transport_fee, uPay) values ('港澳',0.0,true);
+
+alter table shipping_addr_tbl modify area varchar(100) NOT NULL;
