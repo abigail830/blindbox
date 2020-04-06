@@ -12,6 +12,7 @@
             text-align: center;
             margin: 60 auto;
         }
+
         .empty-block > img {
             width: 40%;
             margin-top: 60px;
@@ -41,27 +42,69 @@
             </a>
         </div>
     </div>
+
     <div class="twelve wide column right-box">
         <div class="ui grid main">
-            <div class="ten wide column left-btn">
-            </div>
-            <div class="six wide column">
+            <div class="sixteen wide column right aligned">
                 <div class="title"><h2>订单管理</h2></div>
             </div>
         </div>
         <div class="ui divider"></div>
-
+        <div th:if="${!orders.empty}">
+            <table>
+                <thead>
+                <tr>
+                    <th>订单号</th>
+                    <th>openID</th>
+                    <th>产品名称</th>
+                    <th>价格</th>
+                    <th>创建时间</th>
+                    <th>收件人</th>
+                    <th>收件人电话</th>
+                    <th>收件地址</th>
+                    <th>状态</th>
+                    <th>更多操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${orders}">
+                    <td><span th:text="${item.orderId}">订单号</span></td>
+                    <td><span th:text="${item.openId}">openID</span></td>
+                    <td><span th:text="${item.productName}">产品名称</span></td>
+                    <td><span th:text="${item.productPrice}">价格</span></td>
+                    <td><span th:text="${item.createTime}">创建时间</span></td>
+                    <td><span th:text="${item.receiver}">收件人</span></td>
+                    <td><span th:text="${item.mobile}">收件人电话</span></td>
+                    <td><span th:text="${item.detailAddress}">收件地址</span></td>
+                    <td><span th:text="${item.status}">状态</span></td>
+                    <td>
+                        <a title="已发货" href="#">
+                            <i class="paper plane outline icon" th:attr="onclick=|deliverItem('${item.orderId}')|"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
         <div th:if="${orders ==null or orders.empty}" class="empty-block">
             <img th:src="@{/img/empty.png}">
             <h3>暂时还没有订单...</h3>
         </div>
-
-        <div th:if="${orders!=null or !orders.empty}">
-            <!--this is going to show list-->
-        </div>
     </div>
 </div>
+<script type="text/javascript">
+    function deliverItem(item) {
+        $.ajax({
+            url: "/admin-ui/orders/deliver/" + item,
+            type: "PUT",
+            success: function (data, status) {
+                console.info("Got update status " + status);
+                location.reload();
+            }
+        })
+    };
 
+</script>
 </body>
 
 </html>
