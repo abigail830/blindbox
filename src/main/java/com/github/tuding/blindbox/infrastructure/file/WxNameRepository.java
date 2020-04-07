@@ -9,9 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -26,8 +23,7 @@ public class WxNameRepository {
     @PostConstruct
     void init() {
         try {
-            final URL resource = WxNameRepository.class.getClassLoader().getResource("wx_naming.csv");
-            final InputStream inputStream = Files.newInputStream(Paths.get(resource.getFile()));
+            final InputStream inputStream = getClass().getResourceAsStream("/wx_naming.csv");
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
             nameList = br.lines().map(String::new).collect(Collectors.toList());
             br.close();
