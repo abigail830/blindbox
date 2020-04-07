@@ -113,4 +113,9 @@ public class ProductRepository {
 
         return result.stream().findFirst();
     }
+
+    public List<String> getThreeRandomProductName() {
+        String sql = "select name from product_v2_tbl order by rand() limit 3";
+        return jdbcTemplate.queryForList(sql, String.class);
+    }
 }
