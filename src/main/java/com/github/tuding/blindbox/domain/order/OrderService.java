@@ -129,4 +129,16 @@ public class OrderService {
         orderRepository.updateOrderStatusByTransportOrderId(transportOrderId,
                 OrderStatus.PAY_TRANSPORT_FAIL.name());
     }
+
+    public List<Order> getOrderDeliveredByOpenId(String openId) {
+        return orderRepository.getOrderDelivered(openId);
+    }
+
+    public List<Order> getOrderPendingDeliverByOpenId(String openId) {
+        return orderRepository.getOrderPendingDeliver(openId);
+    }
+
+    public List<Order> getOrderPendingPayTransportByOpenId(String openId) {
+        return orderRepository.getOrderPendingPayTransportFee(openId);
+    }
 }

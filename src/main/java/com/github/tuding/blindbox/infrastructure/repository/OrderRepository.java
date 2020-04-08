@@ -97,4 +97,24 @@ public class OrderRepository {
                 orderId);
         return orders.stream().findFirst();
     }
+
+    public List<Order> getOrderPendingPayTransportFee(String openId) {
+        log.info("Get order pending to pay transport fee for user [{}].", openId);
+        return jdbcTemplate.query("SELECT * FROM order_tbl " +
+                        "WHERE status in (PAY_PRODUCT_SUCCESS, NEW_TRANSPORT, PAY_TRANSPORT_FAIL) " +
+                        "AND openId = ?",
+                rowMapper, openId);
+    }
+
+    public List<Order> getOrderPendingDeliver(String openId) {
+        log.info("Get order pending deliver for user [{}].", openId);
+        return jdbcTemplate.query("SELECT * FROM order_tbl WHERE status =? AND openId = ?",
+                rowMapper, OrderStatus.PAY_TRANSPORT_SUCCESS.name(), openId);
+    }
+
+    public List<Order> getOrderDelivered(String openId) {
+        log.info("Get order pending deliver for user [{}].", openId);
+        return jdbcTemplate.query("SELECT * FROM order_tbl WHERE status =? AND openId = ?",
+                rowMapper, OrderStatus.DELIVERED.name(), openId);
+    }
 }

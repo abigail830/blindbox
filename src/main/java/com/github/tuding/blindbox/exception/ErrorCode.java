@@ -31,4 +31,7 @@ public enum ErrorCode {
     //Product
     FAIL_TO_GET_PRICE_BY_DRAWID,
     DRAWID_NOT_FOUND,
+
+    //Order
+    INVALID_STATUS,
 }

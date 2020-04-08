@@ -2,10 +2,13 @@ package com.github.tuding.blindbox.api.wx;
 
 import com.github.tuding.blindbox.api.wx.wxDto.PayTransportReq;
 import com.github.tuding.blindbox.api.wx.wxDto.PlaceOrderResponse;
+import com.github.tuding.blindbox.api.wx.wxDto.WxOrderStatus;
 import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderService;
 import com.github.tuding.blindbox.domain.order.TransportOrder;
 import com.github.tuding.blindbox.domain.user.ShippingAddressService;
+import com.github.tuding.blindbox.exception.BizException;
+import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -67,5 +71,23 @@ public class WxOrderController {
 
         final TransportOrder transportOrder = orderService.payTransportOrder(orders, ipAddr);
         return new PlaceOrderResponse(transportOrder);
+    }
+
+    @GetMapping()
+    @NeedWxVerifyToken
+    @ApiOperation("获取token用户所属的全部订单，status范围（PENDING_PAY_TRANSPORT, PENDING_DELIVER, DELIVERED")
+    public List<Order> getAllOrderByToken(HttpServletRequest request, @RequestParam String status) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        final String openId = jwt.getOpenIdFromToken(token);
+
+        if (WxOrderStatus.DELIVERED.name().equalsIgnoreCase(status)) {
+            return orderService.getOrderDeliveredByOpenId(openId);
+        } else if (WxOrderStatus.PENDING_DELIVER.name().equalsIgnoreCase(status)) {
+            return orderService.getOrderPendingDeliverByOpenId(openId);
+        } else if (WxOrderStatus.PENDING_PAY_TRANSPORT.name().equalsIgnoreCase(status)) {
+            return orderService.getOrderPendingPayTransportByOpenId(openId);
+        } else {
+            throw new BizException(ErrorCode.INVALID_STATUS);
+        }
     }
 }

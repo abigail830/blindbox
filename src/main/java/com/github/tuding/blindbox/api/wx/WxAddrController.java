@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/wx/address")
 @Slf4j
-@Api(value = "地址相关接口", description = "地址相关接口")
+@Api("地址相关接口")
 public class WxAddrController {
 
     @Autowired
@@ -29,7 +29,7 @@ public class WxAddrController {
 
     @PostMapping
     @NeedWxVerifyToken
-    @ApiOperation(value = "添加发货地址(需要带token）")
+    @ApiOperation("添加发货地址(需要带token）")
     public void addShippingAddress(HttpServletRequest request,
                                    @RequestBody ShippingAddrDTO shippingAddrDTO) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
@@ -40,7 +40,7 @@ public class WxAddrController {
 
     @PutMapping
     @NeedWxVerifyToken
-    @ApiOperation(value = "修改发货地址(需要带token）")
+    @ApiOperation("修改发货地址(需要带token）")
     public void updateShippingAddress(HttpServletRequest request,
                                       @RequestBody ShippingAddrDTO shippingAddrDTO) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
@@ -51,7 +51,7 @@ public class WxAddrController {
 
     @GetMapping
     @NeedWxVerifyToken
-    @ApiOperation(value = "根据token查询关联发货地址(需要带token）")
+    @ApiOperation("根据token查询关联发货地址(需要带token）")
     public List<ShippingAddrDTO> getAddressByToken(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return shippingAddressService.getAddressWithTransportFeeByToken(token).stream()
@@ -61,7 +61,7 @@ public class WxAddrController {
 
     @DeleteMapping("/id/{addrId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "删除发货地址(需要带token）")
+    @ApiOperation("删除发货地址(需要带token）")
     public void deleteAddress(HttpServletRequest request,
                               @PathVariable String addrId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
