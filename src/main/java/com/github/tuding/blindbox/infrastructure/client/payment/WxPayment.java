@@ -23,9 +23,9 @@ public class WxPayment {
     //微信统一下单接口地址
     public static final String PAY_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
-    public static final String PRODUCT_CALL_BACK_URL = "http://47.104.146.206/wx/payment/product/callback";
+    public static final String PRODUCT_CALL_BACK_URL = "https://blindbox.fancier.store/wx/payment/product/callback";
 
-    public static final String TRANSPORT_CALL_BACK_URL = "http://47.104.146.206/wx/payment/transport/callback";
+    public static final String TRANSPORT_CALL_BACK_URL = "https://blindbox.fancier.store/wx/payment/transport/callback";
 
     @Value("${app.appId}")
     private String appId;
