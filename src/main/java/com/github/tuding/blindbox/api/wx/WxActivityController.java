@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RestController
 @Slf4j
 @RequestMapping("/wx/activities")
-@Api(value = "活动相关接口", description = "活动相关接口")
+@Api("活动相关接口")
 public class WxActivityController {
 
     @Autowired

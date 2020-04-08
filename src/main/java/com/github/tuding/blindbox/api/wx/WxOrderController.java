@@ -13,6 +13,7 @@ import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import com.github.tuding.blindbox.infrastructure.util.IpUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("wx/orders")
+@Api("订单相关接口")
 public class WxOrderController {
 
     @Autowired

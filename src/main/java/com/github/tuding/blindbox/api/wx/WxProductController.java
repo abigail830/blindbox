@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/wx/products")
 @Slf4j
-@Api(value = "产品相关接口", description = "产品相关接口（角色/系列/产品）")
+@Api("产品相关接口")
 public class WxProductController {
 
     @Autowired
@@ -40,27 +40,27 @@ public class WxProductController {
 
     @GetMapping("/roles")
     @NeedWxVerifyToken
-    @ApiOperation(value = "获取所有产品角色列表(需要带token)")
+    @ApiOperation("获取所有产品角色列表(需要带token)")
     public List<RoleDTO> getRoles() {
         return productService.getRoles().stream().map(RoleDTO::new).collect(Collectors.toList());
     }
 
     @GetMapping("/{roleId}/series")
     @NeedWxVerifyToken
-    @ApiOperation(value = "根据角色ID，获取关联产品系列(需要带token)")
+    @ApiOperation("根据角色ID，获取关联产品系列(需要带token)")
     public List<SeriesDTO> getSeriesListByRole(@PathVariable("roleId") String roleId) {
         return productService.getSeriesList(roleId).stream().map(SeriesDTO::new).collect(Collectors.toList());
     }
 
     @GetMapping("/series/{seriesId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "根据ID，获取指定产品系列， 包括产品数量(需要带token)")
+    @ApiOperation("根据ID，获取指定产品系列， 包括产品数量(需要带token)")
     public SeriesDTO getSeries(@PathVariable("seriesId") String seriesId) {
         return new SeriesDTO(productService.getSeries(seriesId).get(), productService.getProduct(seriesId));
     }
     @GetMapping("/series/{seriesId}/products")
     @NeedWxVerifyToken
-    @ApiOperation(value = "根据产品系列ID，获取产品列表(需要带token)")
+    @ApiOperation("根据产品系列ID，获取产品列表(需要带token)")
     public List<ProductDTO> getProductBySeriesId(@PathVariable("seriesId") String seriesId) {
         return productService.getProductWithPrice(seriesId).stream().map(ProductDTO::new).collect(Collectors.toList());
     }
@@ -68,7 +68,7 @@ public class WxProductController {
 
     @GetMapping("/series/new")
     @NeedWxVerifyToken
-    @ApiOperation(value = "获取所有新品系列(需要带token)")
+    @ApiOperation("获取所有新品系列(需要带token)")
     public List<SeriesDTO> getAllNewSeries() {
         return productService.getAllNewSeries().stream()
                 .map(SeriesDTO::new).collect(Collectors.toList());
@@ -76,7 +76,7 @@ public class WxProductController {
 
     @GetMapping("/series/all/paging")
     @NeedWxVerifyToken
-    @ApiOperation(value = "分页获取所有产品系列(需要带token), numOfPage start from 0")
+    @ApiOperation("分页获取所有产品系列(需要带token), numOfPage start from 0")
     public List<SeriesDTO> getAllNewSeries(@RequestParam Integer limitPerPage, Integer numOfPage) {
         return productService.getAllSeries(limitPerPage, numOfPage).stream()
                 .map(SeriesDTO::new).collect(Collectors.toList());
@@ -85,7 +85,7 @@ public class WxProductController {
 
     @PutMapping("/draw/{seriesId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "在指定产品系列下抽一盒， 返回抽盒信息(需要带token)")
+    @ApiOperation("在指定产品系列下抽一盒， 返回抽盒信息(需要带token)")
     public DrawDTO drawAProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return new DrawDTO(drawService.drawAProduct(jwt.getOpenIdFromToken(token),seriesId));
@@ -93,37 +93,39 @@ public class WxProductController {
 
     @GetMapping("/draw/")
     @NeedWxVerifyToken
-    @ApiOperation(value = "获取当前的抽盒 (需要带token) - 此接口已停用")
+    @ApiOperation("获取当前的抽盒 (需要带token) - 此接口已停用")
     public DrawDTO getADrawForUserOpenID(HttpServletRequest request) {
+        log.warn("getADrawForUserOpenID 接口应停用");
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return new DrawDTO(drawService.getDrawByOpenID(jwt.getOpenIdFromToken(token)));
     }
 
     @GetMapping("/draw/{drawId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "获取当前的抽盒 (需要带token)")
+    @ApiOperation("获取当前的抽盒 (需要带token)")
     public DrawDTO getADrawForDrawId (@PathVariable String drawId) {
         return new DrawDTO(drawService.getDrawByDrawID(drawId));
     }
 
     @DeleteMapping("/draw/")
     @NeedWxVerifyToken
-    @ApiOperation(value = "取消已有的抽盒 (需要带token) - 此接口已停用")
+    @ApiOperation("取消已有的抽盒 (需要带token) - 此接口已停用")
     public void cancelADrawForUserOpenID(HttpServletRequest request) {
+        log.warn("cancelADrawForUserOpenID 接口应停用");
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         drawService.cancelADrawByOpenID(jwt.getOpenIdFromToken(token));
     }
 
     @DeleteMapping("/draw/{drawId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "取消已有的抽盒 (需要带token)")
+    @ApiOperation("取消已有的抽盒 (需要带token)")
     public void cancelADrawForDrawID(@PathVariable String drawId) {
         drawService.cancelADrawByDrawId(drawId);
     }
 
     @PostMapping("/use-discount/{drawId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "扣减积分以兑换优惠券, 返回折后价格/折扣描述/剩余积分 (需要带token)")
+    @ApiOperation("扣减积分以兑换优惠券, 返回折后价格/折扣描述/剩余积分 (需要带token)")
     @Transactional
     public DiscountCouponDTO getDiscountByBonus(HttpServletRequest request,
                                                 @PathVariable String drawId) {

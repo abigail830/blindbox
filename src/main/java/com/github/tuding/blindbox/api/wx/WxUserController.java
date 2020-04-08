@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/wx/users")
 @Slf4j
-@Api(value = "用户相关接口", description = "用户相关接口")
+@Api("用户相关接口")
 public class WxUserController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class WxUserController {
     @PostMapping("/login")
     @ApiImplicitParam(name = "X-WX-Code", value = "wechat code for get openId", required = true,
             paramType = "header", dataTypeClass = String.class)
-    @ApiOperation(value = "用户微信登陆(不需要带token)")
+    @ApiOperation("用户微信登陆(不需要带token)")
     public String login(HttpServletRequest request) {
 
         String code = request.getHeader("X-WX-Code");
@@ -46,7 +46,7 @@ public class WxUserController {
 
     @GetMapping("/by-token")
     @NeedWxVerifyToken
-    @ApiOperation(value = "根据Token获取用户信息(需要带token)")
+    @ApiOperation("根据Token获取用户信息(需要带token)")
     public User getUserByToken(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         return userService.getUserByToken(token);
@@ -58,7 +58,7 @@ public class WxUserController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", name = "encryptedData", required = true, dataType = "String"),
             @ApiImplicitParam(paramType = "header", name = "iv", required = true, dataType = "String")})
-    @ApiOperation(value = "获取用户微信授权信息并更新后台数据(需要带token)")
+    @ApiOperation("获取用户微信授权信息并更新后台数据(需要带token)")
     public void decrypt(HttpServletRequest request) {
         String encryptedData = request.getHeader("encryptedData");
         String iv = request.getHeader("iv");
@@ -69,7 +69,7 @@ public class WxUserController {
 
     @PostMapping("/share-activity/{activityId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "用户分享了活动咨询(需要带token，每日首次积分+10)")
+    @ApiOperation("用户分享了活动咨询(需要带token，每日首次积分+10)")
     public void shareActivity(HttpServletRequest request, @PathVariable String activityId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         userService.shareActivity(token, activityId);
@@ -77,7 +77,7 @@ public class WxUserController {
 
     @PostMapping("/share-collection/{seriesId}")
     @NeedWxVerifyToken
-    @ApiOperation(value = "用户分享了图鉴(需要带token，每日首次积分+10)")
+    @ApiOperation("用户分享了图鉴(需要带token，每日首次积分+10)")
     public void shareCollection(HttpServletRequest request, @PathVariable String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         userService.shareCollection(token, seriesId);
