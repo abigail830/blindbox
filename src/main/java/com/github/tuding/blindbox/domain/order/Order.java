@@ -36,6 +36,10 @@ public class Order {
     String status;
     Date createTime;
 
+    String shippingCompany;
+    String shippingTicket;
+
+
 
     public Order(String orderId, String productName, BigDecimal productPrice, String openId, String drawId) {
         this.orderId = orderId;

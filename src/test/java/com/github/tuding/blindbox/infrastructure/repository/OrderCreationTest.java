@@ -51,7 +51,7 @@ public class OrderCreationTest {
                 "d7493a65-1b22-479e-b3fe-decd80abe325", "test",
                 BigDecimal.valueOf(100), "test", "test", "test", "test",
                 "receiver", "12345678901", "area", "associateCode",
-                "detailAddress", OrderStatus.NEW.name(), new Date()));
+                "detailAddress", OrderStatus.NEW.name(), new Date(), null, null));
 
         assertThat(orderRepository.getAllOutstandingOrderByOpenId("test").get(0).getOrderId(), is("testOrderID"));
 

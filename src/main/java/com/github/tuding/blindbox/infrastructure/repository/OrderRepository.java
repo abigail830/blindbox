@@ -71,6 +71,13 @@ public class OrderRepository {
 
     }
 
+    public void updateOrderDeliveryStatus(String orderId, String status, String shippingCompany, String shippingTicket) {
+        log.info("Update order id {} status to {}", orderId, status);
+        jdbcTemplate.update("UPDATE order_tbl SET status = ?, shippingCompany = ?, shippingTicket = ? WHERE orderId = ?",
+                status, shippingCompany, shippingTicket, orderId);
+
+    }
+
     public void updateOrderStatusAndAddress(TransportOrder transportOrder) {
         transportOrder.getProductOrders().forEach(orderId -> {
             updateOrderStatusAndAddress(OrderStatus.NEW_TRANSPORT.name(), orderId, transportOrder);
