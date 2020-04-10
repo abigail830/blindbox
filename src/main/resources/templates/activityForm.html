@@ -136,11 +136,12 @@
             <p th:text="${activityForm.errorMsg}" th:if="${activityForm.errorMsg!=null}">errorMsg</p>
         </div>
 
-        <form class="ui form" enctype="multipart/form-data" method="POST" autocomplete="off"
+        <form id="aform" class="ui form" enctype="multipart/form-data" method="POST" autocomplete="off"
               action="#" th:action="@{/admin-ui/activities/form}" th:object="${activityForm}">
 
             <input type="text" th:field="*{id}" style="display: none">
             <input type="text" th:field="*{mode}" style="display: none">
+            <input type="text" id="description" name="description" style="display: none">
 
             <div class="field required ">
                 <label>活动名称</label>
@@ -207,32 +208,11 @@
 </div>
 
 <script type="text/javascript">
-    function submit (item){
-        console.log("******* Going to submit **********");
-        var editor_content = quill.container.innerHTML;
-        console.log(editor_content);
-        console.log(item);
 
-        $.ajax({
-            url: '/admin-ui/activities/form',
-            type: 'POST',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: {
-                "activity": item
-            }
-        },
-            success: function (data, status) {
-                console.info("Got delete status " + status);
-                window.location = '/admin-ui/role/';
-            },
-            error: function (e) {
-                console.log(e);
-            }
-        });
+
+    document.getElementById('aform').onsubmit=function () {
+        $("#description").val($('.ql-editor')[0].innerHTML);
     }
-
-
 
 </script>
 
