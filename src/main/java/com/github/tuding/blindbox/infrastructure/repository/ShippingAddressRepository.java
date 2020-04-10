@@ -91,7 +91,7 @@ public class ShippingAddressRepository {
 
     public int updateAddress(ShippingAddress shippingAddress) {
         String sql = "UPDATE shipping_addr_tbl set receiver = ?, mobile = ?, area = ?, " +
-                "associate_code = ?, detail_address = ?, is_default_address = ?, province = ?, " +
+                "associate_code = ?, detail_address = ?, is_default_address = ?, province = ? " +
                 "WHERE id = ? and open_id = ?";
         return jdbcTemplate.update(sql,
                 shippingAddress.getReceiver(), shippingAddress.getMobile(), shippingAddress.getArea(),
