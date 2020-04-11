@@ -108,9 +108,13 @@ public class OrderRepository {
     public List<Order> getOrderPendingPayTransportFee(String openId) {
         log.info("Get order pending to pay transport fee for user [{}].", openId);
         return jdbcTemplate.query("SELECT * FROM order_tbl " +
-                        "WHERE status in (PAY_PRODUCT_SUCCESS, NEW_TRANSPORT, PAY_TRANSPORT_FAIL) " +
+                        "WHERE status in (?, ?, ?) " +
                         "AND openId = ?",
-                rowMapper, openId);
+                rowMapper,
+                OrderStatus.PAY_PRODUCT_SUCCESS.name(),
+                OrderStatus.NEW_TRANSPORT.name(),
+                OrderStatus.PAY_TRANSPORT_FAIL.name(),
+                openId);
     }
 
     public List<Order> getOrderPendingDeliver(String openId) {
