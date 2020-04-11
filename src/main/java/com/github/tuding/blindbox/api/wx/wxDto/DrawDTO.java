@@ -30,7 +30,7 @@ public class DrawDTO {
         this.drawStatus = draw.getDrawStatus();
         this.seriesId = draw.getSeriesId();
         this.drawTime = draw.getDrawTime();
-        this.boxImage = draw.getBoxImage();
+        this.boxImage = Constant.WX_UI_IMAGE_PATH + draw.getBoxImage();
         this.price = draw.getPrice();
         this.seriesName = draw.getSeriesName();
     }

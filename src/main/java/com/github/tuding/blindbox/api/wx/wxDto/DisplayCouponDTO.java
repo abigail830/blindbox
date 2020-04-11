@@ -26,8 +26,8 @@ public class DisplayCouponDTO {
 
         this.productId = excludedProduct.getId();
         this.productName = excludedProduct.getName();
-        this.productImage = excludedProduct.getProductImage();
-        this.productGrayImage = excludedProduct.getProductGrayImage();
+        this.productImage = Constant.WX_UI_IMAGE_PATH + excludedProduct.getProductImage();
+        this.productGrayImage = Constant.WX_UI_IMAGE_PATH + excludedProduct.getProductGrayImage();
         this.price = excludedProduct.getPrice();
         this.remainBonus = remainBonus;
         this.description = Constant.TIPS_COUPON_DESC;

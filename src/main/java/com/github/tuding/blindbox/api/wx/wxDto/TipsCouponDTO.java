@@ -26,8 +26,8 @@ public class TipsCouponDTO {
 
         this.excludedProductId = excludedProduct.getId();
         this.excludedProductName = excludedProduct.getName();
-        this.excludedProductImage = excludedProduct.getProductImage();
-        this.excludedProductGrayImage = excludedProduct.getProductGrayImage();
+        this.excludedProductImage = Constant.WX_UI_IMAGE_PATH + excludedProduct.getProductImage();
+        this.excludedProductGrayImage = Constant.WX_UI_IMAGE_PATH + excludedProduct.getProductGrayImage();
         this.price = excludedProduct.getPrice();
         this.remainBonus = remainBonus;
         this.description = Constant.TIPS_COUPON_DESC;
