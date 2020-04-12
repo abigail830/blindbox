@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: blindbox
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -37,3 +39,17 @@ app:
   mchId: "mchId"
   mchSecret: "mchSecret"
   imagePath: "/opt/apps/blindbox"
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    health:
+      show-details: 'always'
+    web:
+      exposure:
+        include: 'prometheus'
+  metrics:
+    tags:
+      application: ${spring.application.name}
