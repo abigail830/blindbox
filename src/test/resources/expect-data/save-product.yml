@@ -59,3 +59,12 @@ product_v2_tbl:
     productImage: "/app/data/product/image/product3.png"
     productGrayImage: "/app/data/product/image/grayproduct3.png"
     version: 0
+draw_tbl:
+  - openId: 'test'
+    drawId: 'd7493a65-1b22-479e-b3fe-decd80abe325'
+    drawStatus: 'NEW'
+    productId: 'productid1'
+    seriesId: 'seriesid1'
+    boxImage: '/series/f22be55f-dd01-456f-93c7-31e16618c83e-boxImage.png'
+    price: 100
+    seriesName: 'sport'

@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.domain.product;
 
+import com.github.tuding.blindbox.exception.ProductNotFoundException;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.repository.DrawRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
@@ -63,5 +64,10 @@ public class ProductService {
 
     public List<Product> getProductWithPrice(String seriesId) {
         return productRepository.getProductWithPriceBySeriesID(seriesId);
+    }
+
+    public Product getProductWithoutPrice(String drawId) {
+        return productRepository.getProductWithoutPriceByDrawID(drawId)
+                .orElseThrow(ProductNotFoundException::new);
     }
 }

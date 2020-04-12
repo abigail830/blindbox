@@ -103,8 +103,15 @@ public class WxProductController {
     @GetMapping("/draw/{drawId}")
     @NeedWxVerifyToken
     @ApiOperation("获取当前的抽盒 (需要带token)")
-    public DrawDTO getADrawForDrawId (@PathVariable String drawId) {
+    public DrawDTO getADrawForDrawId(@PathVariable String drawId) {
         return new DrawDTO(drawService.getDrawByDrawID(drawId));
+    }
+
+    @GetMapping("/draw/{drawId}/product")
+    @NeedWxVerifyToken
+    @ApiOperation("获取当前的抽盒 (需要带token)")
+    public ProductDTO getProductByDrawId(@PathVariable String drawId) {
+        return new ProductDTO(productService.getProductWithoutPrice(drawId));
     }
 
     @DeleteMapping("/draw/")
