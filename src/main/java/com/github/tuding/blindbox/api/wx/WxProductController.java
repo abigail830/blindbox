@@ -109,7 +109,7 @@ public class WxProductController {
 
     @GetMapping("/draw/{drawId}/product")
     @NeedWxVerifyToken
-    @ApiOperation("获取当前的抽盒 (需要带token)")
+    @ApiOperation("根据DrawId获取当前的抽盒内产品信息-只在产品成功付款后才能获取，否则抛异常'product not found' (需要带token)")
     public ProductDTO getProductByDrawId(@PathVariable String drawId) {
         return new ProductDTO(productService.getProductWithoutPrice(drawId));
     }

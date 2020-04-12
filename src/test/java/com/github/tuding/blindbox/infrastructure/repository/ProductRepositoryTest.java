@@ -12,8 +12,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @SpringBootTest
 @DBRider
@@ -42,6 +41,13 @@ public class ProductRepositoryTest {
         final Optional<Product> product = productRepository.getProductWithoutPriceByDrawID("d7493a65-1b22-479e-b3fe-decd80abe325");
         assertTrue(product.isPresent());
         assertEquals("product1", product.get().getName());
+    }
+
+    @Test
+    @DataSet("expect-data/save-product.yml")
+    void getProductWithoutPriceByDrawId_not_paid() {
+        final Optional<Product> product = productRepository.getProductWithoutPriceByDrawID("d7493a65-1b22-479e-b3fe-decd80abe326");
+        assertFalse(product.isPresent());
     }
 
 

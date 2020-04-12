@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
+import com.github.tuding.blindbox.domain.order.OrderStatus;
 import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
@@ -111,11 +112,15 @@ public class ProductRepository {
         return result.stream().findFirst();
     }
 
+    /* Only get product after pay successful */
     public Optional<Product> getProductWithoutPriceByDrawID(String drawId) {
         String sql = "SELECT p.* FROM product_v2_tbl p" +
                 " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
-                " left join draw_tbl d on p.ID = d.productId where d.drawId =?";
-        final List<Product> result = jdbcTemplate.query(sql, rowMapper, drawId);
+                " inner join draw_tbl d on p.ID = d.productId" +
+                " inner join order_tbl o on o.drawId = d.drawId" +
+                " where d.drawId =? and o.status not in (?,?,?)";
+        final List<Product> result = jdbcTemplate.query(sql, rowMapper, drawId,
+                OrderStatus.NEW.name(), OrderStatus.PAY_PRODUCT_EXPIRY.name(), OrderStatus.PAY_PRODUCT_FAIL.name());
         return result.stream().findFirst();
     }
 
