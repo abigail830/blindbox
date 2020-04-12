@@ -26,7 +26,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     final List<String> excludedPaths = Arrays.asList("css", "index", "login",
             "/swagger-ui.html", "/swagger-resources", "/webjars", "/v2/api-docs",
-            "/wx");
+            "/wx", "/actuator");
 
     public boolean isExcludedPath(String path) {
         for (String excludedPath : excludedPaths) {

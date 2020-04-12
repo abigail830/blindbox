@@ -1,6 +1,24 @@
 spring:
+  application:
+    name: blindbox
   datasource:
     url: jdbc:h2:mem:RealH2InUserd;DB_CLOSE_DELAY=-1;MODE=MYSQL
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    health:
+      show-details: 'always'
+    web:
+      exposure:
+        include: 'prometheus'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+
 
 #can remove if using jdbc
 mybatis:
