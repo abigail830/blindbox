@@ -64,12 +64,14 @@
                 <input type="text" name="category" th:field="*{category}">
             </div>
             <div class="inline field required">
-                <label>角色图片</label>
-                <div th:if="*{id!=null}">
-                    <img class="ui medium circular image"
+                <label>角色图片 (尺寸要求: 150 * 190)</label>
+                <div>
+                    <img class="ui medium circular image" id="roleImageFileDisplay"
                          th:src="${role.roleImage}">
+
                 </div>
-                <input type="file" name="roleImageFile">
+                <input type="file" name="roleImageFile" id="roleImageFile">
+                <p id="roleImageFileSize"></p>
 
             </div>
             <br/>
@@ -77,6 +79,34 @@
         </form>
     </div>
 </div>
+<script>
+    var _URL = window.URL || window.webkitURL;
 
+    function readUrl(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("#roleImageFileDisplay").attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $("#roleImageFile").change(function (e) {
+        var file, img;
+        if ((file = this.files[0])) {
+            img = new Image();
+            var objectUrl = _URL.createObjectURL(file);
+            img.onload = function () {
+                $('#roleImageFileSize').text("当前尺寸: " +  this.width + "*" + this.height)
+                _URL.revokeObjectURL(objectUrl);
+
+            };
+            img.src = objectUrl;
+        }
+        readUrl(this);
+
+    })
+</script>
 </body>
 </html>

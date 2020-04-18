@@ -80,21 +80,23 @@
             </div>
 
             <div class="inline field required">
-                <label>产品图</label>
-                <div th:if="*{id!=null}">
+                <label>产品点亮图 (尺寸要求: 150 * 190)</label>
+                <div>
                     <img class="ui medium image"
-                         th:src="*{productImage}">
+                         th:src="*{productImage}" id="productImageFileDisplay">
                 </div>
-                <input type="file" name="productImageFile">
+                <input type="file" name="productImageFile" id="productImageFile">
+                <p id="productImageFileSize"></p>
             </div>
 
             <div class="inline field required">
-                <label>产品图(灰图)</label>
-                <div th:if="*{id!=null}">
+                <label>产品未点亮图 (尺寸要求: 150 * 190)</label>
+                <div>
                     <img class="ui medium image"
-                         th:src="*{productGrayImage}">
+                         th:src="*{productGrayImage}" id="productGrayImageFileDisplay">
                 </div>
-                <input type="file" name="productGrayImageFile">
+                <input type="file" name="productGrayImageFile" id="productGrayImageFile">
+                <p id="productGrayImageFileSize"></p>
             </div>
 
 
@@ -110,5 +112,43 @@
         </form>
     </div>
 </div>
+
+<script>
+    var _URL = window.URL || window.webkitURL;
+
+    function readUrl(element, input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $(element).attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function previewAndShowSize(thisElement, sizeElementID, previewElementID) {
+        var file, img;
+        if ((file = thisElement.files[0])) {
+            img = new Image();
+            var objectUrl = _URL.createObjectURL(file);
+            img.onload = function () {
+                $(sizeElementID).text("当前尺寸: " +  this.width + "*" + this.height)
+                _URL.revokeObjectURL(objectUrl);
+
+            };
+            img.src = objectUrl;
+        }
+        readUrl(previewElementID, thisElement);
+    }
+
+    $("#productGrayImageFile").change(function (e) {
+        previewAndShowSize(this, '#productGrayImageFileSize', '#productGrayImageFileDisplay');
+    });
+
+    $("#productImageFile").change(function (e) {
+        previewAndShowSize(this, '#productImageFileSize', '#productImageFileDisplay');
+    });
+
+</script>
 </body>
 </html>

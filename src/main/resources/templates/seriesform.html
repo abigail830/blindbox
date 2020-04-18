@@ -96,47 +96,52 @@
 
             <div class="two fields">
                 <div class="field required">
-                    <label>产品系列图</label>
-                    <div th:if="*{id!=null}">
+                    <label>产品系列图 (尺寸要求: 694 * 300)</label>
+                    <div>
                         <img class="ui medium image"
-                             th:src="*{seriesImage}">
+                             th:src="*{seriesImage}" id="seriesImageFileDisplay">
                     </div>
-                    <input type="file" name="seriesImageFile">
+                    <input type="file" name="seriesImageFile" id="seriesImageFile">
+                    <p id="seriesImageFileSize"></p>
                 </div>
 
                 <div class="field required">
-                    <label>抽盒页面封面</label>
-                    <div th:if="*{id!=null}">
+                    <label>抽盒页面封面 (尺寸要求: 694 * 300)</label>
+                    <div>
                         <img class="ui medium image"
-                             th:src="*{matrixHeaderImage}">
+                             th:src="*{matrixHeaderImage}" id="matrixHeaderImageFileDisplay">
                     </div>
-                    <input type="file" name="matrixHeaderImageFile">
+                    <input type="file" name="matrixHeaderImageFile" id="matrixHeaderImageFile">
+                    <p id="matrixHeaderImageFileSize"></p>
                 </div>
             </div>
             <div class="two fields">
                 <div class="field required">
                     <label>抽盒图</label>
-                    <div th:if="*{id!=null}">
+                    <div>
                         <img class="ui medium image"
-                             th:src="*{matrixCellImage}">
+                             th:src="*{matrixCellImage}" id="matrixCellImageFileDisplay">
                     </div>
-                    <input type="file" name="matrixCellImageFile">
+                    <input type="file" name="matrixCellImageFile" id="matrixCellImageFile">
+                    <p id="matrixCellImageFileSize"></p>
                 </div>
                 <div class="field required">
                     <label>产品图鉴</label>
-                    <div th:if="*{id!=null}">
+                    <div>
                         <img class="ui medium image"
-                             th:src="*{longImage}">
+                             th:src="*{longImage}" id="longImageFileDisplay">
                     </div>
-                    <input type="file" name="longImageFile">
+                    <input type="file" name="longImageFile" id="longImageFile">
+                    <p id="longImageFileSize"></p>
                 </div>
                 <div class="field required">
                     <label>产品外包装盒子图</label>
-                    <div th:if="*{id!=null}">
+                    <div>
                         <img class="ui medium image"
-                             th:src="*{boxImage}">
+                             th:src="*{boxImage}" id="boxImageFileDisplay">
                     </div>
-                    <input type="file" name="boxImageFile">
+                    <input type="file" name="boxImageFile" id="boxImageFile">
+                    <p id="boxImageFileSize"></p>
                 </div>
             </div>
 
@@ -161,5 +166,56 @@
         </form>
     </div>
 </div>
+
+<script>
+    var _URL = window.URL || window.webkitURL;
+
+    function readUrl(element, input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $(element).attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function previewAndShowSize(thisElement, sizeElementID, previewElementID) {
+        var file, img;
+        if ((file = thisElement.files[0])) {
+            img = new Image();
+            var objectUrl = _URL.createObjectURL(file);
+            img.onload = function () {
+                $(sizeElementID).text("当前尺寸: " +  this.width + "*" + this.height)
+                _URL.revokeObjectURL(objectUrl);
+
+            };
+            img.src = objectUrl;
+        }
+        readUrl(previewElementID, thisElement);
+    }
+
+    $("#seriesImageFile").change(function (e) {
+        previewAndShowSize(this, '#seriesImageFileSize', '#seriesImageFileDisplay');
+
+    });
+
+    $("#matrixHeaderImageFile").change(function (e) {
+        previewAndShowSize(this, '#matrixHeaderImageFileSize', '#matrixHeaderImageFileDisplay');
+    });
+
+    $("#matrixCellImageFile").change(function (e) {
+        previewAndShowSize(this, '#matrixCellImageFileSize', '#matrixCellImageFileDisplay');
+    });
+
+    $("#longImageFile").change(function (e) {
+        previewAndShowSize(this, '#longImageFileSize', '#longImageFileDisplay');
+    });
+
+    $("#boxImageFile").change(function (e) {
+        previewAndShowSize(this, '#boxImageFileSize', '#boxImageFileDisplay');
+    });
+
+</script>
 </body>
 </html>
