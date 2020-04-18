@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -70,8 +70,19 @@ public class OrderService {
     }
 
     public void handleExpiredOrder(Order order) {
-        updateOrderToPayExpired(order.orderId);
+        updateOrderToPayExpired(order.getOrderId());
         drawService.cancelADrawByDrawId(order.getDrawId());
+    }
+
+    private String getRandomStringByLength(int length) {
+        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(base.length());
+            sb.append(base.charAt(number));
+        }
+        return sb.toString();
     }
 
     @Transactional
@@ -79,14 +90,11 @@ public class OrderService {
 
         final Product product = productRepository.getProductWithPriceByDrawID(drawId)
                 .orElseThrow(ProductNotFoundException::new);
-        String orderId = UUID.randomUUID().toString();
-        log.info("Going to place order[{}] for product: {}", orderId, product);
 
         try {
-            Order preOder = new Order(orderId, product.getName(), product.getPrice(), openId, drawId);
-            //place order to wxchat
+            Order preOder = new Order(product.getName(), product.getPrice(), openId, drawId);
+            log.info("Going to place order[{}] for product: {}", preOder.getOrderId(), product);
             final Order orderWithWxInfo = wxPayment.generatePayment(preOder, ipAddress);
-            //TODO: now addr info null should cause problem in save?
             drawRepository.confirmDrawToOrder(drawId);
             orderRepository.save(orderWithWxInfo);
             return orderWithWxInfo;

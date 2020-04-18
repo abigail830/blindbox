@@ -1,5 +1,6 @@
 package com.github.tuding.blindbox.api.wx;
 
+import com.github.tuding.blindbox.api.wx.wxDto.OrderDTO;
 import com.github.tuding.blindbox.api.wx.wxDto.PayTransportReq;
 import com.github.tuding.blindbox.api.wx.wxDto.PlaceOrderResponse;
 import com.github.tuding.blindbox.api.wx.wxDto.WxOrderStatus;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -78,16 +80,19 @@ public class WxOrderController {
     @GetMapping()
     @NeedWxVerifyToken
     @ApiOperation("获取token用户所属的全部订单，status范围（PENDING_PAY_TRANSPORT, PENDING_DELIVER, DELIVERED")
-    public List<Order> getAllOrderByToken(HttpServletRequest request, @RequestParam String status) {
+    public List<OrderDTO> getAllOrderByToken(HttpServletRequest request, @RequestParam String status) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         final String openId = jwt.getOpenIdFromToken(token);
 
         if (WxOrderStatus.DELIVERED.name().equalsIgnoreCase(status)) {
-            return orderService.getOrderDeliveredByOpenId(openId);
+            return orderService.getOrderDeliveredByOpenId(openId).stream()
+                    .map(OrderDTO::new).collect(Collectors.toList());
         } else if (WxOrderStatus.PENDING_DELIVER.name().equalsIgnoreCase(status)) {
-            return orderService.getOrderPendingDeliverByOpenId(openId);
+            return orderService.getOrderPendingDeliverByOpenId(openId).stream()
+                    .map(OrderDTO::new).collect(Collectors.toList());
         } else if (WxOrderStatus.PENDING_PAY_TRANSPORT.name().equalsIgnoreCase(status)) {
-            return orderService.getOrderPendingPayTransportByOpenId(openId);
+            return orderService.getOrderPendingPayTransportByOpenId(openId).stream()
+                    .map(OrderDTO::new).collect(Collectors.toList());
         } else {
             throw new BizException(ErrorCode.INVALID_STATUS);
         }

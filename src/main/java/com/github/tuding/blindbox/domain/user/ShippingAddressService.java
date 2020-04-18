@@ -78,11 +78,12 @@ public class ShippingAddressService {
     }
 
     public BigDecimal getTransportFeeByProvince(String province) {
+
         final List<TransportFee> transportFeeList = transportFeeRepository.getTransportFeeList();
         final Optional<TransportFee> fee = transportFeeList.stream()
                 .filter(transportFee -> province.equals(transportFee.getArea())).findFirst();
         final TransportFee transportFee = fee
-                .orElseThrow(() -> new BizException(ErrorCode.TRANSPORT_AREA_NOT_SUPPORT));
+                .orElseThrow(() -> new BizException(ErrorCode.TRANSPORT_PROVINCE_NOT_SUPPORT));
         return transportFee.getTransportFee();
     }
 }

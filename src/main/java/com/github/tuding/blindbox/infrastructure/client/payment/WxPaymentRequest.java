@@ -17,26 +17,25 @@ import java.util.Random;
 public class WxPaymentRequest {
 
     //小程序ID
-    String appid;
+    private String appid;
     //商户号
-    String mch_id;
+    private String mch_id;
     //随机字符串
-    String nonce_str;
+    private String nonce_str;
     //签名
-    String sign;
+    private String sign;
     //商品描述
-    String body;
+    private String body;
     //商户订单号
-    String out_trade_no;
+    private String out_trade_no;
     //标价金额
-    Integer total_fee;
+    private Integer total_fee;
     //终端IP
-    String spbill_create_ip;
+    private String spbill_create_ip;
     //通知地址
-    String notify_url;
+    private String notify_url;
     //交易类型
-    String trade_type = WxPayment.TRADETYPE;
-    String openid;
+    private String trade_type = WxPayment.TRADETYPE;
     private String key;
     private String openId;
 
@@ -86,7 +85,7 @@ public class WxPaymentRequest {
         packageParams.put("spbill_create_ip", this.spbill_create_ip);
         packageParams.put("notify_url", this.notify_url);
         packageParams.put("trade_type", this.trade_type);
-        packageParams.put("openid", this.openid);
+        packageParams.put("openid", this.openId);
         return packageParams;
     }
 

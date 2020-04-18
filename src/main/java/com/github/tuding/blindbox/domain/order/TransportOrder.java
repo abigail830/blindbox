@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,7 +22,7 @@ public class TransportOrder extends Order {
 
         this.productOrders = productOrders;
 
-        this.orderId = UUID.randomUUID().toString();
+        this.orderId = getRandomStringByLength(32);
         this.openId = openId;
         this.receiver = receiver;
         this.mobile = mobile;

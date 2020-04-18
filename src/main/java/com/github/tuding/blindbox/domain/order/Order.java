@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Random;
 
 @Getter
 @Setter
@@ -15,34 +16,32 @@ import java.util.Date;
 @Slf4j
 public class Order {
 
-    String orderId;
-    String openId;
-    String drawId;
+    protected String orderId;
+    protected String openId;
+    protected String drawId;
 
-    String productName;
-    BigDecimal productPrice;
+    protected String productName;
+    protected BigDecimal productPrice;
 
-    String prepayId;
-    String nonceStr;
-    String preOrderTime;
-    String paySign;
+    protected String prepayId;
+    protected String nonceStr;
+    protected String preOrderTime;
+    protected String paySign;
 
-    String receiver;
-    String mobile;
-    String area;
-    String associateCode;
-    String detailAddress;
+    protected String receiver;
+    protected String mobile;
+    protected String area;
+    protected String associateCode;
+    protected String detailAddress;
 
-    String status;
-    Date createTime;
+    protected String status;
+    protected Date createTime;
 
-    String shippingCompany;
-    String shippingTicket;
+    protected String shippingCompany;
+    protected String shippingTicket;
 
-
-
-    public Order(String orderId, String productName, BigDecimal productPrice, String openId, String drawId) {
-        this.orderId = orderId;
+    public Order(String productName, BigDecimal productPrice, String openId, String drawId) {
+        this.orderId = getRandomStringByLength(32);
         this.productName = productName;
         this.productPrice = productPrice;
         this.openId = openId;
@@ -61,5 +60,16 @@ public class Order {
         String stringSignTemp = "appId=" + appid + "&nonceStr=" + nonceStr + "&package=prepay_id=" + prepayId +
                 "&signType=MD5&timeStamp=" + preOrderTime;
         this.paySign = SignUtil.sign(stringSignTemp, key).toUpperCase();
+    }
+
+    protected String getRandomStringByLength(int length) {
+        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(base.length());
+            sb.append(base.charAt(number));
+        }
+        return sb.toString();
     }
 }
