@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -74,16 +73,6 @@ public class OrderService {
         drawService.cancelADrawByDrawId(order.getDrawId());
     }
 
-    private String getRandomStringByLength(int length) {
-        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
-        Random random = new Random();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(base.length());
-            sb.append(base.charAt(number));
-        }
-        return sb.toString();
-    }
 
     @Transactional
     public Order createProductOrder(String openId, String drawId, String ipAddress) {
@@ -148,5 +137,10 @@ public class OrderService {
 
     public List<OrderWithProductInfo> getOrderPendingPayTransportByOpenId(String openId) {
         return orderRepository.getOrderPendingPayTransportFee(openId);
+    }
+
+    public boolean isAllOrderPayed(List<String> productOrders) {
+        Integer count = orderRepository.getPayedOrderCount(productOrders);
+        return productOrders.size() == count;
     }
 }

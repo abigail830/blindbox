@@ -73,8 +73,15 @@ public class WxOrderController {
         }
         final TransportOrder orders = payTransportReq.generateTransportOrder(openId, transportFee);
 
-        final TransportOrder transportOrder = orderService.payTransportOrder(orders, ipAddr);
-        return new PlaceOrderResponse(transportOrder);
+        final List<String> productOrders = orders.getProductOrders();
+        if (orderService.isAllOrderPayed(productOrders)) {
+            final TransportOrder transportOrder = orderService.payTransportOrder(orders, ipAddr);
+            return new PlaceOrderResponse(transportOrder);
+        } else {
+            log.warn("Order not pay yet [{}]", productOrders);
+            throw new BizException(ErrorCode.INVALID_STATUS);
+        }
+
     }
 
     @GetMapping()

@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +24,9 @@ public class OrderRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private RowMapper<Order> rowMapper = new BeanPropertyRowMapper<>(Order.class);
 
@@ -140,5 +146,23 @@ public class OrderRepository {
                         " inner join order_tbl o on o.drawId = d.drawId" +
                         " WHERE o.status =? AND o.openId = ?",
                 rowMapperWithProduct, OrderStatus.DELIVERED.name(), openId);
+    }
+
+    public Integer getPayedOrderCount(List<String> productOrders) {
+        log.info("Valid order status if ready for pay transport fee: [{}].", productOrders);
+
+        List<String> status = Arrays.asList(OrderStatus.PAY_PRODUCT_SUCCESS.name(),
+                OrderStatus.NEW_TRANSPORT.name(), OrderStatus.PAY_TRANSPORT_FAIL.name());
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("orders", productOrders);
+        parameters.addValue("status", status);
+
+        String sql = "SELECT count(*) FROM product_v2_tbl p" +
+                " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
+                " inner join draw_tbl d on p.ID = d.productId" +
+                " inner join order_tbl o on o.drawId = d.drawId" +
+                " WHERE o.status in (:status) AND o.orderId in (:orders)";
+        return namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
     }
 }
