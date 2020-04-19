@@ -2,6 +2,7 @@ package com.github.tuding.blindbox.infrastructure.repository;
 
 import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderStatus;
+import com.github.tuding.blindbox.domain.order.OrderWithProductInfo;
 import com.github.tuding.blindbox.domain.order.TransportOrder;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,8 @@ public class OrderRepository {
     private JdbcTemplate jdbcTemplate;
 
     private RowMapper<Order> rowMapper = new BeanPropertyRowMapper<>(Order.class);
+
+    private RowMapper<OrderWithProductInfo> rowMapperWithProduct = new BeanPropertyRowMapper<>(OrderWithProductInfo.class);
 
     public void save(Order order) {
         log.info("Going to save order {}", order);
@@ -105,27 +108,37 @@ public class OrderRepository {
         return orders.stream().findFirst();
     }
 
-    public List<Order> getOrderPendingPayTransportFee(String openId) {
+    public List<OrderWithProductInfo> getOrderPendingPayTransportFee(String openId) {
         log.info("Get order pending to pay transport fee for user [{}].", openId);
-        return jdbcTemplate.query("SELECT * FROM order_tbl " +
-                        "WHERE status in (?, ?, ?) " +
-                        "AND openId = ?",
-                rowMapper,
+        return jdbcTemplate.query("SELECT p.productImage, o.* FROM product_v2_tbl p" +
+                        " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
+                        " inner join draw_tbl d on p.ID = d.productId" +
+                        " inner join order_tbl o on o.drawId = d.drawId" +
+                        " WHERE o.status in (?, ?, ?) AND o.openId = ?",
+                rowMapperWithProduct,
                 OrderStatus.PAY_PRODUCT_SUCCESS.name(),
                 OrderStatus.NEW_TRANSPORT.name(),
                 OrderStatus.PAY_TRANSPORT_FAIL.name(),
                 openId);
     }
 
-    public List<Order> getOrderPendingDeliver(String openId) {
+    public List<OrderWithProductInfo> getOrderPendingDeliver(String openId) {
         log.info("Get order pending deliver for user [{}].", openId);
-        return jdbcTemplate.query("SELECT * FROM order_tbl WHERE status =? AND openId = ?",
-                rowMapper, OrderStatus.PAY_TRANSPORT_SUCCESS.name(), openId);
+        return jdbcTemplate.query("SELECT p.productImage, o.* FROM product_v2_tbl p" +
+                        " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
+                        " inner join draw_tbl d on p.ID = d.productId" +
+                        " inner join order_tbl o on o.drawId = d.drawId" +
+                        " WHERE o.status =? AND o.openId = ?",
+                rowMapperWithProduct, OrderStatus.PAY_TRANSPORT_SUCCESS.name(), openId);
     }
 
-    public List<Order> getOrderDelivered(String openId) {
+    public List<OrderWithProductInfo> getOrderDelivered(String openId) {
         log.info("Get order pending deliver for user [{}].", openId);
-        return jdbcTemplate.query("SELECT * FROM order_tbl WHERE status =? AND openId = ?",
-                rowMapper, OrderStatus.DELIVERED.name(), openId);
+        return jdbcTemplate.query("SELECT p.productImage, o.* FROM product_v2_tbl p" +
+                        " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
+                        " inner join draw_tbl d on p.ID = d.productId" +
+                        " inner join order_tbl o on o.drawId = d.drawId" +
+                        " WHERE o.status =? AND o.openId = ?",
+                rowMapperWithProduct, OrderStatus.DELIVERED.name(), openId);
     }
 }

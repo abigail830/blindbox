@@ -1,6 +1,6 @@
 package com.github.tuding.blindbox.api.wx.wxDto;
 
-import com.github.tuding.blindbox.domain.order.Order;
+import com.github.tuding.blindbox.domain.order.OrderWithProductInfo;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -31,8 +31,9 @@ public class OrderDTO {
 
     private String shippingCompany;
     private String shippingTicket;
+    private String productImage;
 
-    public OrderDTO(Order order) {
+    public OrderDTO(OrderWithProductInfo order) {
         this.orderId = order.getOrderId();
         this.openId = order.getOpenId();
         this.drawId = order.getDrawId();
@@ -47,5 +48,6 @@ public class OrderDTO {
         this.createTime = order.getCreateTime();
         this.shippingCompany = order.getShippingCompany();
         this.shippingTicket = order.getShippingTicket();
+        this.productImage = order.getProductImage();
     }
 }

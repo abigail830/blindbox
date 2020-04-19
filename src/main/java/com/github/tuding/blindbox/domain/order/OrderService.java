@@ -138,15 +138,15 @@ public class OrderService {
                 OrderStatus.PAY_TRANSPORT_FAIL.name());
     }
 
-    public List<Order> getOrderDeliveredByOpenId(String openId) {
+    public List<OrderWithProductInfo> getOrderDeliveredByOpenId(String openId) {
         return orderRepository.getOrderDelivered(openId);
     }
 
-    public List<Order> getOrderPendingDeliverByOpenId(String openId) {
+    public List<OrderWithProductInfo> getOrderPendingDeliverByOpenId(String openId) {
         return orderRepository.getOrderPendingDeliver(openId);
     }
 
-    public List<Order> getOrderPendingPayTransportByOpenId(String openId) {
+    public List<OrderWithProductInfo> getOrderPendingPayTransportByOpenId(String openId) {
         return orderRepository.getOrderPendingPayTransportFee(openId);
     }
 }
