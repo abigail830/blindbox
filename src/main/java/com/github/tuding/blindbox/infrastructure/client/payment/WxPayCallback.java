@@ -7,7 +7,6 @@ import com.github.tuding.blindbox.domain.product.DrawService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +39,7 @@ public class WxPayCallback {
     private String merchantSecret;
 
     @PostMapping(value = "/product/callback",
-            produces = MediaType.TEXT_XML_VALUE, consumes = MediaType.TEXT_XML_VALUE)
+            produces = "text/xml;charset=UTF-8", consumes = "text/xml;charset=UTF-8")
     @ResponseBody
     @Transactional
     WxPayCallbackRes paymentCallback(@RequestBody WxPayCallbackReq wxPayCallbackReq) {
@@ -63,7 +62,7 @@ public class WxPayCallback {
     }
 
     @PostMapping(value = "/transport/callback",
-            produces = MediaType.TEXT_XML_VALUE, consumes = MediaType.TEXT_XML_VALUE)
+            produces = "text/xml;charset=UTF-8", consumes = "text/xml;charset=UTF-8")
     @ResponseBody
     @Transactional
     WxPayCallbackRes tranportCallback(@RequestBody WxPayCallbackReq wxPayCallbackReq) {
