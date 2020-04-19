@@ -93,6 +93,7 @@ public class WxPayCallback {
             final String signMe = SignUtil.sign(stringMap, merchantSecret);
             return signMe.equals(wxPayCallbackReq.getSign());
         } else {
+            log.warn("Wx callback does not contain sign");
             return Boolean.FALSE;
         }
     }
