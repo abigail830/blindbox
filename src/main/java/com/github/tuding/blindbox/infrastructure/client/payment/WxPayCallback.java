@@ -40,7 +40,7 @@ public class WxPayCallback {
     private String merchantSecret;
 
     @PostMapping(value = "/product/callback",
-            produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
+            produces = MediaType.TEXT_XML_VALUE, consumes = MediaType.TEXT_XML_VALUE)
     @ResponseBody
     @Transactional
     WxPayCallbackRes paymentCallback(@RequestBody WxPayCallbackReq wxPayCallbackReq) {
@@ -63,7 +63,7 @@ public class WxPayCallback {
     }
 
     @PostMapping(value = "/transport/callback",
-            produces = MediaType.APPLICATION_XML_VALUE, consumes = MediaType.APPLICATION_XML_VALUE)
+            produces = MediaType.TEXT_XML_VALUE, consumes = MediaType.TEXT_XML_VALUE)
     @ResponseBody
     @Transactional
     WxPayCallbackRes tranportCallback(@RequestBody WxPayCallbackReq wxPayCallbackReq) {
