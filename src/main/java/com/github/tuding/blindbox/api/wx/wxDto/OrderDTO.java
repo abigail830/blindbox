@@ -5,7 +5,7 @@ import com.github.tuding.blindbox.infrastructure.Constant;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.text.SimpleDateFormat;
 
 @Getter
 @Setter
@@ -28,11 +28,13 @@ public class OrderDTO {
     private String detailAddress;
 
     private String status;
-    private Date createTime;
+    private static final ThreadLocal<SimpleDateFormat> dateFormat
+            = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd kk:mm"));
 
     private String shippingCompany;
     private String shippingTicket;
     private String productImage;
+    private String createTime;
 
     public OrderDTO(OrderWithProductInfo order) {
         this.orderId = order.getOrderId();
@@ -46,7 +48,7 @@ public class OrderDTO {
         this.associateCode = order.getAssociateCode();
         this.detailAddress = order.getDetailAddress();
         this.status = order.getStatus();
-        this.createTime = order.getCreateTime();
+        this.createTime = dateFormat.get().format(order.getCreateTime());
         this.shippingCompany = order.getShippingCompany();
         this.shippingTicket = order.getShippingTicket();
         this.productImage = Constant.WX_UI_IMAGE_PATH + order.getProductImage();
