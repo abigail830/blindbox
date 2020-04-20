@@ -47,6 +47,8 @@ public class WxPayCallback {
     @PostMapping(value = "/product/callback")
     @Transactional
     String paymentCallback(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Content-type", "application/xml");
+        response.setCharacterEncoding("UTF-8");
 
         final WxPayCallbackReq wxPayCallbackReq = getRequestInObject(request);
         log.info("WxPayCallbackReq [{}]", wxPayCallbackReq);
@@ -73,6 +75,9 @@ public class WxPayCallback {
     @PostMapping(value = "/transport/callback")
     @Transactional
     String tranportCallback(HttpServletRequest request, HttpServletResponse response) {
+        response.setHeader("Content-type", "application/xml");
+        response.setCharacterEncoding("UTF-8");
+
         final WxPayCallbackReq wxPayCallbackReq = getRequestInObject(request);
         log.info("WxPayCallbackReq [{}]", wxPayCallbackReq);
 
@@ -105,8 +110,6 @@ public class WxPayCallback {
     }
 
     String fail(HttpServletResponse response) {
-        response.setHeader("Content-type", "text/html");
-        response.setCharacterEncoding("UTF-8");
         return "<xml>\n" +
                 "  <return_code><![CDATA[FAIL]]></return_code>\n" +
                 "  <return_msg><![CDATA[]]></return_msg>\n" +
@@ -114,8 +117,6 @@ public class WxPayCallback {
     }
 
     String success(HttpServletResponse response) {
-        response.setHeader("Content-type", "text/html");
-        response.setCharacterEncoding("UTF-8");
         return "<xml>\n" +
                 "  <return_code><![CDATA[SUCCESS]]></return_code>\n" +
                 "  <return_msg><![CDATA[OK]]></return_msg>\n" +

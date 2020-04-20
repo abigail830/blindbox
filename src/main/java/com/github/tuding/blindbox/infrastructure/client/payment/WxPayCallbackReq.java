@@ -28,6 +28,7 @@ public class WxPayCallbackReq {
     private String transaction_id;
     private String out_trade_no;
     private String time_end;
+    private String fee_type;
 
 
     public WxPayCallbackReq(Map<String, String> map) {
@@ -47,6 +48,7 @@ public class WxPayCallbackReq {
         this.transaction_id = map.getOrDefault("transaction_id", null);
         this.out_trade_no = map.getOrDefault("out_trade_no", null);
         this.time_end = map.getOrDefault("time_end", null);
+        this.fee_type = map.getOrDefault("fee_type", null);
     }
 
     public Boolean isSuccessReq() {
