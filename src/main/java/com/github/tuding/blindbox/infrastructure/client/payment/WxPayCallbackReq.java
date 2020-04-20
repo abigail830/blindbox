@@ -20,7 +20,7 @@ public class WxPayCallbackReq {
     private String sign;
     private String nonce_str;
     private String openid;
-    private Boolean is_subscribe;
+    private String is_subscribe;
     private String trade_type;
     private String bank_type;
     private Integer total_fee;
@@ -29,23 +29,24 @@ public class WxPayCallbackReq {
     private String out_trade_no;
     private String time_end;
 
+
     public WxPayCallbackReq(Map<String, String> map) {
-        this.return_code = map.containsKey("return_code") ? return_code : null;
-        this.return_msg = map.containsKey("return_msg") ? return_msg : null;
-        this.result_code = map.containsKey("result_code") ? result_code : null;
-        this.appid = map.containsKey("appid") ? appid : null;
-        this.mch_id = map.containsKey("mch_id") ? mch_id : null;
-        this.sign = map.containsKey("sign") ? sign : null;
-        this.nonce_str = map.containsKey("nonce_str") ? nonce_str : null;
-        this.openid = map.containsKey("openid") ? openid : null;
-        this.is_subscribe = map.containsKey("is_subscribe") ? is_subscribe : null;
-        this.trade_type = map.containsKey("trade_type") ? trade_type : null;
-        this.bank_type = map.containsKey("bank_type") ? bank_type : null;
-        this.total_fee = map.containsKey("total_fee") ? total_fee : null;
-        this.cash_fee = map.containsKey("cash_fee") ? cash_fee : null;
-        this.transaction_id = map.containsKey("transaction_id") ? transaction_id : null;
-        this.out_trade_no = map.containsKey("out_trade_no") ? out_trade_no : null;
-        this.time_end = map.containsKey("time_end") ? time_end : null;
+        this.return_code = map.getOrDefault("return_code", null);
+        this.return_msg = map.getOrDefault("return_msg", null);
+        this.result_code = map.getOrDefault("result_code", null);
+        this.appid = map.getOrDefault("appid", null);
+        this.mch_id = map.getOrDefault("mch_id", null);
+        this.sign = map.getOrDefault("sign", null);
+        this.nonce_str = map.getOrDefault("nonce_str", null);
+        this.openid = map.getOrDefault("openid", null);
+        this.is_subscribe = map.getOrDefault("is_subscribe", null);
+        this.trade_type = map.getOrDefault("trade_type", null);
+        this.bank_type = map.getOrDefault("bank_type", null);
+        this.total_fee = Integer.valueOf(map.getOrDefault("total_fee", "0"));
+        this.cash_fee = Integer.valueOf(map.getOrDefault("cash_fee", "0"));
+        this.transaction_id = map.getOrDefault("transaction_id", null);
+        this.out_trade_no = map.getOrDefault("out_trade_no", null);
+        this.time_end = map.getOrDefault("time_end", null);
     }
 
     public Boolean isSuccessReq() {

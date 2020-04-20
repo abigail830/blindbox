@@ -53,16 +53,19 @@ public class WxPayCallback {
 
         if (!wxPayCallbackReq.isSuccessReq() || !validSign(wxPayCallbackReq) ||
                 !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
+            log.warn("Invalid sign or param, will return fail for wx callback");
             return fail(response);
         }
 
         String orderId = wxPayCallbackReq.getOut_trade_no();
         if (wxPayCallbackReq.isSuccessPay()) {
             orderService.updateOrderToPaySuccess(orderId);
+            log.info("Updated Pay success for order {}", orderId);
         } else {
             orderService.updateOrderToPayFail(orderId);
             Order order = orderService.getOrder(orderId);
             drawService.cancelADrawByDrawId(order.getDrawId());
+            log.info("Updated Pay fail for order {}, and cancel draw {}", orderId, order.getDrawId());
         }
         return success(response);
     }
@@ -75,13 +78,16 @@ public class WxPayCallback {
 
         if (!wxPayCallbackReq.isSuccessReq() || !validSign(wxPayCallbackReq) ||
                 !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
+            log.warn("Invalid sign or param, will return fail for wx callback");
             return fail(response);
         }
 
         if (wxPayCallbackReq.isSuccessPay()) {
             orderService.updateOrderToTransportPaySuccess(wxPayCallbackReq.getOut_trade_no());
+            log.info("Updated Pay success for order {}", wxPayCallbackReq.getOut_trade_no());
         } else {
             orderService.updateOrderToTransportPayFail(wxPayCallbackReq.getOut_trade_no());
+            log.info("Updated Pay fail for order {}", wxPayCallbackReq.getOut_trade_no());
         }
         return success(response);
     }
