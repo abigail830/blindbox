@@ -1,6 +1,5 @@
 package com.github.tuding.blindbox.infrastructure.client.payment;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderService;
 import com.github.tuding.blindbox.domain.product.DrawService;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +20,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -46,20 +45,20 @@ public class WxPayCallback {
 
     @PostMapping(value = "/product/callback")
     @Transactional
+    @ResponseBody
     String paymentCallback(HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader("Content-type", "application/xml");
-        response.setCharacterEncoding("UTF-8");
-
         final WxPayCallbackReq wxPayCallbackReq = getRequestInObject(request);
-        log.info("WxPayCallbackReq [{}]", wxPayCallbackReq);
-
-        if (!wxPayCallbackReq.isSuccessReq() || !validSign(wxPayCallbackReq) ||
-                !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
-            log.warn("Invalid sign or param, will return fail for wx callback");
-            return fail(response);
+        try {
+            if (!wxPayCallbackReq.isSuccessReq() || !wxPayCallbackReq.validSign(merchantSecret) ||
+                    !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
+                log.warn("Invalid sign or param, will return fail for wx callback");
+                returnFail(response);
+            }
+        } catch (Exception e) {
+            throw new BizException(ErrorCode.INVALID_SIGN);
         }
 
-        String orderId = wxPayCallbackReq.getOut_trade_no();
+        String orderId = wxPayCallbackReq.getOutTradeNo();
         if (wxPayCallbackReq.isSuccessPay()) {
             orderService.updateOrderToPaySuccess(orderId);
             log.info("Updated Pay success for order {}", orderId);
@@ -69,32 +68,35 @@ public class WxPayCallback {
             drawService.cancelADrawByDrawId(order.getDrawId());
             log.info("Updated Pay fail for order {}, and cancel draw {}", orderId, order.getDrawId());
         }
-        return success(response);
+        returnSuccess(response);
+        return null;
     }
 
     @PostMapping(value = "/transport/callback")
     @Transactional
     String tranportCallback(HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader("Content-type", "application/xml");
-        response.setCharacterEncoding("UTF-8");
-
         final WxPayCallbackReq wxPayCallbackReq = getRequestInObject(request);
-        log.info("WxPayCallbackReq [{}]", wxPayCallbackReq);
 
-        if (!wxPayCallbackReq.isSuccessReq() || !validSign(wxPayCallbackReq) ||
-                !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
-            log.warn("Invalid sign or param, will return fail for wx callback");
-            return fail(response);
+        try {
+            if (!wxPayCallbackReq.isSuccessReq() || !wxPayCallbackReq.validSign(merchantSecret) ||
+                    !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
+                log.warn("Invalid sign or param, will return fail for wx callback");
+                returnFail(response);
+            }
+        } catch (Exception e) {
+            throw new BizException(ErrorCode.INVALID_SIGN);
         }
 
         if (wxPayCallbackReq.isSuccessPay()) {
-            orderService.updateOrderToTransportPaySuccess(wxPayCallbackReq.getOut_trade_no());
-            log.info("Updated Pay success for order {}", wxPayCallbackReq.getOut_trade_no());
+            orderService.updateOrderToTransportPaySuccess(wxPayCallbackReq.getOutTradeNo());
+            log.info("Updated Pay success for order {}", wxPayCallbackReq.getOutTradeNo());
         } else {
-            orderService.updateOrderToTransportPayFail(wxPayCallbackReq.getOut_trade_no());
-            log.info("Updated Pay fail for order {}", wxPayCallbackReq.getOut_trade_no());
+            orderService.updateOrderToTransportPayFail(wxPayCallbackReq.getOutTradeNo());
+            log.info("Updated Pay fail for order {}", wxPayCallbackReq.getOutTradeNo());
         }
-        return success(response);
+        returnSuccess(response);
+
+        return null;
     }
 
     private WxPayCallbackReq getRequestInObject(HttpServletRequest request) {
@@ -109,18 +111,32 @@ public class WxPayCallback {
         }
     }
 
-    String fail(HttpServletResponse response) {
-        return "<xml>\n" +
+    void returnFail(HttpServletResponse response) {
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
+        final String result = "<xml>\n" +
                 "  <return_code><![CDATA[FAIL]]></return_code>\n" +
                 "  <return_msg><![CDATA[]]></return_msg>\n" +
                 "</xml>";
+        try {
+            response.getWriter().write(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    String success(HttpServletResponse response) {
-        return "<xml>\n" +
+    void returnSuccess(HttpServletResponse response) {
+        response.setContentType("text/html");
+        response.setCharacterEncoding("UTF-8");
+        final String result = "<xml>\n" +
                 "  <return_code><![CDATA[SUCCESS]]></return_code>\n" +
                 "  <return_msg><![CDATA[OK]]></return_msg>\n" +
                 "</xml>";
+        try {
+            response.getWriter().write(result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String readRequest(HttpServletRequest request) throws IOException {
@@ -137,35 +153,35 @@ public class WxPayCallback {
         return sb.toString();
     }
 
-    @SuppressWarnings("unchecked")
-    private Boolean validSign(WxPayCallbackReq wxPayCallbackReq) {
-        ObjectMapper oMapper = new ObjectMapper();
-        Map<String, Object> map = oMapper.convertValue(wxPayCallbackReq, Map.class);
+//    @SuppressWarnings("unchecked")
+//    private Boolean validSign(WxPayCallbackReq wxPayCallbackReq) {
+//        ObjectMapper oMapper = new ObjectMapper();
+//        Map<String, Object> map = oMapper.convertValue(wxPayCallbackReq, Map.class);
+//
+//        if (map.containsKey("sign")) {
+//            map.remove("sign");
+//            final Map<String, String> stringMap = convertToString(map);
+//            final String signMe = SignUtil.sign(stringMap, merchantSecret);
+//            return signMe.equals(wxPayCallbackReq.getSign());
+//        } else {
+//            log.warn("Wx callback does not contain sign");
+//            return Boolean.FALSE;
+//        }
+//    }
 
-        if (map.containsKey("sign")) {
-            map.remove("sign");
-            final Map<String, String> stringMap = convertToString(map);
-            final String signMe = SignUtil.sign(stringMap, merchantSecret);
-            return signMe.equals(wxPayCallbackReq.getSign());
-        } else {
-            log.warn("Wx callback does not contain sign");
-            return Boolean.FALSE;
-        }
-    }
-
-    private Map<String, String> convertToString(Map<String, Object> map) {
-        Map<String, String> newMap = new HashMap<>();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() != null) {
-                if (entry.getValue() instanceof String) {
-                    newMap.put(entry.getKey(), (String) entry.getValue());
-                } else {
-                    newMap.put(entry.getKey(), entry.getValue().toString());
-                }
-            }
-        }
-        return newMap;
-    }
+//    private Map<String, String> convertToString(Map<String, Object> map) {
+//        Map<String, String> newMap = new HashMap<>();
+//        for (Map.Entry<String, Object> entry : map.entrySet()) {
+//            if (entry.getValue() != null) {
+//                if (entry.getValue() instanceof String) {
+//                    newMap.put(entry.getKey(), (String) entry.getValue());
+//                } else {
+//                    newMap.put(entry.getKey(), entry.getValue().toString());
+//                }
+//            }
+//        }
+//        return newMap;
+//    }
 
 
 }
