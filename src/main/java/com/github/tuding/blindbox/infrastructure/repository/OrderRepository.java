@@ -120,11 +120,9 @@ public class OrderRepository {
                         " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
                         " inner join draw_tbl d on p.ID = d.productId" +
                         " inner join order_tbl o on o.drawId = d.drawId" +
-                        " WHERE o.status in (?, ?, ?) AND o.openId = ?",
+                        " WHERE o.status = ? AND o.openId = ?",
                 rowMapperWithProduct,
                 OrderStatus.PAY_PRODUCT_SUCCESS.name(),
-                OrderStatus.NEW_TRANSPORT.name(),
-                OrderStatus.PAY_TRANSPORT_FAIL.name(),
                 openId);
     }
 
