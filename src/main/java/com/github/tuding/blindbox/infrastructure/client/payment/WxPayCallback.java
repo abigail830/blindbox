@@ -155,10 +155,12 @@ public class WxPayCallback {
     private Map<String, String> convertToString(Map<String, Object> map) {
         Map<String, String> newMap = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof String) {
-                newMap.put(entry.getKey(), (String) entry.getValue());
-            } else {
-                newMap.put(entry.getKey(), entry.getValue().toString());
+            if (entry.getValue() != null) {
+                if (entry.getValue() instanceof String) {
+                    newMap.put(entry.getKey(), (String) entry.getValue());
+                } else {
+                    newMap.put(entry.getKey(), entry.getValue().toString());
+                }
             }
         }
         return newMap;
