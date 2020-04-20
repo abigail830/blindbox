@@ -22,6 +22,7 @@ public enum ErrorCode {
 
     //Infra
     FAIL_TO_STORE_FILE,
+    IO_EXCEPTION,
 
     //Activity
     INVALID_ACTIVITY_ID,

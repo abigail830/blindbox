@@ -4,16 +4,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderService;
 import com.github.tuding.blindbox.domain.product.DrawService;
+import com.github.tuding.blindbox.exception.BizException;
+import com.github.tuding.blindbox.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,16 +44,16 @@ public class WxPayCallback {
     @Value("${app.mchSecret}")
     private String merchantSecret;
 
-    @PostMapping(value = "/product/callback",
-            produces = "text/xml;charset=UTF-8", consumes = "text/xml;charset=UTF-8")
-    @ResponseBody
+    @PostMapping(value = "/product/callback")
     @Transactional
-    WxPayCallbackRes paymentCallback(@RequestBody WxPayCallbackReq wxPayCallbackReq) {
-        log.info("{}", wxPayCallbackReq);
+    String paymentCallback(HttpServletRequest request, HttpServletResponse response) {
+
+        final WxPayCallbackReq wxPayCallbackReq = getRequestInObject(request);
+        log.info("WxPayCallbackReq [{}]", wxPayCallbackReq);
 
         if (!wxPayCallbackReq.isSuccessReq() || !validSign(wxPayCallbackReq) ||
                 !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
-            return WxPayCallbackRes.buildFail("参数格式校验错误");
+            return fail(response);
         }
 
         String orderId = wxPayCallbackReq.getOut_trade_no();
@@ -58,19 +64,18 @@ public class WxPayCallback {
             Order order = orderService.getOrder(orderId);
             drawService.cancelADrawByDrawId(order.getDrawId());
         }
-        return WxPayCallbackRes.buildSuccess();
+        return success(response);
     }
 
-    @PostMapping(value = "/transport/callback",
-            produces = "text/xml;charset=UTF-8", consumes = "text/xml;charset=UTF-8")
-    @ResponseBody
+    @PostMapping(value = "/transport/callback")
     @Transactional
-    WxPayCallbackRes tranportCallback(@RequestBody WxPayCallbackReq wxPayCallbackReq) {
-        log.info("{}", wxPayCallbackReq);
+    String tranportCallback(HttpServletRequest request, HttpServletResponse response) {
+        final WxPayCallbackReq wxPayCallbackReq = getRequestInObject(request);
+        log.info("WxPayCallbackReq [{}]", wxPayCallbackReq);
 
         if (!wxPayCallbackReq.isSuccessReq() || !validSign(wxPayCallbackReq) ||
                 !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
-            return WxPayCallbackRes.buildFail("参数格式校验错误");
+            return fail(response);
         }
 
         if (wxPayCallbackReq.isSuccessPay()) {
@@ -78,7 +83,51 @@ public class WxPayCallback {
         } else {
             orderService.updateOrderToTransportPayFail(wxPayCallbackReq.getOut_trade_no());
         }
-        return WxPayCallbackRes.buildSuccess();
+        return success(response);
+    }
+
+    private WxPayCallbackReq getRequestInObject(HttpServletRequest request) {
+        try {
+            Map<String, String> map = XmlUtil.xmlToMap(readRequest(request));
+            log.info("Map from HttpServletRequest {}", map);
+            return new WxPayCallbackReq(map);
+        } catch (IOException e) {
+            throw new BizException(ErrorCode.IO_EXCEPTION);
+        } catch (Exception ex) {
+            throw new BizException(ErrorCode.WX_USER_NOT_FOUND);
+        }
+    }
+
+    String fail(HttpServletResponse response) {
+        response.setHeader("Content-type", "text/html");
+        response.setCharacterEncoding("UTF-8");
+        return "<xml>\n" +
+                "  <return_code><![CDATA[FAIL]]></return_code>\n" +
+                "  <return_msg><![CDATA[]]></return_msg>\n" +
+                "</xml>";
+    }
+
+    String success(HttpServletResponse response) {
+        response.setHeader("Content-type", "text/html");
+        response.setCharacterEncoding("UTF-8");
+        return "<xml>\n" +
+                "  <return_code><![CDATA[SUCCESS]]></return_code>\n" +
+                "  <return_msg><![CDATA[OK]]></return_msg>\n" +
+                "</xml>";
+    }
+
+    public String readRequest(HttpServletRequest request) throws IOException {
+        InputStream inputStream;
+        StringBuffer sb = new StringBuffer();
+        inputStream = request.getInputStream();
+        String str;
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        while ((str = in.readLine()) != null) {
+            sb.append(str);
+        }
+        in.close();
+        inputStream.close();
+        return sb.toString();
     }
 
     @SuppressWarnings("unchecked")
