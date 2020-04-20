@@ -10,6 +10,7 @@ import com.github.tuding.blindbox.domain.order.TransportOrder;
 import com.github.tuding.blindbox.domain.user.ShippingAddressService;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
+import com.github.tuding.blindbox.exception.FreeDeliverException;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
@@ -67,10 +68,11 @@ public class WxOrderController {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         final String openId = jwt.getOpenIdFromToken(token);
 
-        BigDecimal transportFee = BigDecimal.ZERO;
-        if (payTransportReq.getOrderIdList().size() < Constant.FREE_DELIVER) {
-            transportFee = shippingAddressService.getTransportFeeByProvince(payTransportReq.getProvince());
+        if (payTransportReq.getOrderIdList().size() >= Constant.FREE_DELIVER) {
+            throw new FreeDeliverException();
         }
+
+        BigDecimal transportFee = shippingAddressService.getTransportFeeByProvince(payTransportReq.getProvince());
         final TransportOrder orders = payTransportReq.generateTransportOrder(openId, transportFee);
 
         final List<String> productOrders = orders.getProductOrders();
