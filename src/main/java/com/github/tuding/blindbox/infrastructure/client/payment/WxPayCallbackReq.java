@@ -73,7 +73,6 @@ public class WxPayCallbackReq {
         return new String(resultCharArray);
     }
 
-
     public Boolean isSuccessReq() {
         return "SUCCESS".equals(map.get("return_code"));
     }
@@ -90,6 +89,10 @@ public class WxPayCallbackReq {
 
     public String getOutTradeNo() {
         return map.get("out_trade_no");
+    }
+
+    public String getSign() {
+        return map.get("sign");
     }
 
 

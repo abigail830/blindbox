@@ -53,6 +53,7 @@ public class WxPayCallback {
                     !wxPayCallbackReq.isValidParam(appId, merchantId, TRADETYPE)) {
                 log.warn("Invalid sign or param, will return fail for wx callback");
                 returnFail(response);
+                return null;
             }
         } catch (Exception e) {
             throw new BizException(ErrorCode.INVALID_SIGN);
@@ -152,36 +153,5 @@ public class WxPayCallback {
         inputStream.close();
         return sb.toString();
     }
-
-//    @SuppressWarnings("unchecked")
-//    private Boolean validSign(WxPayCallbackReq wxPayCallbackReq) {
-//        ObjectMapper oMapper = new ObjectMapper();
-//        Map<String, Object> map = oMapper.convertValue(wxPayCallbackReq, Map.class);
-//
-//        if (map.containsKey("sign")) {
-//            map.remove("sign");
-//            final Map<String, String> stringMap = convertToString(map);
-//            final String signMe = SignUtil.sign(stringMap, merchantSecret);
-//            return signMe.equals(wxPayCallbackReq.getSign());
-//        } else {
-//            log.warn("Wx callback does not contain sign");
-//            return Boolean.FALSE;
-//        }
-//    }
-
-//    private Map<String, String> convertToString(Map<String, Object> map) {
-//        Map<String, String> newMap = new HashMap<>();
-//        for (Map.Entry<String, Object> entry : map.entrySet()) {
-//            if (entry.getValue() != null) {
-//                if (entry.getValue() instanceof String) {
-//                    newMap.put(entry.getKey(), (String) entry.getValue());
-//                } else {
-//                    newMap.put(entry.getKey(), entry.getValue().toString());
-//                }
-//            }
-//        }
-//        return newMap;
-//    }
-
 
 }
