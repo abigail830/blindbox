@@ -2,16 +2,25 @@
  * @Author: seekwe
  * @Date: 2020-03-10 10:16:31
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-23 08:44:56
+ * @Last Modified time: 2020-04-11 19:57:43
  */
 .z-wobble-box {
   position: relative;
   @width: 300rpx;
   @height: 500rpx;
   .z-wobble-card {
+    .image-box {
+      top: 0;
+      position: absolute;
+      margin: auto;
+      left: 0;
+      right: 0;
+      // perspective: 1500;
+      z-index: 999;
+    }
     @color: rgba(255, 255, 0, 0.212);
     &::before {
-      transition: transform 2s;
+      transition: transform 1s;
       transform: scale(0);
       transform-origin: center top;
       content: '';
@@ -40,9 +49,13 @@
       position: absolute;
       box-shadow: 3px 30px 30px @color, -3px -30px 30px @color;
     }
+    &.off {
+      visibility: hidden;
+    }
     &.on {
       &::before {
         transform: scale(1);
+        transform-origin: center center;
       }
       &::after {
         opacity: 1;
@@ -60,6 +73,9 @@
     &.out {
       opacity: 0.1;
       transform: scale(0);
+    }
+    &.in {
+      transition: transform 0s;
     }
     .z-wobble-image {
       width: @width;
@@ -83,6 +99,25 @@
       height: 120rpx;
       z-index: -1;
     }
+  }
+
+  .z-wobble-card-image {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    top: 0;
+    right: 0;
+    opacity: 0.1;
+    transform: scale(1) rotateY(90 * 3deg);
+    transition: transform 1.8s;
+    transform-origin: center center;
+    width: @width;
+    height: @height;
+  }
+  .on .z-wobble-card-image {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+    z-index: 99;
   }
 }
 @keyframes rock {

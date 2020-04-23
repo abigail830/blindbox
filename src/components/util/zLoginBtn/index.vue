@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-16 11:46:28
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-17 10:17:15
+ * @Last Modified time: 2020-04-16 19:04:02
  -->
 <template>
 	<button
@@ -39,13 +39,18 @@ export default {
 	},
 	methods: {
 		click() {
+			if (this.btnOpenType) {
+				return;
+			}
 			console.log(this.authState, 'clickclickclickclickclickclickclickclick');
-			this.$emit('click');
+			this.$emit('run');
 		},
 		getuserinfo({ detail }) {
-			console.log(detail);
-
-			this.$emit('click', detail);
+			console.log(
+				this.authState,
+				'getuserinfogetuserinfogetuserinfogetuserinfogetuserinfogetuserinfogetuserinfogetuserinfogetuserinfogetuserinfogetuserinfogetuserinfo'
+			);
+			this.$emit('run', detail);
 		}
 	}
 };

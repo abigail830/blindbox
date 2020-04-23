@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-18 10:10:32
+ * @Last Modified time: 2020-04-03 18:24:34
  */
 import cfg from '../config';
 import util from '../common/util';
@@ -45,6 +45,7 @@ Promise.prototype['done'] = function(onResolved, onRejected) {
 
 const log = (...msg) => {
   if (process.env.NODE_ENV === 'development') {
+    console.log('%c API ', 'background:#f5f5dc;color:#bada55', ...msg);
   }
 };
 const noJSON = data => {
@@ -62,7 +63,14 @@ const api = async (
   fail = () => {},
   complete = () => {}
 ) => {
-  let api = '';
+  const nameType = typeof name;
+  let api = '',
+    urlData = [];
+  if (nameType === 'function') {
+    let tmp = name() || ['', ''];
+    name = tmp[0];
+    urlData = tmp.slice(1);
+  }
   if (typeof name === 'string') {
     const moduleArr = name.split('.');
     const module = apis[moduleArr[0]] || '';
@@ -74,18 +82,22 @@ const api = async (
   } else {
     api = name;
   }
-
   if (!api) {
     log('Api Non existent: ' + name);
     return;
   }
+  const apiType = typeof api;
 
-  if (api === 'string') {
+  if (apiType === 'string') {
     return api;
   }
 
-  let [type, url] = api;
-  let res;
+  let [type, url] = api,
+    res;
+  if (typeof url === 'function') {
+    url = url(...urlData);
+  }
+
   if (typeof data === 'string' || typeof data === 'number') {
     url = url + data;
     data = null;
@@ -195,7 +207,7 @@ fly.interceptors.response.use(
     if (util.$is.object(err['request'])) {
       url = err['request'].url;
     }
-    log('status:', code, url);
+    log('status:', code, url, response);
     let data = response ? response.data : '';
     if (code === 401 || code === 403) {
       log('NoLogin', getTokenStatsu, code);
@@ -223,6 +235,9 @@ fly.interceptors.response.use(
         return newRes;
       }
       return Promise.reject('NoLogin');
+    } else if (code === 400) {
+      util.$log('客服端错误', code, data.errorMsg);
+      return Promise.reject(data.errorMsg);
     } else if (!!data.errorMsg) {
       return Promise.reject(data.errorMsg);
     } else if (code >= 500) {
@@ -289,4 +304,5 @@ export const getToken = async (fn = _ => {}, errFn = e => {}) => {
 
 export const keys = Object.keys(apis);
 export const ajax = api;
+export const all = newFly.all;
 export default Object.assign({}, defModule, keys);

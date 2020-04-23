@@ -85,6 +85,12 @@
       }
     },
     {
+      "path": "pages/user/post",
+      "style": {
+        "navigationBarTitleText": "订单"
+      }
+    },
+    {
       "path": "pages/index/info",
       "style": {
         "navigationBarTitleText": "详情"
@@ -131,7 +137,7 @@
     "navigationStyle": "custom",
     // #endif
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "App",
+    "navigationBarTitleText": "王牌化身福盒机",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8",
     "h5": {},

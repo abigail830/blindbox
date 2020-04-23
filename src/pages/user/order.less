@@ -1,0 +1,102 @@
+/** 
+ * @Author: seekwe
+ * @Date: 2020-04-05 22:37:12
+ * @Last Modified by:: seekwe
+ * @Last Modified time: 2020-04-20 14:09:39
+ */
+
+@import '../../common/var.less';
+@height: 108rpx;
+.tabs {
+  .radius();
+  @padding: 10rpx;
+  @line-height: 100rpx - (@padding*2);
+  display: flex;
+  padding: @padding;
+  box-sizing: border-box;
+  align-items: center;
+  margin: 0 auto @paadingSize;
+  width: @boxWidth;
+  background-color: #fff;
+  position: sticky;
+  z-index: 1;
+  height: @height;
+  top: @padding;
+  box-shadow: 1rpx 2rpx 3rpx #ccc;
+  .tab {
+    text-align: center;
+    flex: 1;
+    font-size: 29rpx;
+    color: #7b7b7b;
+    .tab-icon {
+      display: none;
+    }
+    &.tab_on {
+      font-weight: bold;
+      font-size: 32rpx;
+      color: #000;
+      .tab-icon {
+        font-size: 16rpx;
+        line-height: 12rpx;
+        display: block;
+        color: #eb5435;
+      }
+    }
+  }
+}
+.page-order-box {
+  //   padding-top: @height;
+}
+.page-order {
+  background-color: @lightGreyPageBackground;
+  padding: @paadingSize;
+  color: @fontColor;
+}
+.page-order-items {
+  .radius();
+  display: flex;
+  background: #fff;
+  margin-bottom: @paadingSize;
+  padding: @paadingSize;
+  height: 156rpx;
+  box-sizing: border-box;
+}
+.page-order-image {
+  width: 106rpx;
+  height: 94rpx;
+  border-radius: 5rpx;
+  overflow: hidden;
+}
+.page-order-info {
+  flex: 1;
+  padding-left: 20rpx;
+  .title {
+    font-size: 28rpx;
+  }
+  .time {
+    margin-top: 20rpx;
+    font-size: 24rpx;
+    color: @lightGreyColor;
+    color: #acacac;
+  }
+}
+
+.order-checked {
+  //   background-color: #000;
+  float: right;
+  padding: 0 10rpx 0 40rpx;
+}
+.show-checked-btn {
+  //   display: flex;
+  position: sticky;
+  bottom: 50rpx;
+  background-color: @themeColor;
+  color: #fff;
+  width: 300rpx;
+  .radius();
+  margin: auto;
+  font-size: 36rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+}

@@ -27,7 +27,7 @@ const base64src = function(base64data) {
       },
       fail() {
         reject(new Error('ERROR_BASE64SRC_WRITE'));
-      }
+      },
     });
   });
 };
@@ -40,6 +40,9 @@ const downImg = (url, header) => {
   if (/wxfile\:\/\//.test(url)) {
     return cache[url] || url;
   }
+  if (/^\/[\w\d]?/.test(url)) {
+    return url;
+  }
   if (url.indexOf('data:image') === 0) {
     return base64src(url);
   }
@@ -51,13 +54,14 @@ const downImg = (url, header) => {
     uni.downloadFile({
       url: url.replace('http:', 'https:'),
       header: header || {},
-      success: res => {
+      success: (res) => {
         resolve(res.tempFilePath);
         cache[url] = res.tempFilePath;
       },
-      fail: err => {
+      fail: (err) => {
+        console.error(url, err);
         reject(err);
-      }
+      },
     });
   });
 };
@@ -93,6 +97,7 @@ class Image extends Sprite {
     ctx.save();
     this.Border();
     let src = await downImg(this.src, this.header);
+
     if (this.radius > 0) {
       ctx.setGlobalAlpha(0);
       this.r = this.width / 2;
@@ -111,6 +116,7 @@ class Rect extends Sprite {
     super(config);
     this.src = config.src;
     this.background = config.background || '#fff';
+    // console.warn(JSON.stringify(config));
   }
 
   async draw(ctx) {
@@ -167,73 +173,181 @@ class Rect extends Sprite {
 class Text extends Sprite {
   constructor(config) {
     super(config);
+    this.border = config.border;
+    this.ellipsis =
+      typeof config.ellipsis === 'undefined' ? '...' : config.ellipsis;
     this.text = config.text;
     this.color = config.color;
     this.maxLine = config.maxLine;
+    this.center = config.center;
     this.lineHeight = config.lineHeight || 1.2;
     this.fontSize = $to.rpx2px(config.fontSize || 24);
   }
 
   async draw(ctx) {
+    console.time('poster Text');
     ctx.save();
+    // if (this.border) {
+    // todo dev
+    // await new Rect(
+    //   Object.assign(
+    //     {
+    //       height: 1,
+    //       width: this.width,
+    //       x: this.x,
+    //       y: this.y,
+    //       background: '#000',
+    //     },
+    //     {}
+    //   )
+    // ).draw(ctx);
+    // }
     ctx.fillStyle = this.color;
     ctx.setFontSize(this.fontSize);
     let multiLine = false;
 
-    if (/\n/.test(this.text)) {
-      multiLine = true;
-    }
+    // if (/\n/.test(this.text)) {
+    //   multiLine = true;
+    // }
     if (this.width || multiLine) {
-      let len = Math.floor(this.width / this.fontSize);
-      let row = null;
-      let arr = [];
-      if (multiLine) {
-        arr = this.text.split('\n');
-        row = arr.length;
-      } else {
-        row = Math.ceil(this.width / len);
-      }
-      //.ctx.measureText(text).width
+      let textLen = this.text.length;
+      let textArr = [];
+      let tmpIndex = 0;
+      let tmpWidth = 0;
+      let textTmp = [];
+      let textTmpWidth = [];
 
-      if (row === 1) {
-        ctx.fillText(this.text, this.x, this.y + this.fontSize);
-      } else {
-        if (!multiLine) {
-          for (let i = 0; i < row; i++) {
-            if (this.maxLine > 0 && i >= this.maxLine) {
-              break;
-            }
-            arr.push(this.text.substr(i * len, len));
-          }
+      let dWidth = ctx.measureText(this.ellipsis).width;
+      for (let i = 0; i < textLen; i++) {
+        let text = this.text[i];
+        let w = ctx.measureText(text).width;
+        tmpWidth = tmpWidth + w;
+
+        if (tmpWidth > this.width) {
+          tmpWidth = 0;
+          tmpIndex++;
         }
-        arr.forEach((str, i) =>
+
+        if (tmpIndex >= this.maxLine && this.ellipsis) {
+          tmpIndex--;
+          let reduceWidth = 0;
+          while (reduceWidth < dWidth) {
+            textTmp[tmpIndex].pop();
+            let lastWidth = textTmpWidth[tmpIndex].pop();
+            reduceWidth = reduceWidth + lastWidth;
+          }
+          textTmp[tmpIndex].push(this.ellipsis);
+          break;
+        }
+        if (typeof textTmp[tmpIndex] === 'undefined') {
+          textTmp[tmpIndex] = [];
+          textTmpWidth[tmpIndex] = [];
+        }
+        textTmp[tmpIndex].push(text);
+        textTmpWidth[tmpIndex].push(w);
+        textArr[i] = [text, w];
+      }
+
+      // console.log(textArr);
+      // console.log(this.text, textTmp);
+      textTmp.forEach((str, i) => {
+        let text = str.join('');
+        if (!this.center) {
           ctx.fillText(
-            str,
+            text,
             this.x,
             this.y + this.fontSize * (i + 1) * this.lineHeight
-          )
-        );
-      }
+          );
+        } else {
+          let width = ctx.measureText(text).width;
+          let x = this.x + (this.width - width) / 2;
+          ctx.fillText(
+            text,
+            x,
+            this.y + this.fontSize * (i + 1) * this.lineHeight
+          );
+        }
+      });
+      // 文字
+      // return;
+      // let len = Math.floor(this.width / this.fontSize);
+      // let row = null;
+      // let arr = [];
+      // if (multiLine) {
+      //   arr = this.text.split('\n');
+      //   row = arr.length;
+      // } else {
+      //   row = Math.ceil(this.width / len);
+      // }
+      // //.ctx.measureText(text).width
+
+      // if (row === 1) {
+      //   ctx.fillText(this.text, this.x, this.y + this.fontSize);
+      // } else {
+      //   if (!multiLine) {
+      //     for (let i = 0; i < row; i++) {
+      //       if (this.maxLine > 0 && i >= this.maxLine) {
+      //         break;
+      //       }
+      //       arr.push(this.text.substr(i * len, len));
+      //     }
+      //   }
+      //   let textLen = arr.length - 1;
+      //   arr.forEach((str, i) => {
+      //     if (this.width && textLen === i) {
+      //       let textWidth = ctx.measureText(str).width;
+      //       const unitTextWidth = +(textWidth / str.length).toFixed(2);
+      //       let max = 1000;
+      //       if (textWidth > this.width) {
+      //         max = Math.ceil((textWidth - this.width) / unitTextWidth);
+      //       }
+      //       console.warn(
+      //         '最后一行',
+      //         max,
+      //         this.width,
+      //         textWidth,
+      //         unitTextWidth,
+      //         str
+      //       );
+      //     }
+      //     ctx.fillText(
+      //       str,
+      //       this.x,
+      //       this.y + this.fontSize * (i + 1) * this.lineHeight
+      //     );
+      //   });
+      // }
     } else {
       ctx.fillText(this.text, this.x, this.y + this.fontSize);
     }
 
     ctx.restore();
+    console.timeEnd('poster Text');
   }
 }
 
 class Poster {
-  constructor(
-    { width, height, scale, canvasId, pixelRatio = 1, backgroundColor },
-    vue
-  ) {
+  constructor(c, vue) {
+    let {
+      width,
+      height,
+      scale,
+      ctx,
+      canvasId,
+      header,
+      pixelRatio = 1,
+      backgroundColor,
+    } = c;
+    console.log(backgroundColor, c);
+    this.config = c;
     this.width = width;
     this.height = height;
     this.scale = scale || 1;
     this.canvasId = canvasId;
     this.vue = vue;
-    this.ctx = uni.createCanvasContext(canvasId, vue);
-    this.setBackgroundColor(backgroundColor);
+    this.ctx = ctx;
+    this.header = header;
+    this.backgroundColor = backgroundColor;
     _ratio = pixelRatio;
   }
   setHeight(height) {
@@ -242,13 +356,61 @@ class Poster {
   setWidth(width) {
     this.width = width;
   }
-  setBackgroundColor(backgroundColor) {
-    if (!backgroundColor) return;
+  async setBackground() {
+    if (!this.config.backgroundColor && !this.config.backgroundImage) return;
     this.ctx.save();
-    this.ctx.setFillStyle(backgroundColor);
-    this.ctx.fillRect(0, 0, this.width, this.height);
+    const config = {
+      width: $to.rpx2px(this.width || 0),
+      height: $to.rpx2px(this.height || 0),
+    };
+    if (this.backgroundColor) {
+      this.ctx.setFillStyle(this.backgroundColor);
+      this.ctx.fillRect(0, 0, config.width, config.height);
+    }
+    if (this.config.backgroundImage) {
+      let src = await downImg(this.config.backgroundImage, this.header);
+      let [err, resInfo] = await uni.getImageInfo({ src: src });
+      console.log('设置背景', this.config.backgroundImage, err, resInfo);
+
+      let iHeight = 0;
+      let sum = 0;
+      if (!err && resInfo) {
+        let iwProportion = $to.rpx2px(750) / resInfo.width;
+        iHeight = resInfo.height * iwProportion;
+      }
+
+      if (iHeight >= config.height || !iHeight) {
+        console.log('直接设置背景');
+        config.height = iHeight;
+        await new Image(
+          Object.assign(config, {
+            x: 0,
+            y: 0,
+            src: this.config.backgroundImage,
+          })
+        ).draw(this.ctx);
+      } else {
+        sum = Math.ceil(config.height / iHeight);
+        config.height = iHeight;
+
+        console.log('追加背景', sum, this.config.backgroundImage);
+        for (let index = 0; index < sum; index++) {
+          await new Image(
+            Object.assign(config, {
+              x: 0,
+              y: config.height * index,
+              src: this.config.backgroundImage,
+            })
+          ).draw(this.ctx);
+        }
+      }
+
+      console.log(0, 0, this.width, this.height);
+    }
+
     this.ctx.restore();
   }
+
   async draw(steps) {
     let ctx = this.ctx;
     ctx.scale(this.scale, this.scale);
@@ -256,9 +418,8 @@ class Poster {
     const typeMap = {
       img: Image,
       text: Text,
-      rect: Rect
+      rect: Rect,
     };
-    console.log('draw');
 
     for (let i = 0, len = steps.length; i < len; i++) {
       let sprite = steps[i] || {};
@@ -311,6 +472,7 @@ class Poster {
       omTree.push(new typeMap[sprite.type](sprite));
     }
 
+    await this.setBackground();
     for (let om of omTree) {
       try {
         await om.draw(ctx);
@@ -319,28 +481,37 @@ class Poster {
       }
     }
 
+    // ctx.draw(false);
     return new Promise((resolve, reject) => {
-      ctx.draw(false, () => {
-        uni.canvasToTempFilePath(
-          {
-            x: 0,
-            y: 0,
-            width: this.width * this.scale,
-            height: this.height * this.scale,
-            canvasId: this.canvasId,
-            quality: 0.8,
-            complete: e => {
-              console.log(e);
+      // return;
+      ctx.draw(false, async () => {
+        setTimeout((_) => {
+          uni.canvasToTempFilePath(
+            {
+              x: 0,
+              y: 0,
+              // width: this.width * this.scale,
+              width: this.width,
+              height: this.height,
+              canvasId: this.canvasId,
+              quality: 0.8,
+              complete: (e) => {
+                // console.log(e, this.canvasId, this.vue);
+              },
+              success: (res) => {
+                resolve(res.tempFilePath);
+              },
+              fail: (err) => {
+                reject(err);
+              },
             },
-            success: res => {
-              resolve(res.tempFilePath);
-            },
-            fail: err => {
-              reject(err);
-            }
-          },
-          this.vue
-        );
+            this.vue
+          );
+        }, 20);
+        // if (!err) {
+        //   resolve(res.tempFilePath);
+        // }
+        // console.log(err, res);
       });
     });
   }

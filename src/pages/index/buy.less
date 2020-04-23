@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 15:46:24
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-17 16:19:12
+ * @Last Modified time: 2020-04-11 19:50:12
  */
 @import '../../common/var.less';
 @width: 580rpx;
@@ -17,14 +17,24 @@
     font-size: 38.88rpx;
     color: #fff;
     margin-bottom: 30rpx;
+    .delete_state {
+      text-decoration: line-through;
+    }
+    .card-state {
+      font-size: 28rpx;
+      display: inline-block;
+      margin: 0 10rpx;
+    }
   }
   .buy-cover {
     width: @width;
+    width: 460rpx;
     margin: auto;
     display: block;
     height: 630rpx;
     border-radius: 10rpx;
     overflow: hidden;
+    background-color: #fff;
   }
   .buy-code {
     font-size: 18rpx;
@@ -80,4 +90,23 @@
   width: @width;
   color: #ad7902;
   font-size: 18rpx;
+}
+
+.help-view;
+
+.help-box {
+  .help-center {
+    text-align: left;
+    height: calc(50vh - 80rpx) !important;
+  }
+}
+.ok-btn {
+  margin-top: 20rpx;
+  color: #fff;
+  border-radius: 50rpx;
+  height: 80rpx;
+  font-size: 36rpx;
+  line-height: 80rpx;
+  background-image: linear-gradient(147deg, #fc9062 0%, #ff2525 74%);
+  background-image: -webkit-linear-gradient(147deg, #fc9062 0%, #ff2525 74%);
 }

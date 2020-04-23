@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-11 18:20:31
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-18 16:34:01
+ * @Last Modified time: 2020-04-16 18:44:30
  */
 @import '../../../common/var.less';
 .z-category-list-view-box {
@@ -72,17 +72,6 @@
   position: sticky;
   bottom: 50rpx;
   text-align: center;
-  .poster-btn {
-    background-color: @themeColor;
-    width: 100rpx;
-    height: 100rpx;
-    color: #fff;
-    font-size: 28rpx;
-    padding: 8rpx 20rpx;
-    box-sizing: border-box;
-    display: inline-block;
-    border-radius: 100%;
-  }
 }
 
 .poster-image-block {
@@ -97,19 +86,24 @@
     position: absolute;
     left: 0;
     right: 0;
-    height: 600rpx;
+    // height: 600rpx;
+    height: auto;
     top: 0;
     bottom: 0;
     margin: auto;
-    width: 400rpx;
+    max-width: 600rpx;
+    height: 80vh;
   }
 }
 
-// canvas {
-//   position: fixed;
-//   bottom: 0;
-//   pointer-events: none;
-//   left: 0;
-//   width: 300rpx;
-//   height: 600rpx;
-// }
+canvas {
+  position: fixed;
+  top: 0;
+  pointer-events: none;
+  left: 0;
+  width: 300rpx;
+  height: 600rpx;
+  z-index: 999999999999999;
+}
+
+.close-icon();

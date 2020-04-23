@@ -2,10 +2,13 @@
  * @Author: seekwe
  * @Date: 2020-03-02 15:31:00
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-17 21:04:50
+ * @Last Modified time: 2020-04-19 12:44:00
  */
 @import '../../common/var.less';
 @width: 580rpx;
+.z-home-info-box .sheet-box_on {
+  background-color: #fff !important;
+}
 .page-info {
   text-align: center;
   background-color: @themeColor;
@@ -28,8 +31,9 @@
   .info-cover {
     display: block;
     width: 100%;
-    background-color: #000;
+    // background-color: #000;
     height: 300rpx;
+    height: 250.518rpx;
   }
   .boxs {
     display: flex;
@@ -63,10 +67,13 @@
       .been-icon {
         width: @width / 4;
         height: @width / 4;
-        background-color: #929292;
+        // background-color: #929292;
         border-width: 1rpx;
         box-sizing: border-box;
         border: 1rpx solid #929292;
+        &.off {
+          background-color: #929292;
+        }
       }
       .mini-icon {
         position: absolute;
@@ -110,6 +117,8 @@
   margin-top: 30rpx;
   justify-content: space-between;
   .data-code {
+    text-align: left;
+    // white-space: nowrap;
     font-size: 18rpx;
     color: #666666;
   }

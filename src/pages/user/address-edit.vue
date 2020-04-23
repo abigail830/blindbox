@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-11 10:24:31
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-18 09:58:08
+ * @Last Modified time: 2020-04-10 13:42:22
  -->
 <template>
 	<view class="page-address-edit page">
@@ -56,6 +56,7 @@ let from = {
 	detailAddress: '',
 	associateCode: '',
 	isDefaultAddress: 1,
+	province: '',
 	area: '请选择所在地区'
 };
 if (process.env.NODE_ENV === 'development') {
@@ -63,7 +64,8 @@ if (process.env.NODE_ENV === 'development') {
 		id: 0,
 		mobile: '13800138000',
 		receiver: '默认',
-		detailAddress: '广州',
+		province: '北京市',
+		detailAddress: '人民路',
 		associateCode: [0, 0, 0],
 		isDefaultAddress: 1,
 		area: '北京市市辖区东城区'
@@ -128,7 +130,8 @@ export default {
 				this.$alert('请输入正确联系号码');
 				return;
 			}
-			data.associateCode = data.associateCode.join('|');
+			if (typeof data.associateCode !== 'string')
+				data.associateCode = data.associateCode.join('|');
 			data.isDefaultAddress = !!data.isDefaultAddress;
 			let api = '';
 			if (this.from.id) {
@@ -150,9 +153,11 @@ export default {
 			this.$refs.zAddress.open();
 		},
 		onConfirm(e) {
-			this.$log(e);
+			this.$log('onConfirm', e);
 			this.from.associateCode = e.value.join('|');
-			this.from.area = e.label.split('-').join('');
+			let area = e.label.split('-');
+			this.from.area = area.join('');
+			this.from.province = area[0];
 		}
 	}
 };
@@ -167,8 +172,8 @@ export default {
 	margin-top: 10rpx;
 	height: 60rpx;
 	// transform: scale(0.7);
-	.address-checkbox {
-	}
+	// .address-checkbox {
+	// }
 }
 .save-btn,
 .delete-btn {

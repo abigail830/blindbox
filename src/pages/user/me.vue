@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-01 20:59:35
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-17 10:17:54
+ * @Last Modified time: 2020-04-16 19:21:49
  -->
 <template>
 	<view class="page page-me">
@@ -25,22 +25,22 @@
 			</view>
 			<view class="integral">
 				<view class="integral-title">积分</view>
-				<view class="integral-value">00000</view>
+				<view class="integral-value">{{bonus}}</view>
 			</view>
 			<view class="header-list">
-				<view class="page-list-item">
+				<view class="page-list-item" @click="show('order')">
 					<view class="page-list-icon">
 						<image mode="widthFix" src="/static/order-icon.png" class="order-icon" />
 					</view>订单
-					<view class="page-list-item_right" @click="show('order')">
+					<view class="page-list-item_right">
 						<view class="page-list-item-arrow"></view>
 					</view>
 				</view>
-				<view class="page-list-item">
+				<view class="page-list-item" @click="show('address')">
 					<view class="page-list-icon">
 						<image mode="widthFix" src="/static/lbs-icon.png" class="lbs-icon" />
 					</view>收货地址
-					<view class="page-list-item_right" @click="show('address')">
+					<view class="page-list-item_right">
 						<view class="page-list-item-arrow"></view>
 					</view>
 				</view>
@@ -55,15 +55,15 @@
 			>点击登录</button>
 		</view>
 		<view class="page-me-list">
-			<view class="page-list-item">
+			<view class="page-list-item" @click="show('agreement')">
 				使用协议
-				<view class="page-list-item_right" @click="show('agreement')">
+				<view class="page-list-item_right">
 					<view class="page-list-item-arrow"></view>
 				</view>
 			</view>
-			<view class="page-list-item">
+			<view class="page-list-item" @click="show('rule')">
 				规则
-				<view class="page-list-item_right" @click="show('rule')">
+				<view class="page-list-item_right">
 					<view class="page-list-item-arrow"></view>
 				</view>
 			</view>
@@ -115,6 +115,9 @@ export default {
 		nickName() {
 			return this.userInfo.nickName || '';
 		},
+		bonus() {
+			return this.userInfo.bonus;
+		},
 		...mapState(['system']),
 		...mapGetters(['userInfo', 'authState', 'banState'])
 	},
@@ -131,19 +134,7 @@ export default {
 			console.log('clickLoginBtn', e);
 		},
 		async getuserinfo(e) {
-			const { errMsg, userInfo, iv, encryptedData } = e.detail;
-			if (errMsg === 'getUserInfo:ok') {
-				this.$log('登录成功', userInfo);
-				let res = await this.$api(
-					'user.update',
-					{},
-					{ headers: { iv: iv, encryptedData: encryptedData } }
-				);
-				this.$store.commit(
-					'USER_SIGNIN',
-					Object.assign({ authState: true }, this.userInfo, userInfo)
-				);
-			}
+			await this.$getuserinfo(e.detail);
 		},
 		show(type) {
 			this.$log(type);

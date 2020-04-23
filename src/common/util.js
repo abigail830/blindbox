@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-11-08 14:06:18
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-17 16:47:37
+ * @Last Modified time: 2020-04-03 17:28:23
  */
 
 let app;
@@ -195,7 +195,7 @@ export const $shake = (stopFn = stop => {}, intervalTime = 500, music = '') => {
       lastX: 0,
       lastY: 0,
       lastZ: 0,
-      shakeSpeed: 150
+      shakeSpeed: 70
     };
 
   if (music) {
@@ -222,6 +222,7 @@ export const $shake = (stopFn = stop => {}, intervalTime = 500, music = '') => {
         (Math.abs(x + y + z - global.lastX - global.lastY - global.lastZ) /
           diffTime) *
         10000;
+
       if (speed > global.shakeSpeed) {
         global.state = true;
         setTimeout(_ => {
@@ -245,13 +246,14 @@ export const $shake = (stopFn = stop => {}, intervalTime = 500, music = '') => {
     wx.offAccelerometerChange(fn);
   };
   wx.onAccelerometerChange(fn);
+
+  console.log('开始', global);
   return stop;
 };
 export const $util = {
   throttle: function(fn, gapTime = 1500) {
     let _lastTime = null;
     return function() {
-      console.log(this);
       let _nowTime = +new Date();
       if (_nowTime - _lastTime > gapTime || !_lastTime) {
         fn.apply(this, arguments);
@@ -273,4 +275,14 @@ export default {
   $awaitWrap,
   $systems,
   $PLATFORM: process.env.VUE_APP_PLATFORM
+};
+
+export const shuffle = arr => {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    let rIndex = Math.floor(Math.random() * (i + 1));
+    let temp = arr[rIndex];
+    arr[rIndex] = arr[i];
+    arr[i] = temp;
+  }
+  return arr;
 };

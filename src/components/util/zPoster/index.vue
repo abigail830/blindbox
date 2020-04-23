@@ -1,5 +1,5 @@
 <template>
-	<canvas canvas-id="app" :style="canvasStyle"></canvas>
+	<canvas id="app" canvas-id="app" :style="canvasStyle"></canvas>
 </template>
 
 <script>
@@ -27,9 +27,7 @@ export default {
 			type: Object
 		}
 	},
-	created() {
-		ctx = uni.createCanvasContext(canvasId, this);
-	},
+	created() {},
 	computed: {
 		canvasStyle() {
 			return (
@@ -58,6 +56,9 @@ export default {
 			height: 0
 		};
 	},
+	mounted() {
+		ctx = uni.createCanvasContext(canvasId, this);
+	},
 	methods: {
 		save() {
 			uni.saveImageToPhotosAlbum({
@@ -68,7 +69,7 @@ export default {
 			});
 		},
 		clear() {
-			poster.clear();
+			if (poster) poster.clear();
 		},
 		watchCreate() {
 			if (JSON.stringify(this.config) === '{}') {
@@ -78,30 +79,35 @@ export default {
 		},
 		create() {
 			path = '';
-			this.width = this.config.width || $to.px2rpx(this.sysInfo.screenWidth);
-			this.height = this.config.height || $to.px2rpx(this.sysInfo.screenHeight);
-			poster = new Poster(
-				{
-					width: this.width,
-					height: this.height,
-					scale: this.scale,
-					canvasId: canvasId,
-					backgroundColor: this.config.backgroundColor,
-					pixelRatio: this.sysInfo.pixelRatio,
-					ctx: ctx
-				},
-				this
-			);
-			console.log('ctx: ', ctx);
-			return poster
-				.draw(this.config.views || [])
-				.then(tmpPath => {
-					path = tmpPath;
-					this.$emit('result', { path: tmpPath }, true);
-				})
-				.catch(err => {
-					this.$emit('result', { errMsg: err }, false);
+			this.$nextTick(_ => {
+				let config = JSON.parse(JSON.stringify(this.config));
+				this.width = config.width || $to.px2rpx(this.sysInfo.screenWidth);
+				this.height = config.height || $to.px2rpx(this.sysInfo.screenHeight);
+				// console.warn('this.config', this.config);
+
+				this.$nextTick(_ => {
+					poster = new Poster(
+						Object.assign({}, config, {
+							width: this.width,
+							height: this.height,
+							scale: this.scale,
+							canvasId: canvasId,
+							pixelRatio: this.sysInfo.pixelRatio,
+							ctx: ctx
+						}),
+						this
+					);
+					return poster
+						.draw(config.views || [])
+						.then(tmpPath => {
+							path = tmpPath;
+							this.$emit('result', { path: tmpPath }, true);
+						})
+						.catch(err => {
+							this.$emit('result', { errMsg: err }, false);
+						});
 				});
+			});
 		}
 	}
 };

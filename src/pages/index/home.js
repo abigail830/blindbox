@@ -4,7 +4,6 @@
  * @Last Modified by:   seekwe
  * @Last Modified time: 2020-03-16 15:17:27
  */
-
 import { mapState, mapGetters } from 'vuex';
 import { themeColor } from '@/common/var';
 export const computed = _ => {
@@ -16,7 +15,9 @@ export const computed = _ => {
       return this.seriesActive === 'all';
     },
     seriesShowData() {
-      return this.seriesData.slice(0, 3);
+      const len = this.seriesData.length;
+
+      return len > 2 ? this.seriesData.slice(0, 3) : this.seriesData;
     },
     seriesData() {
       return this.series.items || [];
@@ -30,7 +31,7 @@ export const data = _ => {
   return {
     seriesActive: 'all',
     isShowBottom: false, // 显示全部系列
-    tabActive: 'all', // 默认 tab: all, new
+    tabActive: 'new', // 默认 tab: all, new
     swiperConfig: {
       indicatorColor: 'rgba(197,200,198, 1)',
       indicatorActiveColor: themeColor,
@@ -39,21 +40,10 @@ export const data = _ => {
       interval: 2000,
       duration: 500
     },
-    swiperItems: [
-      {
-        image: '/static/demo.png'
-      },
-      {
-        image: '/static/demo.png'
-      },
-      {
-        image: '/static/demo.png'
-      },
-      {
-        image: '/static/demo.png'
-      }
-    ],
+    swiperItems: [],
     itemsNewData: [],
+    itemsData: [],
+    itemsDataPage: 1,
     itemsNewPage: 1
   };
 };
@@ -62,56 +52,88 @@ export const methods = _ => {
   return {
     setBarrage() {
       if (!this.system.barrage) return;
-      this.$refs.zBarrage.add('我是后面来的啦' + +new Date());
+
+      this.$api('home.barrage').then(e => {
+        e.map((e, k) => {
+          if (k === 0) {
+            this.$refs.zBarrage.add(e);
+            return;
+          }
+          setTimeout(_ => {
+            this.$refs.zBarrage.add(e);
+          }, Math.ceil(Math.random() * 2000));
+        });
+      });
     },
     switchTab(key) {
       this.tabActive = key;
     },
     setSeriesActive(id) {
       this.seriesActive = id;
-      this.$log('加载指定系列:', id);
-    },
-    getSeriesData() {
-      let seriesData = [];
-      for (let i = 0; i < 33; i++) {
-        seriesData.push({
-          id: i,
-          image: '/static/demo-icon.png',
-          title: '明星名字'
+      if (id != 'all') {
+        this.$log('加载指定系列:', id);
+        this.itemsDataPage = 1;
+        this.$api(_ => {
+          return ['products.series', id];
+        }).then(e => {
+          this.itemsData = e.map(e => {
+            e.image = this.$websiteUrl + e.seriesImage;
+            return e;
+          });
+        });
+      } else {
+        this.$log('加载全部系列:', id);
+        this.$api(_ => {
+          return ['products.all', 10, this.itemsDataPage];
+        }).then(e => {
+          let itemsData = e.map(e => {
+            e.image = this.$websiteUrl + e.seriesImage;
+            return e;
+          });
+          if (this.itemsDataPage > 1) {
+            this.itemsData = this.itemsData.concat(itemsData);
+          } else {
+            this.itemsData = itemsData;
+          }
         });
       }
-      this.$store.commit('series/setSeriesData', seriesData);
     },
-    goInfo(type, id) {
-      this.$go('./info?id=' + id);
+    goInfo(data, id) {
+      this.$store.commit('current/setSeriesData', data);
+      this.$go('./info?id=' + data.id);
     },
     reloadItems() {
       this.itemsNewPage = 1;
       this.getItems();
     },
-    getItems() {
-      let done = this.$loading();
-      let itemsNewData = [];
+    getSwiper() {
+      this.$api('home.swiper').then(e => {
+        let swiperItems = e.map(e => {
+          let data = e;
+          data.image = this.$websiteUrl + e.mainImgUrl;
+          return data;
+        });
 
-      setTimeout(_ => {
-        for (let i = 0; i < 5; i++) {
-          itemsNewData.push({
-            image: '/static/demo.png',
-            id: i,
-            price: '100',
-            isTop: i <= 2,
-            isNew: i < 2,
-            isAdvance: i < 3 && i >= 1,
-            title: `(${this.itemsNewPage})我的标题:` + i
+        this.swiperItems = swiperItems;
+      });
+    },
+    goActivity(e) {
+      this.$go('activity/info?id=' + e.id);
+    },
+    getItems() {
+      this.getSwiper();
+      let done = this.$loading();
+      this.$api('home.newSeries')
+        .then(e => {
+          this.itemsNewData = e.map(e => {
+            e.image = this.$websiteUrl + e.seriesImage;
+            return e;
           });
-        }
-        if (this.itemsNewPage > 1) {
-          this.itemsNewData = this.itemsNewData.concat(itemsNewData);
-        } else {
-          this.itemsNewData = itemsNewData;
-        }
-        done();
-      }, 1000);
+          done();
+        })
+        .catch(e => {
+          done();
+        });
     }
   };
 };

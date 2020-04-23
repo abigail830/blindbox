@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-02 18:47:50
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-18 09:56:07
+ * @Last Modified time: 2020-04-13 18:32:22
  -->
 <template>
 	<view class="page page-address">
@@ -45,6 +45,7 @@ import addBtnIcon from './static/add.png';
 export default {
 	data() {
 		return {
+			type: '',
 			editIcon: editIcon,
 			editIconOff: editIconOff,
 			addressIcon: addressIcon,
@@ -53,11 +54,29 @@ export default {
 			addressList: []
 		};
 	},
+	onLoad(opt) {
+		this.type = opt.type || '';
+	},
 	onShow() {
 		this.goAddress();
 	},
+	computed: {
+		isSelect() {
+			return this.type === 'select';
+		}
+	},
 	methods: {
+		selectAddress(v, k) {
+			this.$store.commit('current/setAddress', v);
+			this.$log('选中地址', v);
+
+			this.$back();
+		},
 		toggleDefault(v, k) {
+			if (this.isSelect) {
+				this.selectAddress(v, k);
+				return;
+			}
 			if (v.isDefaultAddress) return;
 			uni.showModal({
 				content: '是否把该地址设置为默认地址',
@@ -66,6 +85,7 @@ export default {
 						let data = Object.assign({}, v, { isDefaultAddress: true });
 						await this.$api('address.update', data);
 						this.goAddress();
+						this.$store.commit('current/setAddress', v);
 						// this.addressList[k].isDefault = true;
 					} else if (res.cancel) {
 					}
@@ -78,10 +98,15 @@ export default {
 			try {
 				const res = await this.$api('address.get');
 				this.addressList = res;
+				this.$store.commit(
+					'current/setAddress',
+					res.find(e => e.isDefaultAddress) || {}
+				);
 				done();
 			} catch (err) {
 				this.$alert('网络繁忙，请稍后再试');
 				this.$log(err);
+				done();
 			}
 		},
 		goEdit(v) {
