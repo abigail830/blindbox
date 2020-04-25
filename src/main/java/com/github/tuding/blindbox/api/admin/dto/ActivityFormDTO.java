@@ -65,7 +65,7 @@ public class ActivityFormDTO {
         log.info("{}", toString());
         return new Activity(id, name, description, shownInAd,
                 getActivityStartDateAsTS(), getActivityEndDateAsTS(),
-                mainImg, mainImgAddr);
+                mainImg, mainImgAddr.replace(Constant.ADMIN_UI_IMAGE_PATH, ""));
     }
 
     public void setupMode(Mode mode) {
