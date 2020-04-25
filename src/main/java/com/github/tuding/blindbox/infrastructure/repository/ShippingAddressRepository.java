@@ -83,8 +83,8 @@ public class ShippingAddressRepository {
     }
 
     public void updateLastAddrAsDefault(String openId) {
-        String sql = "UPDATE shipping_addr_tbl set is_default_address = true " +
-                "WHERE id = (SELECT ID from shipping_addr_tbl WHERE open_id = ? ORDER BY ID DESC LIMIT 1)";
+        String sql = "UPDATE shipping_addr_tbl set is_default_address = true WHERE id in (" +
+                "SELECT ID FROM(SELECT ID from shipping_addr_tbl WHERE open_id = ? ORDER BY ID DESC LIMIT 1) as c);";
         jdbcTemplate.update(sql, openId);
         log.info("Update latest address(if there is any) as default for user [{}]", openId);
     }
