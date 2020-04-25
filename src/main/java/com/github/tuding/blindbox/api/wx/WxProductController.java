@@ -139,7 +139,7 @@ public class WxProductController {
         BigDecimal priceAfterDiscount = productService.getProductPriceAfterDiscount(drawId);
 
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_COUPON_CONSUME_BONUS);
+        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_DISCOUNT_COUPON_CONSUME_BONUS);
 
         drawService.updateDrawPriceById(priceAfterDiscount, drawId);
 
@@ -152,7 +152,7 @@ public class WxProductController {
     public TipsCouponDTO getTipsByBonus(HttpServletRequest request,
                                                 @PathVariable String drawId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_COUPON_CONSUME_BONUS);
+        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_DISCOUNT_COUPON_CONSUME_BONUS);
         Product excludedProduct = drawService.getExcludedProduct(drawId);
         return new TipsCouponDTO(excludedProduct, remainBonus);
     }
@@ -163,7 +163,7 @@ public class WxProductController {
     public DisplayCouponDTO getDisplayByBonus(HttpServletRequest request,
                                         @PathVariable String drawId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_COUPON_CONSUME_BONUS);
+        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_DISCOUNT_COUPON_CONSUME_BONUS);
         Product excludedProduct = drawService.getDrawProduct(drawId);
         return new DisplayCouponDTO(excludedProduct, remainBonus);
     }

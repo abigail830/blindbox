@@ -22,7 +22,7 @@ public class DrawDTO {
     String seriesName;
     Integer tipsCouponCost = Constant.GET_TIPS_COUPON_CONSUME_BONUS;
     Integer displayCouponCost = Constant.GET_DISPLAY_COUPON_CONSUME_BONUS;
-    Integer discountCouponCost = Constant.GET_COUPON_CONSUME_BONUS;
+    Integer discountCouponCost = Constant.GET_DISCOUNT_COUPON_CONSUME_BONUS;
 
 
     public DrawDTO (Draw draw) {
