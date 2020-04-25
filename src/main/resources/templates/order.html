@@ -78,7 +78,7 @@
                     <td><span th:text="${item.shippingTicket}">快递号</span></td>
                     <td><span th:text="${item.status}">状态</span></td>
                     <td>
-                        <a title="发货" href="#">
+                        <a th:if="${item.status =='PAY_TRANSPORT_SUCCESS'}" title="发货" href="#">
                             <i class="paper plane outline icon"
                                th:attr="onclick=|showModal('${item.orderId}', '${item.productName}', '${item.receiver}', '${item.detailAddress}', '${item.mobile}')|"></i>
                         </a>
@@ -106,11 +106,11 @@
                       method="POST">
                     <div class="field required">
                         <label>快递公司</label>
-                        <input type="text" name="shippingCompany">
+                        <input required="required" type="text" name="shippingCompany">
                     </div>
                     <div class="field required">
                         <label>快递单号</label>
-                        <input type="text" name="shippingTicket">
+                        <input required="required" type="text" name="shippingTicket">
                     </div>
                     <button class="ui button">确认</button>
 

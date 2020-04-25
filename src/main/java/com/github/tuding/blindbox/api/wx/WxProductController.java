@@ -5,6 +5,7 @@ import com.github.tuding.blindbox.domain.product.DrawService;
 import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.domain.product.ProductService;
 import com.github.tuding.blindbox.domain.user.UserService;
+import com.github.tuding.blindbox.exception.DrawException;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
@@ -88,7 +89,11 @@ public class WxProductController {
     @ApiOperation("在指定产品系列下抽一盒， 返回抽盒信息(需要带token)")
     public DrawDTO drawAProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        return new DrawDTO(drawService.drawAProduct(jwt.getOpenIdFromToken(token),seriesId));
+        try {
+            return new DrawDTO(drawService.drawAProduct(jwt.getOpenIdFromToken(token),seriesId));
+        } catch (Exception ex) {
+            throw new DrawException();
+        }
     }
 
     @GetMapping("/draw/")
