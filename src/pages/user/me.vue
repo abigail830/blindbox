@@ -2,14 +2,25 @@
  * @Author: seekwe
  * @Date: 2020-03-01 20:59:35
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-16 19:21:49
+ * @Last Modified time: 2020-04-26 11:32:08
  -->
 <template>
 	<view class="page page-me">
-		<view class="header" v-if="!!nickName">
+		<view
+			class="header"
+			v-if="!!nickName"
+		>
 			<view class="username">
-				<zLoginBtn @click="clickLoginBtn" :authState="false" customClass="avatar">
-					<img class="avatar" mode="widthFix" :src="userInfo.avatarUrl" />
+				<zLoginBtn
+					@click="clickLoginBtn"
+					:authState="false"
+					customClass="avatar"
+				>
+					<img
+						class="avatar"
+						mode="widthFix"
+						:src="userInfo.avatarUrl"
+					/>
 				</zLoginBtn>
 				<view class="username-box">
 					<view class="nickname">{{nickName}}</view>
@@ -28,17 +39,31 @@
 				<view class="integral-value">{{bonus}}</view>
 			</view>
 			<view class="header-list">
-				<view class="page-list-item" @click="show('order')">
+				<view
+					class="page-list-item"
+					@click="show('order')"
+				>
 					<view class="page-list-icon">
-						<image mode="widthFix" src="/static/order-icon.png" class="order-icon" />
+						<image
+							mode="widthFix"
+							src="/static/order-icon.png"
+							class="order-icon"
+						/>
 					</view>订单
 					<view class="page-list-item_right">
 						<view class="page-list-item-arrow"></view>
 					</view>
 				</view>
-				<view class="page-list-item" @click="show('address')">
+				<view
+					class="page-list-item"
+					@click="show('address')"
+				>
 					<view class="page-list-icon">
-						<image mode="widthFix" src="/static/lbs-icon.png" class="lbs-icon" />
+						<image
+							mode="widthFix"
+							src="/static/lbs-icon.png"
+							class="lbs-icon"
+						/>
 					</view>收货地址
 					<view class="page-list-item_right">
 						<view class="page-list-item-arrow"></view>
@@ -46,7 +71,10 @@
 				</view>
 			</view>
 		</view>
-		<view class="header" v-else>
+		<view
+			class="header"
+			v-else
+		>
 			<button
 				class="login-btn"
 				@--click="show('login')"
@@ -55,13 +83,19 @@
 			>点击登录</button>
 		</view>
 		<view class="page-me-list">
-			<view class="page-list-item" @click="show('agreement')">
+			<view
+				class="page-list-item"
+				@click="show('agreement')"
+			>
 				使用协议
 				<view class="page-list-item_right">
 					<view class="page-list-item-arrow"></view>
 				</view>
 			</view>
-			<view class="page-list-item" @click="show('rule')">
+			<view
+				class="page-list-item"
+				@click="show('rule')"
+			>
 				规则
 				<view class="page-list-item_right">
 					<view class="page-list-item-arrow"></view>
@@ -70,24 +104,43 @@
 			<view class="page-list-item">
 				音效
 				<view class="page-list-item_right">
-					<switch @change="changeSoundEffects" :checked="system.soundEffects" />
+					<switch
+						@change="changeSoundEffects"
+						:checked="system.soundEffects"
+					/>
 				</view>
 			</view>
 			<view class="page-list-item">
 				弹幕
 				<view class="page-list-item_right">
-					<switch @change="changeBarrage" :checked="system.barrage" />
+					<switch
+						@change="changeBarrage"
+						:checked="system.barrage"
+					/>
 				</view>
 			</view>
 		</view>
-		<view class="help-view" v-show="showHelp">
+		<view
+			class="help-view"
+			v-show="showHelp"
+		>
 			<view class="help-box">
 				<view class="help-title">{{help.title}}</view>
-				<scroll-view :scroll-y="true" class="help-center">
+				<scroll-view
+					:scroll-y="true"
+					class="help-center"
+				>
 					<zParser :html="help.content" />
 				</scroll-view>
-				<view class="close-icon-box" @click="help={}">
-					<image class="close-image" src="/static/universal-icon.png" mode />
+				<view
+					class="close-icon-box"
+					@click="help={}"
+				>
+					<image
+						class="close-image"
+						src="/static/universal-icon.png"
+						mode
+					/>
 				</view>
 			</view>
 		</view>
@@ -116,7 +169,7 @@ export default {
 			return this.userInfo.nickName || '';
 		},
 		bonus() {
-			return this.userInfo.bonus;
+			return this.userInfo.bonus || 0;
 		},
 		...mapState(['system']),
 		...mapGetters(['userInfo', 'authState', 'banState'])

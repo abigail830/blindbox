@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 15:35:11
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-19 17:10:46
+ * @Last Modified time: 2020-04-25 16:57:27
  -->
 <template>
 	<view class="page page-buy">
@@ -210,7 +210,7 @@ export default {
 	methods: Object.assign(
 		{
 			info() {
-				this.$api('buy.info');
+				this.$api(_ => ['buy.info', this.drawId]);
 			},
 			async selectId() {
 				const done = this.$loading();
@@ -229,7 +229,7 @@ export default {
 				this.$log('selectId', this.series);
 			},
 			cancelDraw() {
-				this.$api('buy.cancel');
+				this.$api(_ => ['buy.cancel', this.drawId]);
 			},
 			closeInfo(payment = false) {
 				this.showPurchase = false;

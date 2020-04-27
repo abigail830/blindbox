@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-20 13:57:30
+ * @Last Modified time: 2020-04-26 11:31:23
  -->
 <script>
 import { music } from './config';
@@ -87,12 +87,6 @@ export default {
 					this.$log('获取到用户信息失败,需要手动登录');
 					return;
 				}
-				this.$log(
-					'过期时间|授权状态|远程用户信息',
-					cfg.autoTimeout,
-					this.$store.getters.authState,
-					res
-				);
 				if (res) {
 					const user = res;
 					if (user.nickname || user.nickName) {

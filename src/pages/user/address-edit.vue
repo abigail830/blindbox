@@ -2,27 +2,44 @@
  * @Author: seekwe
  * @Date: 2020-03-11 10:24:31
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-10 13:42:22
+ * @Last Modified time: 2020-04-25 16:46:16
  -->
 <template>
 	<view class="page-address-edit page">
 		<view class="address-form">
 			<view class="address-form-line">
 				<text class="label">收货人：</text>
-				<input v-model="from.receiver" class="address-form-input" type="text" placeholder="请输入联系姓名" />
+				<input
+					v-model="from.receiver"
+					class="address-form-input"
+					type="text"
+					placeholder="请输入联系姓名"
+				/>
 			</view>
 			<view class="address-form-line">
 				<text class="label">联系电话：</text>
-				<input class="address-form-input" v-model="from.mobile" type="tel" placeholder="请输入联系电话" />
+				<input
+					class="address-form-input"
+					v-model="from.mobile"
+					type="tel"
+					placeholder="请输入联系电话"
+				/>
 			</view>
 			<view class="address-form-line">
 				<text class="label">所在地区：</text>
-				<text @click="openAddres" class="address-form-input">{{from.area}}</text>
+				<text
+					@click="openAddres"
+					class="address-form-input"
+				>{{from.area}}</text>
 			</view>
 			<view class="address-form-line">
 				<text class="label">详细地址：</text>
-				<textarea v-model="from.detailAddress" class="address-form-textarea" placeholder="请输入详细地址" />
-			</view>
+				<textarea
+					v-model="from.detailAddress"
+					class="address-form-textarea"
+					placeholder="请输入详细地址"
+				/>
+				</view>
 		</view>
 		<checkbox-group @change="changeIsDefaultAddress">
 			<label class="address-checkbox-box">
@@ -105,8 +122,8 @@ export default {
 		async deleteAddress() {
 			this.$log('删除地址');
 			try {
-				let res = await this.$api('address.delete', this.from.id);
-				console.log(res);
+				await this.$api('address.delete', this.from.id);
+				this.$back();
 			} catch (err) {
 				this.$alert(err);
 			}

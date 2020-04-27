@@ -2,17 +2,31 @@
  * @Author: seekwe
  * @Date: 2020-03-01 17:15:28
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-29 12:42:03
+ * @Last Modified time: 2020-04-27 15:39:04
  -->
 <template>
 	<view class="page page-lottery">
 		<view class="items">
 			<view class="items-box">
-				<view class="item" v-for="(v,k) in itemsData" :key="k" @click="goInfo(v,k)">
+				<view
+					class="item"
+					v-for="(v,k) in itemsData"
+					:key="k"
+					@click="goInfo(v,k)"
+				>
 					<view class="item-tag">
-						<image src="/static/top-icon.png" mode="aspectFill" class="item-icon" v-if="v.shownInAd" />
+						<image
+							src="/static/top-icon.png"
+							mode="aspectFill"
+							class="item-icon"
+							v-if="v.shownInAd"
+						/>
 					</view>
-					<img class="item-image" mode="widthFix" :src="v.image" />
+					<img
+						class="item-image"
+						mode="widthFix"
+						:src="v.image"
+					/>
 					<view class="item-title">{{v.activityName}}</view>
 				</view>
 			</view>
@@ -34,9 +48,6 @@ export default {
 		this.$log('刷新');
 		this.itemsPage = 1;
 		this.getItems();
-		// setTimeout(_ => {
-		// 	uni.stopPullDownRefresh();
-		// }, 2000);
 	},
 	onReachBottom() {
 		this.$log('下一页');

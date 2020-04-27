@@ -2,13 +2,19 @@
  * @Author: seekwe
  * @Date: 2020-03-09 18:28:09
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-17 10:17:28
+ * @Last Modified time: 2020-04-26 11:38:09
  -->
 <template>
 	<view>
-		<view class="z-add-tips-box" v-if="showTip">
-			<view class="z-add-tips-content" @tap="hideTip">
-				<text>{{tip}}</text>
+		<view
+			class="z-add-tips-box"
+			v-if="showTip"
+		>
+			<view
+				class="z-add-tips-content"
+				@tap="hideTip"
+			>
+				<text class="z-add-tips-content-text">{{tip}}</text>
 			</view>
 		</view>
 	</view>
@@ -89,7 +95,7 @@ export default {
 	padding: 18rpx 20rpx;
 	margin-right: 40rpx;
 }
-.z-add-tips-content > text {
+.z-add-tips-content-text {
 	color: #fff;
 	font-size: 28rpx;
 	font-weight: 400;
