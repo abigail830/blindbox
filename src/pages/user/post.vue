@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-04-13 17:41:24
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-21 11:42:27
+ * @Last Modified time: 2020-04-27 16:10:24
  -->
 <template>
 	<view class="page page-order page-order-post">
@@ -85,7 +85,11 @@ export default {
 			}
 		},
 		postOrder() {
-			this.$log('提交订单');
+			if (this.notAddress) {
+				this.$alert('请点选择收货地址');
+				return;
+			}
+			this.$log('提交订单', this.address);
 			let data = Object.assign(
 				{
 					orderIdList: this.orderIDs

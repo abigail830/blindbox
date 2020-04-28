@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 15:35:11
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-25 16:57:27
+ * @Last Modified time: 2020-04-27 16:03:19
  -->
 <template>
 	<view class="page page-buy">
@@ -246,7 +246,7 @@ export default {
 				this.$back();
 			},
 			purchasePost(discount = false) {
-				const done = this.$loading('支付中，开发中');
+				const done = this.$loading('支付中');
 				this.$api(_ => {
 					return ['order.pay', this.drawId];
 				})
@@ -271,12 +271,6 @@ export default {
 					.finally(_ => {
 						done();
 					});
-				// this.$log('是否使用折扣', discount, this.price);
-				// setTimeout(_ => {
-				// this.$back();
-				// 设置产品信息
-				// this.$go('lottery/wobble');
-				// }, 2000);
 			},
 			ok() {
 				this.$go(
@@ -284,7 +278,8 @@ export default {
 						this.drawId +
 						'&img=' +
 						this.$websiteUrl +
-						this.series.boxImage
+						this.series.boxImage,
+					true
 				);
 			}
 		},
