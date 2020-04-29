@@ -89,11 +89,12 @@ public class OrderRepository {
 
     public void updateOrderStatusAndAddress(TransportOrder transportOrder) {
         transportOrder.getProductOrders().forEach(orderId -> {
-            updateOrderStatusAndAddress(OrderStatus.NEW_TRANSPORT.name(), orderId, transportOrder);
+            updateOrderStatusAndAddress(OrderStatus.PAY_TRANSPORT_SUCCESS.name(), orderId, transportOrder);
         });
     }
 
     private void updateOrderStatusAndAddress(String status, String orderId, TransportOrder transportOrder) {
+        log.info("Going to update order {} with status {} and transportId {}", orderId, status, transportOrder);
         String sql = "UPDATE order_tbl SET status = ?, receiver = ?,mobile = ?, area = ?, associateCode = ?," +
                 " detailAddress=?, tranportOrderId = ? WHERE orderId = ?";
         jdbcTemplate.update(sql, status, transportOrder.getReceiver(), transportOrder.getMobile(),

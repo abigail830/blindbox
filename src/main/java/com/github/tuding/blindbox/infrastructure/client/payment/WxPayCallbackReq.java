@@ -45,7 +45,7 @@ public class WxPayCallbackReq {
         if (signWx == null) return false;
         map.remove("sign"); // 需要去掉原 map 中包含的 sign 字段再进行签名
         String signMe = createSign(new TreeMap<String, Object>(map), key);
-        log.info("Compare SignWX[{}] & SignMe[{}]", signWx, signMe);
+        log.debug("Compare SignWX[{}] & SignMe[{}]", signWx, signMe);
         return signWx.equals(signMe);
     }
 
