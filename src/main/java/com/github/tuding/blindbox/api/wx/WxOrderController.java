@@ -69,19 +69,14 @@ public class WxOrderController {
         final String openId = jwt.getOpenIdFromToken(token);
 
         if (payTransportReq.getOrderIdList().size() >= Constant.FREE_DELIVER) {
+            final TransportOrder orders = payTransportReq.generateTransportOrder(openId, BigDecimal.ZERO);
+            orderService.processTransport(orders, ipAddr);
             throw new FreeDeliverException();
-        }
-
-        BigDecimal transportFee = shippingAddressService.getTransportFeeByProvince(payTransportReq.getProvince());
-        final TransportOrder orders = payTransportReq.generateTransportOrder(openId, transportFee);
-
-        final List<String> productOrders = orders.getProductOrders();
-        if (orderService.isAllOrderPayed(productOrders)) {
-            final TransportOrder transportOrder = orderService.payTransportOrder(orders, ipAddr);
-            return new PlaceOrderResponse(transportOrder);
         } else {
-            log.warn("Order not pay yet [{}]", productOrders);
-            throw new BizException(ErrorCode.INVALID_STATUS);
+            BigDecimal transportFee = shippingAddressService.getTransportFeeByProvince(payTransportReq.getProvince());
+            final TransportOrder orders = payTransportReq.generateTransportOrder(openId, transportFee);
+            final TransportOrder transportOrder = orderService.processTransport(orders, ipAddr);
+            return new PlaceOrderResponse(transportOrder);
         }
 
     }

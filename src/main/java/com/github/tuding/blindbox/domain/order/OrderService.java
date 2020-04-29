@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -111,11 +112,25 @@ public class OrderService {
         orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_EXPIRY.name());
     }
 
-    public TransportOrder payTransportOrder(TransportOrder transportOrder, String ipAddr) {
-        final TransportOrder tOrder = (TransportOrder) wxPayment.generatePayment(transportOrder, ipAddr);
+    private TransportOrder payTransportOrder(TransportOrder transportOrder, String ipAddr) {
+        TransportOrder tOrder = transportOrder;
+        if (transportOrder.getProductPrice().compareTo(BigDecimal.ZERO) > 0) {
+            tOrder = (TransportOrder) wxPayment.generatePayment(transportOrder, ipAddr);
+        }
         orderRepository.updateOrderStatusAndAddress(tOrder);
         return tOrder;
     }
+
+    public TransportOrder processTransport(TransportOrder orders, String ipAddr) {
+        final List<String> productOrders = orders.getProductOrders();
+        if (isAllOrderPayed(productOrders)) {
+            return payTransportOrder(orders, ipAddr);
+        } else {
+            log.warn("Order not pay yet [{}]", productOrders);
+            throw new BizException(ErrorCode.INVALID_STATUS);
+        }
+    }
+
 
     public void updateOrderToTransportPaySuccess(String transportOrderId) {
         orderRepository.updateOrderStatusByTransportOrderId(transportOrderId,
@@ -139,7 +154,7 @@ public class OrderService {
         return orderRepository.getOrderPendingPayTransportFee(openId);
     }
 
-    public boolean isAllOrderPayed(List<String> productOrders) {
+    private boolean isAllOrderPayed(List<String> productOrders) {
         Integer count = orderRepository.getPayedOrderCount(productOrders);
         return productOrders.size() == count;
     }
