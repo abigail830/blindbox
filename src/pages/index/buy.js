@@ -2,30 +2,20 @@
  * @Author: seekwe
  * @Date: 2020-04-03 11:00:42
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-24 20:38:41
+ * @Last Modified time: 2020-05-05 19:36:02
  */
+
+import { CardDescription } from '@/config';
 export const methods = (_) => {
   return {
     selectTipCard() {
-      this.help = {
-        title: '提示卡说明',
-        type: 'tip',
-        content: '没什么好说明的',
-      };
+      this.help = CardDescription.tips;
     },
     selectShowCard() {
-      this.help = {
-        type: 'display',
-        title: '显示卡说明',
-        content: '没什么好说明的',
-      };
+      this.help = CardDescription.display;
     },
     selectDiscountCard() {
-      this.help = {
-        type: 'discount',
-        title: '优惠卡说明',
-        content: '没什么好说明的',
-      };
+      this.help = CardDescription.discount;
     },
     submisBtn() {
       this.$log('点击了按钮', this.help.type);

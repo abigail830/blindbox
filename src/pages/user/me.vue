@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-01 20:59:35
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-26 11:32:08
+ * @Last Modified time: 2020-05-05 19:18:23
  -->
 <template>
 	<view class="page page-me">
@@ -152,7 +152,7 @@ import { mapState, mapGetters } from 'vuex';
 import zParser from '@/components/util/zParse';
 import zLoginBtn from '@/components/util/zLoginBtn';
 import { onShareAppMessage } from '@/common/mixins';
-import { help } from './me';
+import { RuleDescription as help } from '@/config';
 
 export default {
 	components: { zParser, zLoginBtn },

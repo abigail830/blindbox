@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-20 13:57:10
+ * @Last Modified time: 2020-05-05 19:39:14
  */
 
 let apiHost, websiteUrl;
@@ -26,6 +26,78 @@ if (process.env.NODE_ENV !== 'development') {
 
 // 微信订阅活动模块 ID
 export const ActivityTmplids = ['EtU35HZ2aNqUGpLdHl5PBc9VV1P9tqD-bgCIIIXGjes'];
+
+// 购买盒子页面底部提示文案
+export const buyBootomTips = '我是一段温馨的提示哦。我是一段温馨的提示哦。。';
+
+// 卡券说明文案 content 支持 html
+export const CardDescription = {
+  tips: {
+    title: '提示卡说明',
+    type: 'tip',
+    content: '没什么好说明的',
+  },
+  display: {
+    type: 'display',
+    title: '显示卡说明',
+    content: '没什么好说明的',
+  },
+  discount: {
+    type: 'discount',
+    title: '优惠卡说明',
+    content: '没什么好说明的',
+  },
+};
+
+// 我的页面规则文案 content 支持 html
+export const RuleDescription = {
+  agreement: {
+    title: '使用协议',
+    content: `我是协议的啦,你想写什么<br>
+这是测试的啦!!!!
+`,
+  },
+  service: {
+    title: '联系客服',
+    content: `<p style="text-align: center;">
+QQ: 378223838<br><br>
+电话: 15976566645<br><br>
+微信: seekwe<br><br>
+<br>
+<img style="max-width:100%;" src="https://wx.qlogo.cn/mmopen/vi_32/icXdI0QO7eV1m1T5dUHofNTfBShe30JXriaKTQUPLh0uz6q5xFERee9I65VCaxibIVGAm9xvsRAY4LUJL82L7fdibg/132" />
+</p>`,
+  },
+  rule: {
+    title: '规则',
+    content: `我的规则,<b>你想</b>写什么<br>
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试的啦我的规则,你想写什么
+这是\n 测试我的规则,你想写什么
+这是\n 测试的啦
+`,
+  },
+};
 
 export default {
   websiteUrl,

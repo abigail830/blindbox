@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 15:35:11
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-27 16:03:19
+ * @Last Modified time: 2020-05-05 19:48:05
  -->
 <template>
 	<view class="page page-buy">
@@ -80,7 +80,10 @@
 					@click="purchase"
 				>就买它</button>
 			</view>
-			<view class="tip-view">温馨提示：我是一段温馨的提示哦。我是一段温馨的提示哦。我是一段温馨的提示哦。我是一段温馨的提示哦。我是一段温馨的提示哦。</view>
+			<view
+				class="tip-view"
+				v-if="buyBootomTips"
+			>温馨提示：{{buyBootomTips}}</view>
 		</view>
 		<view
 			class="help-view"
@@ -125,6 +128,7 @@ import zParser from '@/components/util/zParse';
 import zHomeBuy from '@/components/box/zHomeBuy';
 import { mapState } from 'vuex';
 import { methods } from './buy';
+import { buyBootomTips } from '@/config';
 export default {
 	components: { zParser, zHomeBuy },
 	data() {
@@ -137,7 +141,8 @@ export default {
 			product: {},
 			priceAfterDiscount: 100,
 			discount: {},
-			excludedProduct: {}
+			excludedProduct: {},
+			buyBootomTips: buyBootomTips
 		};
 	},
 	computed: {
@@ -163,6 +168,7 @@ export default {
 			return this.series.price || 99999999999;
 		},
 		drawId() {
+			this.$log('drawId', JSON.stringify(this.series));
 			return this.series.drawId;
 		},
 		showHelp() {
@@ -194,7 +200,6 @@ export default {
 		if (o.id) {
 			this.id = o.id;
 			this.selectId();
-			this.info();
 		} else {
 			this.$log('没有 id 是不是回到其他页面');
 		}
@@ -210,6 +215,7 @@ export default {
 	methods: Object.assign(
 		{
 			info() {
+				this.$log('info', this.drawId);
 				this.$api(_ => ['buy.info', this.drawId]);
 			},
 			async selectId() {
@@ -227,6 +233,7 @@ export default {
 				}
 				done();
 				this.$log('selectId', this.series);
+				this.$nextTick(this.info);
 			},
 			cancelDraw() {
 				this.$api(_ => ['buy.cancel', this.drawId]);
