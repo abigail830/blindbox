@@ -115,9 +115,11 @@ public class OrderService {
     private TransportOrder payTransportOrder(TransportOrder transportOrder, String ipAddr) {
         TransportOrder tOrder = transportOrder;
         if (transportOrder.getProductPrice().compareTo(BigDecimal.ZERO) > 0) {
+            orderRepository.updateOrderStatusAndAddress(tOrder, OrderStatus.NEW_TRANSPORT.name());
             tOrder = (TransportOrder) wxPayment.generatePayment(transportOrder, ipAddr);
+        } else {
+            orderRepository.updateOrderStatusAndAddress(tOrder, OrderStatus.PAY_TRANSPORT_SUCCESS.name());
         }
-        orderRepository.updateOrderStatusAndAddress(tOrder);
         return tOrder;
     }
 

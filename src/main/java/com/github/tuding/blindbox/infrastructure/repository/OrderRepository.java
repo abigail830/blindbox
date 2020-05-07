@@ -87,9 +87,9 @@ public class OrderRepository {
 
     }
 
-    public void updateOrderStatusAndAddress(TransportOrder transportOrder) {
+    public void updateOrderStatusAndAddress(TransportOrder transportOrder, String status) {
         transportOrder.getProductOrders().forEach(orderId -> {
-            updateOrderStatusAndAddress(OrderStatus.PAY_TRANSPORT_SUCCESS.name(), orderId, transportOrder);
+            updateOrderStatusAndAddress(status, orderId, transportOrder);
         });
     }
 
