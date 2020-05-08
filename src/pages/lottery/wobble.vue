@@ -70,7 +70,6 @@ export default {
 		// this.poster();
 	},
 	onLoad(opt) {
-		console.log(opt, opt, 9999999999999999);
 		this.boxImage = opt.img;
 		this.getDrawProduct(opt.id);
 	},
@@ -91,9 +90,9 @@ export default {
 				.then(e => {
 					if (e.status === 404) {
 						// 继续请求
-						setTimeout(_ => {
-							// this.getDrawProduct(id);
-						}, 500);
+						// setTimeout(_ => {
+						// 	// this.getDrawProduct(id);
+						// }, 500);
 					} else {
 						this.title = e.name;
 						this.image = e.productImage;

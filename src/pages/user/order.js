@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-04-19 15:32:59
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-20 12:42:13
+ * @Last Modified time: 2020-05-08 12:06:43
  */
 export default {
   data: {
@@ -19,6 +19,7 @@ export default {
     getItemsData3() {
       this.$api('order.delivered').then((e) => {
         this.itemsData1 = e;
+        uni.stopPullDownRefresh();
       });
     },
     getItemsData2() {
