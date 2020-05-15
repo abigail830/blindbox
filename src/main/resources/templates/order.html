@@ -78,9 +78,16 @@
                     <td><span th:text="${item.shippingTicket}">快递号</span></td>
                     <td><span th:text="${item.status}">状态</span></td>
                     <td>
+<!--                        <a th:if="${item.status =='PAY_TRANSPORT_SUCCESS'}" title="发货" href="#">-->
                         <a th:if="${item.status =='PAY_TRANSPORT_SUCCESS'}" title="发货" href="#">
                             <i class="paper plane outline icon"
-                               th:attr="onclick=|showModal('${item.orderId}', '${item.productName}', '${item.receiver}', '${item.detailAddress}', '${item.mobile}')|"></i>
+                               th:attr="onclick=|showModal('${item.orderId}', '${item.productName}', '${item.receiver}',
+                               '${item.detailAddress}', '${item.mobile}', '', '')|"></i>
+                        </a>
+                        <a th:if="${item.status =='DELIVERED'}" title="发货" href="#">
+                            <i class="paper edit outline icon"
+                               th:attr="onclick=|showModal('${item.orderId}', '${item.productName}', '${item.receiver}',
+                               '${item.detailAddress}', '${item.mobile}', '${item.shippingCompany}', '${item.shippingTicket}')|"></i>
                         </a>
                     </td>
                 </tr>
@@ -106,11 +113,11 @@
                       method="POST">
                     <div class="field required">
                         <label>快递公司</label>
-                        <input required="required" type="text" name="shippingCompany">
+                        <input required="required" type="text" name="shippingCompany" id="shippingCompany">
                     </div>
                     <div class="field required">
                         <label>快递单号</label>
-                        <input required="required" type="text" name="shippingTicket">
+                        <input required="required" type="text" name="shippingTicket" id="shippingTicket">
                     </div>
                     <button class="ui button">确认</button>
 
@@ -132,13 +139,16 @@
         })
     };
 
-    function showModal(item, productName, receiver, address, mobile) {
+    function showModal(item, productName, receiver, address, mobile, shippingCompany, shippingTicket) {
         $('#shippingForm').attr('action', '/admin-ui/orders/deliver/' + item);
         $('#modalHeader').text("订单号: " + item);
         $('#productName').text("产品名称: " + productName);
         $('#receiver').text("收件人: " + receiver);
         $('#address').text("收件地址: " + address);
         $('#mobile').text("联系电话: " + mobile);
+        $('#deliveryStatus').text("状态: " + status);
+        $('#shippingCompany').val(shippingCompany);
+        $('#shippingTicket').val(shippingTicket);
         $('.ui.modal').modal('show');
     }
 
