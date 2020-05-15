@@ -173,4 +173,31 @@ public class WxProductController {
         return new DisplayCouponDTO(excludedProduct, remainBonus);
     }
 
+
+
+    @PutMapping("/v2/drawList/{seriesId}")
+    @NeedWxVerifyToken
+    @ApiOperation("在指定产品系列下抽一组（12盒）， 返回抽盒信息(需要带token)")
+    public DrawListDTO drawAListOfProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        try {
+            return new DrawListDTO(drawService.drawAListOfProduct(jwt.getOpenIdFromToken(token),seriesId));
+        } catch (Exception ex) {
+            log.error("Failed to draw a list of product", ex);
+            throw new DrawException();
+        }
+    }
+
+    @GetMapping("/v2/drawList/{drawListID}")
+    @NeedWxVerifyToken
+    @ApiOperation("获取已抽的抽盒组 (需要带token)")
+    public DrawListDTO getDrawList(HttpServletRequest request,  @PathVariable("drawListID") String drawListID) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        try {
+            return new DrawListDTO(drawService.getDrawList(jwt.getOpenIdFromToken(token),drawListID));
+        } catch (Exception ex) {
+            log.error("Failed to get draw list", ex);
+            throw new DrawException();
+        }
+    }
 }

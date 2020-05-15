@@ -1,7 +1,7 @@
 package com.github.tuding.blindbox.domain.product;
 
 import com.github.tuding.blindbox.exception.DrawNotFoundException;
-import com.github.tuding.blindbox.infrastructure.Constant;
+import com.github.tuding.blindbox.infrastructure.repository.DrawListRepository;
 import com.github.tuding.blindbox.infrastructure.repository.DrawRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
 import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
@@ -34,6 +34,9 @@ public class DrawService {
 
     @Autowired
     DrawRepository drawRepository;
+
+    @Autowired
+    DrawListRepository drawListRepository;
 
 
     private final ScheduledExecutorService scheduledExecutorService
@@ -128,6 +131,20 @@ public class DrawService {
         }
     }
 
+    public Map<Integer, Draw> handleDrawingGroup(String openId, String seriesId, Series series) {
+        Map<Integer, Draw> drawGroup = new HashMap<>();
+        for (int index = 0; index < 12; index ++) {
+            try {
+                Draw draw = RetryUtil.retryOnTimes(() -> handleDrawing(openId, seriesId, series), 10, 0);
+                drawGroup.put(index, draw);
+            } catch (Exception ex) {
+                log.warn("Caught exception when drawing. ", ex);
+            }
+        }
+        return drawGroup;
+    }
+
+
     public static Product drawAProductBaseOnStock(List<Product> productBySeries) {
         long sum = productBySeries.stream().mapToLong(Product::getStock).sum();
         double rand = Math.random();
@@ -162,5 +179,20 @@ public class DrawService {
 
     public void updateDrawPriceById(BigDecimal priceAfterDiscount, String drawId) {
         drawRepository.updateDrawPriceById(priceAfterDiscount, drawId);
+    }
+
+    public DrawList drawAListOfProduct(String openIdFromToken, String seriesId) {
+        log.info("Draw a list product for {}", seriesId);
+        Optional<Series> series = seriesRespository.querySeriesByID(seriesId);
+        Map<Integer, Draw> drawGroup = handleDrawingGroup(openIdFromToken, seriesId, series.get());
+        DrawList drawList = new DrawList(openIdFromToken, UUID.randomUUID().toString(), drawGroup, seriesId, new Date(),
+                series.get().price, series.get().boxImage, series.get().name);
+        log.info("Draw List is made as {}", drawList);
+        drawListRepository.saveDrawList(drawList);
+        return drawList;
+    }
+
+    public DrawList getDrawList(String openIdFromToken, String drawListID) {
+        return drawListRepository.getDrawList(drawListID).get();
     }
 }
