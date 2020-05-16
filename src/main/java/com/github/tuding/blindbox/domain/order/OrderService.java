@@ -106,7 +106,13 @@ public class OrderService {
     public void updateOrderToPaySuccess(String orderId) {
         log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
         orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
-        userRepository.addBonusByOrderId(orderId, Constant.BUY_PRODUCT);
+
+        final int rowUpdated = userRepository.addBonusByOrderId(orderId, Constant.BUY_PRODUCT);
+        if (rowUpdated == 1) {
+            log.info("{} bonus added for purchase order {}", Constant.BUY_PRODUCT, orderId);
+        } else {
+            log.warn("Fail to add bonus for order {}", orderId);
+        }
     }
 
     public void updateOrderToPayFail(String orderId) {
