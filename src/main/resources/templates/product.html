@@ -58,6 +58,7 @@
                     <th>产品名称</th>
                     <th>珍稀产品</th>
                     <th>库存</th>
+                    <th>权重</th>
                     <th>更多操作</th>
                 </tr>
                 </thead>
@@ -68,6 +69,7 @@
                         <div th:if="${item.isSpecial}"><i class="check circle icon"></i></div>
                     </td>
                     <td><span th:text="${item.stock}">库存</span></td>
+                    <td><span th:text="${item.weight}">权重</span></td>
 
                     <td>
                         <a th:href="@{'/admin-ui/product/productform/' + ${item.id}}" title="编辑">

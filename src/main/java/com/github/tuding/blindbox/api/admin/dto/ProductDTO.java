@@ -25,6 +25,8 @@ public class ProductDTO {
 
     Long version;
 
+    Long weight;
+
     public Product toDomainObject() {
         Product product = new Product();
         product.setId(id);
@@ -35,6 +37,7 @@ public class ProductDTO {
         product.setProductImage(productImage);
         product.setProductGrayImage(productGrayImage);
         product.setVersion(version);
+        product.setWeight(weight);
         return product;
     }
 
@@ -44,6 +47,7 @@ public class ProductDTO {
         this.name = product.getName();
         this.isSpecial = product.getIsSpecial();
         this.stock = product.getStock();
+        this.weight = product.getWeight();
         this.version = product.getVersion();
         this.productImage = Constant.ADMIN_UI_IMAGE_PATH + product.getProductImage();
         this.productGrayImage = Constant.ADMIN_UI_IMAGE_PATH + product.getProductGrayImage();

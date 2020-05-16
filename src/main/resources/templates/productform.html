@@ -73,10 +73,13 @@
 
             <div class="two fields">
                 <div class="field required">
-                    <label>初始库存</label>
+                    <label>库存</label>
                     <input type="number" name="stock" th:field="*{stock}">
                 </div>
-
+                <div class="field required">
+                    <label>抽盒权重</label>
+                    <input type="number" name="weight" th:field="*{weight}">
+                </div>
             </div>
 
             <div class="inline field required">

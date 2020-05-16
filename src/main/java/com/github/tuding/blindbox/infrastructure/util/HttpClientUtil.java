@@ -78,6 +78,24 @@ public class HttpClientUtil {
         return httpClient.newCall(requestBuilder.build()).execute();
     }
 
+    public Response putBody(String urlString, String body, Map<String, String> headers)
+            throws IOException {
+        OkHttpClient httpClient = buildHttpClient(urlString, DEFAULT_CONNECT_TIMEOUT, DEFAULT_READ_TIMEOUT);
+        HttpUrl url = HttpUrl.parse(urlString);
+        Request.Builder requestBuilder = new Request.Builder()
+                .url(url);
+
+        setHeader(headers, requestBuilder);
+
+        requestBuilder.put(RequestBody.create(
+                MediaType.parse(headers != null && headers.containsKey("Content-Type")
+                        ? headers.get("Content-Type") : "text/plain; charset=utf-8"), body));
+
+        log.info("Request url is :{}, body is :{}", url.toString(), body);
+        return httpClient.newCall(requestBuilder.build()).execute();
+    }
+
+
     public String send(String urlString, HttpMethod method,
                        Map<String, String> parameters, Map<String, String> headers)
             throws IOException {

@@ -23,4 +23,6 @@ public class Product {
     Long version;
     BigDecimal price;
 
+    Long weight;
+
 }

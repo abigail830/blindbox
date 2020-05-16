@@ -29,19 +29,19 @@ public class ProductRepository {
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO product_v2_tbl (id, seriesID, name, isSpecial, stock, " +
-                    " productImage, productGrayImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    " productImage, productGrayImage, weight) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
                     product.getIsSpecial(), product.getStock(),
-                    product.getProductImage(), product.getProductGrayImage());
+                    product.getProductImage(), product.getProductGrayImage(), product.getWeight());
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO product_v2_tbl (id, seriesID, name, isSpecial, stock, " +
-                    " productImage, productGrayImage) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    " productImage, productGrayImage, weight) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql, product.getId(), product.getSeriesID(), product.getName(),
                     product.getIsSpecial(), product.getStock(),
-                    product.getProductImage(), product.getProductGrayImage());
+                    product.getProductImage(), product.getProductGrayImage(), product.getWeight());
             log.info("update row {} ", update);
         }
     }
@@ -81,8 +81,8 @@ public class ProductRepository {
     public void updateProduct(Product product) {
         log.info("Change product as {} ", product);
         String insertSql = "INSERT INTO product_v2_tbl (id, seriesID, name, isSpecial, stock, " +
-                " productImage, productGrayImage, version) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                " productImage, productGrayImage, weight, version) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int update = jdbcTemplate.update(insertSql,
                 product.getId(),
                 product.getSeriesID(),
@@ -91,6 +91,7 @@ public class ProductRepository {
                 product.getStock(),
                 product.getProductImage(),
                 product.getProductGrayImage(),
+                product.getWeight(),
                 product.getVersion());
         log.info("update row {} ", update);
     }
@@ -98,7 +99,7 @@ public class ProductRepository {
 
     public List<Product> getProductWithPriceBySeriesID(String id) {
         log.info("Going to query product with product series: {}", id);
-        return jdbcTemplate.query(" SELECT p.id, p.seriesId, p.name, p.productImage, p.productGrayImage, price FROM product_v2_tbl p " +
+        return jdbcTemplate.query(" SELECT p.id, p.seriesId, p.name, p.productImage, p.productGrayImage, price, p.weight FROM product_v2_tbl p " +
                 " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion " +
                 " inner join series_tbl as series on p.seriesId = series.id " +
                 " WHERE p.seriesID = ?", rowMapper, id);
