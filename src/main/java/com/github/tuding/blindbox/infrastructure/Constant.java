@@ -14,6 +14,7 @@ public class Constant {
     public static final int SHARE_COLLECTION = 10;
     public static final int LIGHT_UP_COLLECTION = 500;
     public static final int SHARE_ACTIVITY = 10;
+    public static final int BUY_PRODUCT = 20;
 
     public static final int GET_DISCOUNT_COUPON_CONSUME_BONUS = 500;
     public static final int GET_TIPS_COUPON_CONSUME_BONUS = 500;

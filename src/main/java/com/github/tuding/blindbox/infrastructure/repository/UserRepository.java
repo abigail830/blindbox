@@ -95,4 +95,12 @@ public class UserRepository {
         if (row != 1)
             throw new BizException(ErrorCode.FAIL_TO_UPDATE_BONUS);
     }
+
+    public int addBonusByOrderId(String orderId, int addBonus) {
+        String updateSql = "update wx_user_tbl u" +
+                " inner join order_tbl o on u.open_id = o.openId" +
+                " SET bonus = bonus + ?" +
+                "where o.orderId = ?";
+        return jdbcTemplate.update(updateSql, addBonus, orderId);
+    }
 }

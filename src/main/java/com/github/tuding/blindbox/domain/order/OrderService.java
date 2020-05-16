@@ -6,10 +6,12 @@ import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.exception.OrderNotFoundException;
 import com.github.tuding.blindbox.exception.ProductNotFoundException;
+import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.client.payment.WxPayment;
 import com.github.tuding.blindbox.infrastructure.repository.DrawRepository;
 import com.github.tuding.blindbox.infrastructure.repository.OrderRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
+import com.github.tuding.blindbox.infrastructure.repository.UserRepository;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ public class OrderService {
 
     @Autowired
     DrawService drawService;
+
+    @Autowired
+    UserRepository userRepository;
 
     private final ScheduledExecutorService scheduledExecutorService
             = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("order-auto-scan-thread-%d").build());
@@ -97,9 +102,11 @@ public class OrderService {
         return orderRepository.getOrder(orderId).orElseThrow(OrderNotFoundException::new);
     }
 
+    @Transactional
     public void updateOrderToPaySuccess(String orderId) {
         log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
         orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
+        userRepository.addBonusByOrderId(orderId, Constant.BUY_PRODUCT);
     }
 
     public void updateOrderToPayFail(String orderId) {
