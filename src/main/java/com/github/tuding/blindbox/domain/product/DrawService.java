@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.github.tuding.blindbox.infrastructure.Constant.DRAW_INIT_STATUS;
+import static com.github.tuding.blindbox.infrastructure.Constant.DRAW_ORDER_STATUS;
 
 @Service
 @Slf4j
@@ -194,5 +195,15 @@ public class DrawService {
 
     public DrawList getDrawList(String openIdFromToken, String drawListID) {
         return drawListRepository.getDrawList(drawListID).get();
+    }
+
+    public void cancelADrawListbyDrawListId(String drawListID) {
+        DrawList drawList = drawListRepository.getDrawList(drawListID).get();
+        log.info("Cancel draw list {}", drawList);
+        for (Draw draw : drawList.getDrawGroup().values()) {
+            if (draw.getDrawStatus().equalsIgnoreCase(DRAW_INIT_STATUS)) {
+                cancelADrawByDrawId(draw.getDrawId());
+            }
+        }
     }
 }

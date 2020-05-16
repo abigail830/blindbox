@@ -200,4 +200,11 @@ public class WxProductController {
             throw new DrawException();
         }
     }
+
+    @DeleteMapping("/v2/drawList/{drawListID}")
+    @NeedWxVerifyToken
+    @ApiOperation("获取已抽的抽盒组 (需要带token)")
+    public void cancelDrawList(HttpServletRequest request,  @PathVariable("drawListID") String drawListID) {
+        drawService.cancelADrawListbyDrawListId(drawListID);
+    }
 }
