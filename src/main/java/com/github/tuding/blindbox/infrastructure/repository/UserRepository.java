@@ -100,7 +100,7 @@ public class UserRepository {
         String updateSql = "update wx_user_tbl u" +
                 " inner join order_tbl o on u.open_id = o.openId" +
                 " SET bonus = bonus + ?" +
-                "where o.orderId = ?";
+                " where o.orderId = ?";
         return jdbcTemplate.update(updateSql, addBonus, orderId);
     }
 }
