@@ -124,25 +124,12 @@ public class DrawService {
             selected.setVersion(selected.getVersion() + 1);
             Draw draw = new Draw(openId, drawID.toString(), DRAW_INIT_STATUS,
                     selected.getId(), seriesId, new Date(), series.price, series.boxImage,
-                    selected.isSpecial, selected.productImage, series.name);
+                    selected.isSpecial, selected.productImage, series.name, selected);
             drawRepository.persistADraw(selected, draw);
             return draw;
         } else {
             throw new RuntimeException("No stock for selected product");
         }
-    }
-
-    public Map<Integer, Draw> handleDrawingGroup(String openId, String seriesId, Series series) {
-        Map<Integer, Draw> drawGroup = new HashMap<>();
-        for (int index = 0; index < 12; index ++) {
-            try {
-                Draw draw = RetryUtil.retryOnTimes(() -> handleDrawing(openId, seriesId, series), 10, 0);
-                drawGroup.put(index, draw);
-            } catch (Exception ex) {
-                log.warn("Caught exception when drawing. ", ex);
-            }
-        }
-        return drawGroup;
     }
 
 
@@ -182,12 +169,86 @@ public class DrawService {
         drawRepository.updateDrawPriceById(priceAfterDiscount, drawId);
     }
 
+    public static Product drawAProductBaseOnWeight(List<Product> productBySeries) {
+        long sum = productBySeries.stream().mapToLong(Product::getWeight).sum();
+        double rand = Math.random();
+        double cumulativeP = 0.0d;
+        for (Product product : productBySeries) {
+            cumulativeP += (double)product.weight/(double)sum;
+            if (rand <= cumulativeP) {
+                return product;
+            }
+        }
+        return null;
+    }
+
+    public void persistDraw(Product selected, Draw draw) {
+        try {
+            selected.setStock(selected.getStock() - 1);
+            selected.setVersion(selected.getVersion() + 1);
+            drawRepository.persistADraw(selected, draw);
+        } catch (Exception ex) {
+            //Solve optimistic lock in concurrently mode
+            RetryUtil.retryOnTimes(() -> {
+                Product refresh = productRepository.getProductByID(selected.id).get();
+                refresh.setStock(selected.getStock() - 1);
+                refresh.setVersion(selected.getVersion() + 1);
+                drawRepository.persistADraw(refresh, draw);
+                return true;
+            }, 10, 0);
+        }
+    }
+
+    public Draw exclusiveDraw(List<Product> productBySeries, String openId, String seriesId, Series series) {
+        Product selected = drawAProductBaseOnWeight(productBySeries);
+        if (selected != null && selected.stock > 0L) {
+            UUID drawID = UUID.randomUUID();
+            Draw draw = new Draw(openId, drawID.toString(), DRAW_INIT_STATUS,
+                    selected.getId(), seriesId, new Date(), series.price, series.boxImage,
+                    selected.isSpecial, selected.productImage, series.name, selected);
+            persistDraw(selected, draw);
+            return draw;
+        } else {
+            return null;
+        }
+    }
+
+    public List<Draw> handleExclusiveDrawing(String openId, String seriesId, Series series, String drawListID) {
+        List<Draw> res = new LinkedList<>();
+        List<Product> productBySeries = productRepository.getProductBySeries(seriesId);
+        String lastProductId = null;
+        for (int count = 0; count < 12; count ++) {
+            productBySeries = removeLastSelectedProduct(productBySeries, lastProductId);
+            Draw draw = exclusiveDraw(productBySeries, openId, seriesId, series);
+            if (draw != null) {
+                log.info("draw product {} to drawListID {}", draw.product.name,drawListID);
+                res.add(draw);
+                lastProductId = draw.getProductId();
+            } else {
+                lastProductId = null;
+            }
+        }
+        return res;
+    }
+
+    private List<Product> removeLastSelectedProduct(List<Product> productBySeries, String finalLastProductId) {
+        return productBySeries.stream()
+                .filter(item -> !item.id.equalsIgnoreCase(finalLastProductId))
+                .collect(Collectors.toList());
+    }
+
     public DrawList drawAListOfProduct(String openIdFromToken, String seriesId) {
-        log.info("Draw a list product for {}", seriesId);
+        String drawListID = UUID.randomUUID().toString();
+        log.info("Draw a list product for {} with drawList ID {}", seriesId, drawListID);
         Optional<Series> series = seriesRespository.querySeriesByID(seriesId);
-        Map<Integer, Draw> drawGroup = handleDrawingGroup(openIdFromToken, seriesId, series.get());
-        DrawList drawList = new DrawList(openIdFromToken, UUID.randomUUID().toString(), drawGroup, seriesId, new Date(),
+        List<Draw> draws = handleExclusiveDrawing(openIdFromToken, seriesId, series.get(), drawListID);
+        Map<Integer, Draw> drawGroup = new HashMap<>();
+        for (int index = 0; index < draws.size(); index ++) {
+            drawGroup.put(index, draws.get(index));
+        }
+        DrawList drawList = new DrawList(openIdFromToken, drawListID, drawGroup, seriesId, new Date(),
                 series.get().price, series.get().boxImage, series.get().name);
+        log.info("Draw result {}", draws.stream().map(item -> item.product.name).collect(Collectors.toList()));
         log.info("Draw List is made as {}", drawList);
         drawListRepository.saveDrawList(drawList);
         return drawList;
@@ -201,7 +262,7 @@ public class DrawService {
         DrawList drawList = drawListRepository.getDrawList(drawListID).get();
         log.info("Cancel draw list {}", drawList);
         for (Draw draw : drawList.getDrawGroup().values()) {
-            if (draw.getDrawStatus().equalsIgnoreCase(DRAW_INIT_STATUS)) {
+            if (draw != null && draw.getDrawStatus().equalsIgnoreCase(DRAW_INIT_STATUS)) {
                 cancelADrawByDrawId(draw.getDrawId());
             }
         }

@@ -44,7 +44,8 @@ public class OrderCreationTest {
                 "/series/f22be55f-dd01-456f-93c7-31e16618c83e-boxImage.png",
                 false,
                 "/product/f22be55f-dd01-456f-93c7-31e16618c83e-Image.png",
-                "sport"));
+                "sport",
+                null));
 
         //order
         orderRepository.save(new Order("testOrderID", "test",

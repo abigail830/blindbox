@@ -24,5 +24,6 @@ public class  Draw {
     Boolean isSpecial;
     String productImage;
     String seriesName;
+    Product product;
 
 }
