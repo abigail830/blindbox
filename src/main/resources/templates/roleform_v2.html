@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>blindbox</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
-    <script th:src="@{/javascript/jquery-3.1.1.min.js}" crossorigin="anonymous"></script>
+    <script crossorigin="anonymous" th:src="@{/javascript/jquery-3.1.1.min.js}"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
     <style>
         form {
             text-align: left;
         }
+
 
     </style>
 
@@ -31,8 +32,8 @@
             <div class="item">
                 <div class="header">Product</div>
                 <div class="menu">
-                    <a class="active teal item" th:href="@{/admin-ui/role/}">产品管理（old)</a>
-                    <a class="item" th:href="@{/admin-ui/role/v2/}">角色管理</a>
+                    <a class="item" th:href="@{/admin-ui/role/}">产品管理（old)</a>
+                    <a class="active teal item" th:href="@{/admin-ui/role/v2/}">角色管理</a>
                     <a class="item" th:href="@{/admin-ui/role/}">系列与产品管理</a>
                 </div>
             </div>
@@ -47,7 +48,7 @@
     <div class="thirteen wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
-                <a th:href="@{/admin-ui/role/}" class="ui button primary basic theme-text">
+                <a class="ui button primary basic theme-text" th:href="@{/admin-ui/role/v2/}">
                     <i class="angle left icon"></i>返回角色列表</a>
             </div>
             <div class="six wide column">
@@ -55,13 +56,13 @@
             </div>
         </div>
         <div class="ui divider"></div>
-        <form class="ui form three wide column" enctype="multipart/form-data"
-              action="/admin-ui/role/roleform" method="POST" th:object="${role}">
-            <input type="text" th:field="*{id}" style="display: none">
-            <input type="text" th:field="*{roleImage}" style="display: none">
+        <form action="/admin-ui/role/v2/roleform" class="ui form three wide column"
+              enctype="multipart/form-data" method="POST" th:object="${role}">
+            <input style="display: none" th:field="*{id}" type="text">
+            <input style="display: none" th:field="*{roleImage}" type="text">
             <div class="field required">
                 <label>角色名称</label>
-                <input type="text" name="name" th:field="*{name}" >
+                <input name="name" th:field="*{name}" type="text">
             </div>
             <div class="inline field required">
                 <label>角色图片 (尺寸要求: 150 * 190)</label>
@@ -69,7 +70,7 @@
                     <img class="ui medium circular image" id="roleImageFileDisplay"
                          th:src="${role.roleImage}">
                 </div>
-                <input type="file" name="roleImageFile" id="roleImageFile">
+                <input id="roleImageFile" name="roleImageFile" type="file">
                 <p id="roleImageFileSize"></p>
             </div>
             <br/>
@@ -105,6 +106,7 @@
         readUrl(this);
 
     })
+
 </script>
 </body>
 </html>

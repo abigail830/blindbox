@@ -178,7 +178,7 @@ public class WxProductController {
     @PutMapping("/v2/drawList/{seriesId}")
     @NeedWxVerifyToken
     @ApiOperation(value = "在指定产品系列下抽一组（12盒）， 返回抽盒信息(需要带token)",
-            notes = "每次都会从该系列下所有产品中，按照机率抽取12个，在map中返回。如果抽中的某产品对应库存为0，则map中该")
+            notes = "每次都会从该系列下所有产品中，按照机率抽取12个，在map中返回。如果抽中的某产品对应库存为0，则map中该index对应draw为null")
     public DrawListDTO drawAListOfProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         try {

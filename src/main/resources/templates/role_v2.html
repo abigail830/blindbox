@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>main</title>
+    <link rel="stylesheet" th:href="@{/style/semantic.css}">
+    <link rel="stylesheet" th:href="@{/style/style.css}">
+    <script crossorigin="anonymous" th:src="@{/javascript/jquery-3.1.1.min.js}"></script>
+    <script th:src="@{/javascript/semantic.min.js}"></script>
+    <style>
+        .empty-block {
+            text-align: center;
+            margin: 60 auto;
+        }
+        .empty-block > img {
+            width: 40%;
+            margin-top: 60px;
+        }
+
+        .role-name {
+            text-align: center;
+        }
+
+
+
+
+
+
+
+    </style>
+
+</head>
+<body>
+<div class="big-title">
+    <a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
+    <!--<a th:text="'欢迎 ' +  ${user}"></a>-->
+</div>
+<div class="ui grid main">
+    <div class="three wide column">
+        <div class="ui vertical menu">
+            <div class="item">
+                <div class="header">Activity</div>
+                <div class="menu">
+                    <a class="item" th:href="@{/admin-ui/activities/}">活动信息管理</a>
+                </div>
+            </div>
+            <div class="item">
+                <div class="header">Product</div>
+                <div class="menu">
+                    <a class="item" th:href="@{/admin-ui/role/}">产品管理（old)</a>
+                    <a class="active teal item" th:href="@{/admin-ui/role/v2/}">角色管理</a>
+                    <a class="item" th:href="@{/admin-ui/role/}">系列与产品管理</a>
+                </div>
+            </div>
+            <div class="item">
+                <div class="header">Order</div>
+                <div class="menu">
+                    <a class="item" th:href="@{/admin-ui/orders/}">订单管理</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="thirteen wide column right-box">
+        <div class="ui grid main">
+            <div class="ten wide column left-btn">
+                <a class="ui button primary white-text" th:href="@{/admin-ui/role/v2/roleform/}">添加角色</a>
+            </div>
+            <div class="six wide column">
+                <div class="title"><h2>产品角色管理 V2</h2></div>
+            </div>
+        </div>
+        <div class="ui divider"></div>
+
+        <div class="ui seven column grid" th:if="${!roles.empty}">
+            <div class="column" th:each="role : ${roles}">
+                <div class="ui fluid card">
+                    <a class="image" th:href="@{'/admin-ui/role/v2/roleform/' + ${role.id}}">
+                        <img th:src="${role.roleImage}">
+                    </a>
+                    <div class="content">
+                        <a class="header" th:href="@{'/admin-ui/role/v2/roleform/' + ${role.id}}">
+                            <div class="header" th:text="${role.name}"></div>
+                        </a>
+                    </div>
+                    <div class="ui bottom attached button">
+                        <i class="trash icon"></i>
+                        删除
+                    </div>
+                </div>
+                <!--                <div class="ui fluid card">-->
+                <!--                    <div class="image">-->
+                <!--                        <img th:src="${role.roleImage}">-->
+                <!--                    </div>-->
+                <!--                    <div class="content">-->
+                <!--                        <div class="header" th:text="${role.name}"></div>-->
+                <!--                    </div>-->
+                <!--                    <div class="extra content">-->
+                <!--                        <div class="ui two buttons">-->
+                <!--                            <a title="编辑" th:href="@{'/admin-ui/role/v2/roleform/' + ${role.id}}"-->
+                <!--                               class="ui basic green button">-->
+                <!--                                <i class="edit alternate outline icon"></i>-->
+                <!--                            </a>-->
+                <!--                            <a title="删除" href="#" class="ui basic red button">-->
+                <!--                                <i class="trash alternate outline icon" th:attr="onclick=|delItem('${role.id}')|"></i>-->
+                <!--                            </a>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+            </div>
+        </div>
+
+        <div th:if="${roles.empty}">
+            <h3 class="empty_tips">还没有产品角色，请添加。。。</h3>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    function delItem (item){
+        $.ajax({
+            url: "/admin-ui/role/v2/" + item,
+            type: "DELETE",
+            success: function (data, status) {
+                console.info("Got delete status " + status);
+                window.location = '/admin-ui/role/v2/';
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        })
+    }
+
+
+</script>
+
+</body>
+</html>
