@@ -49,6 +49,10 @@ public class RolesRepository {
         return jdbcTemplate.query("SELECT * FROM roles_tbl", rowMapper);
     }
 
+    public List<Role> queryRolesOrderByName() {
+        log.info("Going to query roles ");
+        return jdbcTemplate.query("SELECT * FROM roles_tbl order by name", rowMapper);
+    }
 
     public void deleteRoles(String id) {
         log.info("Delete role for {}", id);

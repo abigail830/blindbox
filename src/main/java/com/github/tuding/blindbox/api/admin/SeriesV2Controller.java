@@ -66,7 +66,7 @@ public class SeriesV2Controller {
 
     @GetMapping("/seriesform")
     public String createForm(Model model) {
-        final List<RoleWithCheck> roles = rolesRepository.queryRoles()
+        final List<RoleWithCheck> roles = rolesRepository.queryRolesOrderByName()
                 .stream().map(RoleWithCheck::new).collect(Collectors.toList());
         model.addAttribute("roles", roles);
         model.addAttribute("series", new SeriesV2DTO());
@@ -78,8 +78,11 @@ public class SeriesV2Controller {
 
         final SeriesV2DTO series = seriesRespository.querySeriesV2ByID(id).map(SeriesV2DTO::new)
                 .orElseThrow(() -> new BizException(ErrorCode.WX_USER_NOT_FOUND));
+        final List<String> linkedRoleIds = seriesRespository.queryLinkedRoleIdsBySeriesId(id);
+        series.setLinkedRoleIds(linkedRoleIds);
+        log.info("{}", series);
 
-        final List<RoleWithCheck> roles = rolesRepository.queryRoles()
+        final List<RoleWithCheck> roles = rolesRepository.queryRolesOrderByName()
                 .stream().map(role -> {
                     if (series.isContainedRole(role.getId()))
                         return new RoleWithCheck(role, Boolean.TRUE);

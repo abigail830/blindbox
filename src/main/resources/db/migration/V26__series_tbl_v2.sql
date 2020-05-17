@@ -18,7 +18,7 @@ create TABLE series_v2_tbl (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 create TABLE series_role_mapping_tbl (
-  ID varchar(100) NOT NULL unique,
+  ID bigint NOT NULL AUTO_INCREMENT,
   seriesId varchar(100) NOT NULL,
   roleId varchar(100) NOT NULL,
   PRIMARY KEY (id)
