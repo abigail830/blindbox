@@ -20,8 +20,8 @@ public class RoleDTO {
     public RoleDTO(Role role) {
         this.id = role.getId();
         this.name = role.getName();
-        this.category = role.getCategory();
-        this.description = role.getDescription();
+        this.category = "";
+        this.description = "";
         this.roleImage = Constant.WX_UI_IMAGE_PATH + role.getRoleImage();
     }
 }
