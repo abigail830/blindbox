@@ -177,7 +177,8 @@ public class WxProductController {
 
     @PutMapping("/v2/drawList/{seriesId}")
     @NeedWxVerifyToken
-    @ApiOperation("在指定产品系列下抽一组（12盒）， 返回抽盒信息(需要带token)")
+    @ApiOperation(value = "在指定产品系列下抽一组（12盒）， 返回抽盒信息(需要带token)",
+            notes = "每次都会从该系列下所有产品中，按照机率抽取12个，在map中返回。如果抽中的某产品对应库存为0，则map中该")
     public DrawListDTO drawAListOfProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         try {
@@ -203,7 +204,7 @@ public class WxProductController {
 
     @DeleteMapping("/v2/drawList/{drawListID}")
     @NeedWxVerifyToken
-    @ApiOperation("获取已抽的抽盒组 (需要带token)")
+    @ApiOperation("取消之前已抽（已锁定库存的）抽盒组 (需要带token)")
     public void cancelDrawList(HttpServletRequest request,  @PathVariable("drawListID") String drawListID) {
         drawService.cancelADrawListbyDrawListId(drawListID);
     }

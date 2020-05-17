@@ -51,15 +51,13 @@
         </div>
         <div class="ui divider"></div>
         <div th:if="${!orders.empty}">
-            <table>
+            <table class="ui striped table">
                 <thead>
                 <tr>
                     <th>订单号</th>
                     <th>产品名称</th>
                     <th>创建时间</th>
-                    <th>收件人</th>
-                    <th>收件人电话</th>
-                    <th>收件地址</th>
+                    <th>收件信息</th>
                     <th>快递公司</th>
                     <th>快递号</th>
                     <th>状态</th>
@@ -71,23 +69,21 @@
                     <td><span th:text="${item.orderId}">订单号</span></td>
                     <td><span th:text="${item.productName}">产品名称</span></td>
                     <td><span th:text="${item.createTime}">创建时间</span></td>
-                    <td><span th:text="${item.receiver}">收件人</span></td>
-                    <td><span th:text="${item.mobile}">收件人电话</span></td>
-                    <td><span th:text="${item.detailAddress}">收件地址</span></td>
+                    <td><span th:text="${item.combineAddr}">收件信息</span></td>
                     <td><span th:text="${item.shippingCompany}">快递公司</span></td>
                     <td><span th:text="${item.shippingTicket}">快递号</span></td>
                     <td><span th:text="${item.status}">状态</span></td>
                     <td>
 <!--                        <a th:if="${item.status =='PAY_TRANSPORT_SUCCESS'}" title="发货" href="#">-->
-                        <a th:if="${item.status =='PAY_TRANSPORT_SUCCESS'}" title="发货" href="#">
+                        <a href="#" th:if="${item.status =='运费已付'}" title="发货">
                             <i class="paper plane outline icon"
-                               th:attr="onclick=|showModal('${item.orderId}', '${item.productName}', '${item.receiver}',
-                               '${item.detailAddress}', '${item.mobile}', '', '')|"></i>
+                               th:attr="onclick=|showModal('${item.orderId}', '${item.productName}',
+                               '${item.combineAddr}', '', '')|"></i>
                         </a>
-                        <a th:if="${item.status =='DELIVERED'}" title="发货" href="#">
+                        <a href="#" th:if="${item.status =='已发货'}" title="发货">
                             <i class="paper edit outline icon"
-                               th:attr="onclick=|showModal('${item.orderId}', '${item.productName}', '${item.receiver}',
-                               '${item.detailAddress}', '${item.mobile}', '${item.shippingCompany}', '${item.shippingTicket}')|"></i>
+                               th:attr="onclick=|showModal('${item.orderId}', '${item.productName}',
+                               '${item.combineAddr}', '${item.shippingCompany}', '${item.shippingTicket}')|"></i>
                         </a>
                     </td>
                 </tr>
@@ -103,9 +99,9 @@
             <div class="content content">
                 <div class="description">
                     <p id="productName"></p>
-                    <p id="receiver"></p>
+                    <!--                    <p id="receiver"></p>-->
                     <p id="address"></p>
-                    <p id="mobile"></p>
+                    <!--                    <p id="mobile"></p>-->
                 </div>
                 <form id="shippingForm" class="ui form three wide column"
                       enctype="multipart/form-data"
@@ -139,13 +135,11 @@
         })
     };
 
-    function showModal(item, productName, receiver, address, mobile, shippingCompany, shippingTicket) {
+    function showModal(item, productName, address, shippingCompany, shippingTicket) {
         $('#shippingForm').attr('action', '/admin-ui/orders/deliver/' + item);
         $('#modalHeader').text("订单号: " + item);
         $('#productName').text("产品名称: " + productName);
-        $('#receiver').text("收件人: " + receiver);
-        $('#address').text("收件地址: " + address);
-        $('#mobile').text("联系电话: " + mobile);
+        $('#address').text("收件信息: " + address);
         $('#deliveryStatus').text("状态: " + status);
         $('#shippingCompany').val(shippingCompany);
         $('#shippingTicket').val(shippingTicket);
