@@ -13,29 +13,37 @@
     <a th:href="@{/admin-ui/main/}"><h1>BlindBox 管理后台</h1></a>
 </div>
 <div class="ui grid main">
-    <div class="four wide column">
+    <div class="three wide column">
         <div class="ui vertical menu">
-            <a class="item" th:href="@{/admin-ui/activities/}">
-                <!--<a class="active teal item">-->
-                活动管理
-            </a>
-            <a class="active teal item" th:href="@{/admin-ui/role/}">
-                产品管理
-                <!--<div class="ui label">51</div>-->
-            </a>
-            <a class="item" th:href="@{/admin-ui/orders/}">
-                订单管理
-                <!--<div class="ui label">1</div>-->
-            </a>
+            <div class="item">
+                <div class="header">Activity</div>
+                <div class="menu">
+                    <a class="item" th:href="@{/admin-ui/activities/}">活动信息管理</a>
+                </div>
+            </div>
+            <div class="item">
+                <div class="header">Product</div>
+                <div class="menu">
+                    <a class="active teal item" th:href="@{/admin-ui/role/}">产品管理（old)</a>
+                    <a class="item" th:href="@{/admin-ui/role/}">角色管理（new)</a>
+                    <a class="item" th:href="@{/admin-ui/role/}">系列与产品管理（new)</a>
+                </div>
+            </div>
+            <div class="item">
+                <div class="header">Order</div>
+                <div class="menu">
+                    <a class="item" th:href="@{/admin-ui/orders/}">订单管理</a>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="twelve wide column right-box">
+    <div class="thirteen wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
                 <a th:href="@{/admin-ui/role/}" class="ui button primary basic theme-text">
                     <i class="angle left icon"></i>返回角色列表</a>
-                <a th:href="@{'/admin-ui/series/seriesform/?roleId=' + ${role.id}}" class="ui button primary white-text">添加产品系列</a>
+                <a th:href="@{'/admin-ui/series/seriesform/?roleId=' + ${role.id}}"
+                   class="ui button primary white-text">添加产品系列</a>
             </div>
             <div class="six wide column">
                 <div class="title"><h2>产品系列管理</h2></div>
@@ -48,7 +56,6 @@
                                      th:src="${role.roleImage}"></div>
             <div align="center">
                 <div th:text="${role.name}" class="header"></div>
-                <div class="description" th:text="${role.description}"></div>
             </div>
 
         </div>

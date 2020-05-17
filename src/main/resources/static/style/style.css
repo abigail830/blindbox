@@ -32,6 +32,8 @@
 
 .main {
     width: 95%;
+    margin: 0px auto;
+    text-align: center;
 }
 
 .right-box {

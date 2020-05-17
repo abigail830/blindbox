@@ -35,21 +35,29 @@
 <div class="ui grid">
     <div class="three wide column">
         <div class="ui vertical menu">
-            <a class="item" th:href="@{/admin-ui/activities/}">
-                <!--<a class="active teal item">-->
-                活动管理
-            </a>
-            <a class="item" th:href="@{/admin-ui/role/}">
-                产品管理
-                <!--<div class="ui label">51</div>-->
-            </a>
-            <a class="item" th:href="@{/admin-ui/orders/}">
-                订单管理
-                <!--<div class="ui label">1</div>-->
-            </a>
+            <div class="item">
+                <div class="header">Activity</div>
+                <div class="menu">
+                    <a class="item" th:href="@{/admin-ui/activities/}">活动信息管理</a>
+                </div>
+            </div>
+            <div class="item">
+                <div class="header">Product</div>
+                <div class="menu">
+                    <a class="item" th:href="@{/admin-ui/role/}">产品管理（old)</a>
+                    <a class="item" th:href="@{/admin-ui/role/}">角色管理（new)</a>
+                    <a class="item" th:href="@{/admin-ui/role/}">系列与产品管理（new)</a>
+                </div>
+            </div>
+            <div class="item">
+                <div class="header">Order</div>
+                <div class="menu">
+                    <a class="item" th:href="@{/admin-ui/orders/}">订单管理</a>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="thirteen wide column">
+    <div class="thirteen wide column right-box">
         <div>
             <div class="main-welcome-title"><h2>欢迎进入管理后台</h2></div>
             <div class="welcome-img">
