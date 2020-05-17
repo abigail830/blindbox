@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>SeriesForm</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
-    <script th:src="@{/javascript/jquery-3.1.1.min.js}" crossorigin="anonymous"></script>
+    <script crossorigin="anonymous" th:src="@{/javascript/jquery-3.1.1.min.js}"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
     <script type="text/javascript">
         $(document).ready(function(){
@@ -19,11 +19,13 @@
                 activityEndDate: 'empty',
             }
         });
+
     </script>
     <style>
         form {
             text-align: left;
         }
+
     </style>
 
 </head>
@@ -43,9 +45,9 @@
             <div class="item">
                 <div class="header">Product</div>
                 <div class="menu">
-                    <a class="active teal item" th:href="@{/admin-ui/role/}">产品管理（old)</a>
+                    <a class="item" th:href="@{/admin-ui/role/}">产品管理（old)</a>
                     <a class="item" th:href="@{/admin-ui/role/v2/}">角色管理</a>
-                    <a class="item" th:href="@{/admin-ui/series/v2/}">系列与产品管理</a>
+                    <a class="active teal item" th:href="@{/admin-ui/series/v2/}">系列与产品管理</a>
                 </div>
             </div>
             <div class="item">
@@ -59,7 +61,7 @@
     <div class="thirteen wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
-                <a th:href="@{'/admin-ui/series/?roleID='+${roleId}}" class="ui button primary basic theme-text">
+                <a class="ui button primary basic theme-text" th:href="@{'/admin-ui/series/v2/'}">
                     <i class="angle left icon"></i>返回产品系列列表</a>
             </div>
             <div class="six wide column">
@@ -68,17 +70,16 @@
         </div>
         <div class="ui divider"></div>
         <form class="ui form three wide column" enctype="multipart/form-data"
-              th:action="@{'/admin-ui/series/form/' + ${roleId}}" method="POST" th:object="${series}">
-            <input type="text" th:field="*{id}" style="display: none">
-            <input type="text" th:field="*{roleId}" style="display: none">
-            <input type="text" th:field="*{seriesImage}" style="display: none">
-            <input type="text" th:field="*{matrixHeaderImage}" style="display: none">
-            <input type="text" th:field="*{matrixCellImage}" style="display: none">
+              method="POST" th:action="@{'/admin-ui/series/v2/form/' + ${roleId}}" th:object="${series}">
+            <input style="display: none" th:field="*{id}" type="text">
+            <input style="display: none" th:field="*{seriesImage}" type="text">
+            <input style="display: none" th:field="*{matrixHeaderImage}" type="text">
+            <input style="display: none" th:field="*{matrixCellImage}" type="text">
 
 
             <div class="field required">
-                <label>产品系列名称</label>
-                <input type="text" name="name" th:field="*{name}">
+                <label>系列名称</label>
+                <input name="name" th:field="*{name}" type="text">
             </div>
 
             <div class="three fields">
@@ -87,17 +88,17 @@
                     <div class="ui calendar">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input type="date" name="releaseDate" th:field="*{releaseDate}" th:value="*{releaseDate}">
+                            <input name="releaseDate" th:field="*{releaseDate}" th:value="*{releaseDate}" type="date">
                         </div>
                     </div>
                 </div>
                 <div class="field required">
                     <label>售价</label>
-                    <input type="number" step="0.01" name="price" th:field="*{price}">
+                    <input name="price" step="0.01" th:field="*{price}" type="number">
                 </div>
                 <div class="field required">
                     <label for="columnSize">每行盲盒数</label>
-                    <input id="columnSize" type="number" th:field="*{columnSize}" min="3" max="4">
+                    <input id="columnSize" max="4" min="3" th:field="*{columnSize}" type="number">
                 </div>
             </div>
 
@@ -107,9 +108,9 @@
                     <label>产品系列图 (尺寸要求: 694 * 300)</label>
                     <div>
                         <img class="ui medium image"
-                             th:src="*{seriesImage}" id="seriesImageFileDisplay">
+                             id="seriesImageFileDisplay" th:src="*{seriesImage}">
                     </div>
-                    <input type="file" name="seriesImageFile" id="seriesImageFile">
+                    <input id="seriesImageFile" name="seriesImageFile" type="file">
                     <p id="seriesImageFileSize"></p>
                 </div>
 
@@ -117,9 +118,9 @@
                     <label>抽盒页面封面 (尺寸要求: 694 * 300)</label>
                     <div>
                         <img class="ui medium image"
-                             th:src="*{matrixHeaderImage}" id="matrixHeaderImageFileDisplay">
+                             id="matrixHeaderImageFileDisplay" th:src="*{matrixHeaderImage}">
                     </div>
-                    <input type="file" name="matrixHeaderImageFile" id="matrixHeaderImageFile">
+                    <input id="matrixHeaderImageFile" name="matrixHeaderImageFile" type="file">
                     <p id="matrixHeaderImageFileSize"></p>
                 </div>
             </div>
@@ -128,27 +129,27 @@
                     <label>抽盒图</label>
                     <div>
                         <img class="ui medium image"
-                             th:src="*{matrixCellImage}" id="matrixCellImageFileDisplay">
+                             id="matrixCellImageFileDisplay" th:src="*{matrixCellImage}">
                     </div>
-                    <input type="file" name="matrixCellImageFile" id="matrixCellImageFile">
+                    <input id="matrixCellImageFile" name="matrixCellImageFile" type="file">
                     <p id="matrixCellImageFileSize"></p>
                 </div>
                 <div class="field required">
                     <label>产品图鉴</label>
                     <div>
                         <img class="ui medium image"
-                             th:src="*{longImage}" id="longImageFileDisplay">
+                             id="longImageFileDisplay" th:src="*{longImage}">
                     </div>
-                    <input type="file" name="longImageFile" id="longImageFile">
+                    <input id="longImageFile" name="longImageFile" type="file">
                     <p id="longImageFileSize"></p>
                 </div>
                 <div class="field required">
                     <label>产品外包装盒子图</label>
                     <div>
                         <img class="ui medium image"
-                             th:src="*{boxImage}" id="boxImageFileDisplay">
+                             id="boxImageFileDisplay" th:src="*{boxImage}">
                     </div>
-                    <input type="file" name="boxImageFile" id="boxImageFile">
+                    <input id="boxImageFile" name="boxImageFile" type="file">
                     <p id="boxImageFileSize"></p>
                 </div>
             </div>
@@ -156,14 +157,14 @@
             <br/>
             <div class="field">
                 <div class="ui checkbox">
-                    <input id="isNewSeries" type="checkbox" th:field="*{isNewSeries}">
+                    <input id="isNewSeries" th:field="*{isNewSeries}" type="checkbox">
                     <label for="isNewSeries">新系列？</label>
                 </div>
             </div>
 
             <div class="field">
                 <div class="ui checkbox">
-                    <input id="isPresale" type="checkbox" th:field="*{isPresale}">
+                    <input id="isPresale" th:field="*{isPresale}" type="checkbox">
                     <label for="isPresale">预售？</label>
                 </div>
             </div>
@@ -223,6 +224,7 @@
     $("#boxImageFile").change(function (e) {
         previewAndShowSize(this, '#boxImageFileSize', '#boxImageFileDisplay');
     });
+
 
 </script>
 </body>

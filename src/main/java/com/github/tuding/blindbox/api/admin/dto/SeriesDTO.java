@@ -41,6 +41,26 @@ public class SeriesDTO {
     String boxImage;
     MultipartFile boxImageFile;
 
+    String posterBgImage;
+    MultipartFile posterBgImageFile;
+
+    public SeriesDTO(Series series) {
+        this.id = series.getId();
+        this.roleId = series.getRoleId();
+        this.name = series.getName();
+        this.releaseDate = series.getReleaseDate();
+        this.isNewSeries = series.getIsNewSeries();
+        this.isPresale = series.getIsPresale();
+        this.price = series.getPrice();
+        this.columnSize = series.getColumnSize();
+        this.seriesImage = Constant.ADMIN_UI_IMAGE_PATH + series.getSeriesImage();
+        this.matrixHeaderImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixHeaderImage();
+        this.matrixCellImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixCellImage();
+        this.longImage = Constant.ADMIN_UI_IMAGE_PATH + series.getLongImage();
+        this.boxImage = Constant.ADMIN_UI_IMAGE_PATH + series.getBoxImage();
+        this.posterBgImage = Constant.ADMIN_UI_IMAGE_PATH + series.getPosterBgImage();
+    }
+
     public Series toDomainObject() {
         Series series = new Series();
         series.setId(id);
@@ -56,22 +76,7 @@ public class SeriesDTO {
         series.setColumnSize(columnSize);
         series.setLongImage(longImage);
         series.setBoxImage(boxImage);
+        series.setPosterBgImage(posterBgImage);
         return series;
-    }
-
-    public SeriesDTO (Series series) {
-        this.id = series.getId();
-        this.roleId = series.getRoleId();
-        this.name = series.getName();
-        this.releaseDate = series.getReleaseDate();
-        this.isNewSeries = series.getIsNewSeries();
-        this.isPresale = series.getIsPresale();
-        this.price = series.getPrice();
-        this.columnSize = series.getColumnSize();
-        this.seriesImage = Constant.ADMIN_UI_IMAGE_PATH + series.getSeriesImage();
-        this.matrixHeaderImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixHeaderImage();
-        this.matrixCellImage = Constant.ADMIN_UI_IMAGE_PATH + series.getMatrixCellImage();
-        this.longImage = Constant.ADMIN_UI_IMAGE_PATH + series.getLongImage();
-        this.boxImage = Constant.ADMIN_UI_IMAGE_PATH + series.getBoxImage();
     }
 }

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>BlindBox</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
-    <script th:src="@{/javascript/jquery-3.1.1.min.js}" crossorigin="anonymous"></script>
+    <script crossorigin="anonymous" th:src="@{/javascript/jquery-3.1.1.min.js}"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
 </head>
 <body>
@@ -24,9 +24,9 @@
             <div class="item">
                 <div class="header">Product</div>
                 <div class="menu">
-                    <a class="active teal item" th:href="@{/admin-ui/role/}">产品管理（old)</a>
+                    <a class="item" th:href="@{/admin-ui/role/}">产品管理（old)</a>
                     <a class="item" th:href="@{/admin-ui/role/v2/}">角色管理</a>
-                    <a class="item" th:href="@{/admin-ui/series/v2/}">系列与产品管理</a>
+                    <a class="active teal item" th:href="@{/admin-ui/series/v2/}">系列与产品管理</a>
                 </div>
             </div>
             <div class="item">
@@ -40,25 +40,14 @@
     <div class="thirteen wide column right-box">
         <div class="ui grid main">
             <div class="ten wide column left-btn">
-                <a th:href="@{/admin-ui/role/}" class="ui button primary basic theme-text">
-                    <i class="angle left icon"></i>返回角色列表</a>
-                <a th:href="@{'/admin-ui/series/seriesform/?roleId=' + ${role.id}}"
-                   class="ui button primary white-text">添加产品系列</a>
+                <a class="ui button primary white-text"
+                   th:href="@{/admin-ui/series/v2/seriesform}">添加系列</a>
             </div>
             <div class="six wide column">
-                <div class="title"><h2>产品系列管理</h2></div>
+                <div class="title"><h2>产品系列管理 V2</h2></div>
             </div>
         </div>
         <div class="ui divider"></div>
-
-        <div class="four wide column">
-            <div align="center"><img class="ui tiny circular image" style="text-align: center"
-                                     th:src="${role.roleImage}"></div>
-            <div align="center">
-                <div th:text="${role.name}" class="header"></div>
-            </div>
-
-        </div>
 
         <div th:if="${!series.empty}">
             <table>
@@ -74,7 +63,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="item : ${series}" >
+                <tr th:each="item : ${series}">
                     <td><span th:text="${item.name}">系列名称</span></td>
                     <td><span th:text="${item.releaseDate}">发布日期</span></td>
                     <td>
@@ -87,16 +76,16 @@
 
 
                     <td>
-                        <a th:href="@{'/admin-ui/series/seriesform/' + ${item.id}}" title="编辑">
+                        <a th:href="@{'/admin-ui/series/v2/seriesform/' + ${item.id}}" title="编辑">
                             <i class="edit outline icon"></i>
                         </a>
 
-                        <a title="删除" href="#">
+                        <a href="#" title="删除">
                             <i class="trash alternate outline icon" th:attr="onclick=|delItem('${item.id}')|"></i>
                         </a>
                     </td>
                     <td>
-                        <a th:href="@{'/admin-ui/product/?seriesId=' + ${item.id}}" class="small ui basic button">
+                        <a class="small ui basic button" th:href="@{'/admin-ui/product/?seriesId=' + ${item.id}}">
                             <i class="arrow circle right icon"></i> 编辑产品
                         </a>
                     </td>
@@ -105,13 +94,17 @@
             </table>
         </div>
 
+        <div th:if="${series.empty}">
+            <h3 class="empty_tips">还没有产品系列，请添加。。。</h3>
+        </div>
+
     </div>
 
 </div>
 <script type="text/javascript">
     function delItem (item){
         $.ajax({
-            url: "/admin-ui/series/" + item,
+            url: "/admin-ui/series/v2/" + item,
             type: "DELETE",
             success: function (data, status) {
                 console.info("Got delete status " + status);
@@ -119,6 +112,8 @@
             }
         })
     }
+
+
 </script>
 </body>
 </html>

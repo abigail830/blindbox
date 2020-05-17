@@ -89,7 +89,6 @@ public class SeriesRespository {
     public List<Series> queryByRoleID(String roleID) {
         log.info("Going to query series with role id: {}", roleID);
         return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
-
     }
 
     public List<Series> queryRoles() {
@@ -153,5 +152,10 @@ public class SeriesRespository {
     public List<Series> queryAllSeriesWithPaging(Integer limitPerPage, Integer numOfPage) {
         log.info("Going to query all series");
         return jdbcTemplate.query("SELECT * FROM series_tbl LIMIT ? OFFSET ?", rowMapper, limitPerPage, numOfPage);
+    }
+
+    public List<Series> queryAllSeries() {
+        log.info("Going to query all series.");
+        return jdbcTemplate.query("SELECT * FROM series_v2_tbl", rowMapper);
     }
 }

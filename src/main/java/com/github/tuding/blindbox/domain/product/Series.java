@@ -32,4 +32,6 @@ public class Series {
     String longImage;
 
     String boxImage;
+
+    String posterBgImage;
 }
