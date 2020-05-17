@@ -9,6 +9,7 @@ import lombok.ToString;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -47,7 +48,8 @@ public class SeriesV2DTO {
     String posterBgImage;
     MultipartFile posterBgImageFile;
 
-    List<String> linkedRoleIds;
+    List<String> orilinkedRoleIds = new ArrayList<>();
+    List<String> newlinkedRoleIds = new ArrayList<>();
 
     public SeriesV2DTO(Series series) {
         this.id = series.getId();
@@ -64,7 +66,8 @@ public class SeriesV2DTO {
         this.longImage = Constant.ADMIN_UI_IMAGE_PATH + series.getLongImage();
         this.boxImage = Constant.ADMIN_UI_IMAGE_PATH + series.getBoxImage();
         this.posterBgImage = Constant.ADMIN_UI_IMAGE_PATH + series.getPosterBgImage();
-        this.linkedRoleIds = series.getLinkedRoleIds();
+        this.orilinkedRoleIds = series.getLinkedRoleIds();
+        this.newlinkedRoleIds = series.getLinkedRoleIds();
     }
 
     public Series toDomainObject() {
@@ -83,15 +86,19 @@ public class SeriesV2DTO {
         series.setLongImage(longImage);
         series.setBoxImage(boxImage);
         series.setPosterBgImage(posterBgImage);
-        series.setLinkedRoleIds(linkedRoleIds);
+        series.setLinkedRoleIds(orilinkedRoleIds);
         return series;
     }
 
     public Boolean isContainedRole(String roleId) {
-        if (linkedRoleIds != null && !linkedRoleIds.isEmpty())
-            return linkedRoleIds.stream().anyMatch(roleId::equals);
+        if (orilinkedRoleIds != null && !orilinkedRoleIds.isEmpty())
+            return orilinkedRoleIds.stream().anyMatch(roleId::equals);
         else
             return false;
     }
 
+    public void setRoleIds(List<String> linkedRoleIds) {
+        this.orilinkedRoleIds = linkedRoleIds;
+        this.newlinkedRoleIds = linkedRoleIds;
+    }
 }

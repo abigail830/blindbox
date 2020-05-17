@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -75,13 +76,13 @@ public class SeriesV2Controller {
 
     @GetMapping("/seriesform/{id}")
     public String editRole(Model model, @PathVariable String id) {
-
+        // construct series
         final SeriesV2DTO series = seriesRespository.querySeriesV2ByID(id).map(SeriesV2DTO::new)
                 .orElseThrow(() -> new BizException(ErrorCode.WX_USER_NOT_FOUND));
         final List<String> linkedRoleIds = seriesRespository.queryLinkedRoleIdsBySeriesId(id);
-        series.setLinkedRoleIds(linkedRoleIds);
-        log.info("{}", series);
+        series.setRoleIds(linkedRoleIds);
 
+        // construct roles
         final List<RoleWithCheck> roles = rolesRepository.queryRolesOrderByName()
                 .stream().map(role -> {
                     if (series.isContainedRole(role.getId()))
@@ -92,8 +93,8 @@ public class SeriesV2Controller {
 
         model.addAttribute("roles", roles);
         model.addAttribute("series", series);
-        log.info("Edit seriesV2DTO [{}]", series);
 
+        log.debug("Edit seriesV2DTO [{}]", series);
         return "seriesform_v2";
     }
 
@@ -101,8 +102,8 @@ public class SeriesV2Controller {
     public RedirectView handleForm(@RequestParam("role") List<String> roleList,
                                    @ModelAttribute("series") SeriesV2DTO seriesDTO,
                                    Model model) throws IOException, ParseException {
-        seriesDTO.setLinkedRoleIds(roleList);
-        log.info("-------- {}", seriesDTO);
+        seriesDTO.setNewlinkedRoleIds(roleList);
+        log.debug("-------- {}", seriesDTO);
 
         if (StringUtils.isNotBlank(seriesDTO.getId())) {
             updateSeries(seriesDTO);
@@ -112,6 +113,7 @@ public class SeriesV2Controller {
         return new RedirectView("/admin-ui/series/v2/");
     }
 
+    @Transactional
     private void createSeries(@ModelAttribute("series") SeriesV2DTO seriesDTO) {
         UUID seriesID = UUID.randomUUID();
         log.info("handle series creation as {} id {}", seriesDTO, seriesID.toString());
@@ -131,11 +133,29 @@ public class SeriesV2Controller {
 
         seriesDTO.setId(seriesID.toString());
         seriesRespository.createSeriesV2(seriesDTO.toDomainObject());
+        seriesRespository.addSeriesRoleMappingV2(seriesDTO.getId(), seriesDTO.getNewlinkedRoleIds());
     }
 
+    @Transactional
     private void updateSeries(@ModelAttribute("series") SeriesV2DTO seriesDTO) {
         log.info("handle series update as {} ", seriesDTO);
+        updateSeriesImages(seriesDTO);
+        seriesRespository.updateSeriesV2(seriesDTO.toDomainObject());
 
+        final List<String> toBeRemove = seriesDTO.getOrilinkedRoleIds().stream()
+                .filter(role -> !seriesDTO.getNewlinkedRoleIds().contains(role)).collect(Collectors.toList());
+        log.info("toBeRemove: {}", toBeRemove);
+        if (!toBeRemove.isEmpty())
+            seriesRespository.removeSeriesRoleMapping(seriesDTO.getId(), toBeRemove);
+
+        final List<String> toBeAdd = seriesDTO.getNewlinkedRoleIds().stream()
+                .filter(newRole -> !seriesDTO.getOrilinkedRoleIds().contains(newRole)).collect(Collectors.toList());
+        log.info("toBeAdd {}", toBeAdd);
+        if (!toBeAdd.isEmpty())
+            seriesRespository.addSeriesRoleMappingV2(seriesDTO.getId(), toBeAdd);
+    }
+
+    private void updateSeriesImages(@ModelAttribute("series") SeriesV2DTO seriesDTO) {
         if (seriesDTO.getSeriesImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
             seriesDTO.setSeriesImage(image);
@@ -166,8 +186,6 @@ public class SeriesV2Controller {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-posterBgImage", ImageCategory.SERIES, seriesDTO.getPosterBgImageFile());
             seriesDTO.setPosterBgImage(image);
         }
-
-        seriesRespository.updateSeriesV2(seriesDTO.toDomainObject());
     }
 
     @GetMapping("/role/{id}")

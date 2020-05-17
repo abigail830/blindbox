@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,6 +21,9 @@ import java.util.Optional;
 public class SeriesRespository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     private RolesRepository rolesRepository;
@@ -176,29 +181,46 @@ public class SeriesRespository {
 
     public List<String> queryLinkedRoleIdsBySeriesId(String seriesId) {
         String sql = "select roleId from series_role_mapping_tbl where seriesId = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{seriesId}, List.class);
+        return jdbcTemplate.queryForList(sql, new Object[]{seriesId}, String.class);
     }
 
     public void createSeriesV2(Series series) {
         log.info("handle series creation as {}", series);
-
         if (Toggle.TEST_MODE.isON()) {
             insertSeriesTbl(series, "INSERT INTO series_v2_tbl ");
-            insertSeriesRoleMapping(series, "INSERT INTO series_role_mapping_tbl ");
         } else {
             insertSeriesTbl(series, "INSERT ignore INTO series_v2_tbl ");
-            insertSeriesRoleMapping(series, "INSERT INTO series_role_mapping_tbl ");
         }
     }
 
-    private void insertSeriesRoleMapping(Series series, String header) {
+    public void addSeriesRoleMappingV2(String seriesId, List<String> roleIds) {
+        log.info("handle series {} mapping with roles {}", seriesId, roleIds);
+        if (Toggle.TEST_MODE.isON()) {
+            insertSeriesRoleMapping(seriesId, roleIds, "INSERT INTO series_role_mapping_tbl ");
+        } else {
+            insertSeriesRoleMapping(seriesId, roleIds, "INSERT ignore INTO series_role_mapping_tbl ");
+        }
+    }
+
+    private void insertSeriesRoleMapping(String seriesId, List<String> roleIds, String header) {
         String insertMappingSql = header + " (seriesId, roleId) VALUES (?, ?)";
-        for (String id : series.getLinkedRoleIds()) {
+        for (String id : roleIds) {
             int updateMapping = jdbcTemplate.update(insertMappingSql,
-                    series.getId(),
+                    seriesId,
                     id);
             log.info("update row {} in series_role_mapping_tbl ", updateMapping);
         }
+    }
+
+    public int removeSeriesRoleMapping(String seriesId, List<String> roleIds) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("roleIds", roleIds);
+        parameters.addValue("seriesId", seriesId);
+
+        String sql = "DELETE from series_role_mapping_tbl where seriesId = (:seriesId) and roleId in (:roleIds)";
+        log.info("Going to remove row {} - {} in series_role_mapping_tbl ", seriesId, roleIds);
+        return namedParameterJdbcTemplate.update(sql, parameters);
+
     }
 
     private void insertSeriesTbl(Series series, String header) {
