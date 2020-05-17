@@ -26,16 +26,14 @@ public class RolesRepository {
         log.info("Going to insert roles_tbl with {}", role);
 
         if (Toggle.TEST_MODE.isON()) {
-            String insertSql = "INSERT INTO roles_tbl (id, name, category, description, role_image) " +
-                    "VALUES (?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, role.getId(), role.getName(), role.getCategory(),
-                    role.getDescription(), role.getRoleImage());
+            String insertSql = "INSERT INTO roles_tbl (id, name, role_image) " +
+                    "VALUES (?, ?, ?)";
+            int update = jdbcTemplate.update(insertSql, role.getId(), role.getName(), role.getRoleImage());
             log.info("update row {} ", update);
         } else {
-            String insertSql = "INSERT ignore INTO roles_tbl (id, name, category, description, role_image) " +
-                    "VALUES (?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql, role.getId(), role.getName(), role.getCategory(),
-                    role.getDescription(), role.getRoleImage());
+            String insertSql = "INSERT ignore INTO roles_tbl (id, name, role_image) " +
+                    "VALUES (?, ?, ?)";
+            int update = jdbcTemplate.update(insertSql, role.getId(), role.getName(), role.getRoleImage());
             log.info("update row {} ", update);
         }
     }
@@ -63,11 +61,8 @@ public class RolesRepository {
     }
 
     public void updateRole(Role role) {
-        String insertSql = "UPDATE roles_tbl " +
-                " SET name = ?, category = ?, description = ? " +
-                " WHERE id = ? ";
-        int update = jdbcTemplate.update(insertSql, role.getName(), role.getCategory(),
-                role.getDescription(), role.getId());
+        String insertSql = "UPDATE roles_tbl SET name = ? WHERE id = ? ";
+        int update = jdbcTemplate.update(insertSql, role.getName(), role.getId());
         log.info("update row {} ", update);
     }
 }

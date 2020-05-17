@@ -1,13 +1,9 @@
 roles_tbl:
   - id: roleid1
     name: testRole1
-    category: test
-    description: test
     role_image: "/app/data/role/testRole1/testRole1.png"
   - id: roleid2
     name: testRole2
-    category: test
-    description: test
     role_image: "/app/data/role/testRole2/testRole2.png"
 series_tbl:
   - id: seriesid1

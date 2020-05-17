@@ -42,11 +42,11 @@ public class ProductionCreationTest {
 
         System.out.println(formatter.parse("2020-03-13"));
         //roles
-        rolesRepository.saveRole(new Role("roleid1", "testRole1", "test",
-                "test", "/app/data/role/testRole1/testRole1.png"));
+        rolesRepository.saveRole(new Role("roleid1", "testRole1",
+                "/app/data/role/testRole1/testRole1.png"));
 
-        rolesRepository.saveRole(new Role("roleid2", "testRole2", "test",
-                "test", "/app/data/role/testRole2/testRole2.png"));
+        rolesRepository.saveRole(new Role("roleid2", "testRole2",
+                "/app/data/role/testRole2/testRole2.png"));
 
         assertTrue(rolesRepository.queryRolesByName("testRole1").isPresent());
 
