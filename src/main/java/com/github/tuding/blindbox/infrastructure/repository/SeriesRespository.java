@@ -25,6 +25,7 @@ public class SeriesRespository {
 
     private RowMapper<Series> rowMapper = new BeanPropertyRowMapper<>(Series.class);
 
+    @Deprecated
     public void saveSeries(Series series) {
         log.info("handle series creation as {}", series);
 
@@ -72,6 +73,7 @@ public class SeriesRespository {
     }
 
 
+    @Deprecated
     public Optional<Series> querySeriesByName(String name) {
         log.info("Going to query series with name: {}", name);
 
@@ -79,6 +81,7 @@ public class SeriesRespository {
         return seriesList.stream().findFirst();
     }
 
+    @Deprecated
     public Optional<Series> querySeriesByID(String id) {
         log.info("Going to query series with id: {}", id);
 
@@ -86,16 +89,19 @@ public class SeriesRespository {
         return seriesList.stream().findFirst();
     }
 
+    @Deprecated
     public List<Series> queryByRoleID(String roleID) {
         log.info("Going to query series with role id: {}", roleID);
         return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
     }
 
+    @Deprecated
     public List<Series> queryRoles() {
         log.info("Going to query series ");
         return jdbcTemplate.query("SELECT * FROM series_tbl", rowMapper);
     }
 
+    @Deprecated
     public void createSeries(Series series) {
         Optional<Role> role = rolesRepository.queryRolesByID(series.getRoleId());
         if (role.isPresent()) {
@@ -105,6 +111,7 @@ public class SeriesRespository {
         }
     }
 
+    @Deprecated
     public void deleteSeries(String id) {
         log.info("Delete series for {}", id);
         jdbcTemplate.update("DELETE FROM series_tbl where id = ?", id);
@@ -112,6 +119,7 @@ public class SeriesRespository {
 
     }
 
+    @Deprecated
     public void updateSeries(Series series) {
         if (StringUtils.isNotBlank(series.getReleaseDate())) {
             String updateSql = "UPDATE series_tbl " +
@@ -144,11 +152,13 @@ public class SeriesRespository {
 
     }
 
+    @Deprecated
     public List<Series> queryAllNewSeries() {
         log.info("Going to query all new series");
         return jdbcTemplate.query("SELECT * FROM series_tbl where isNewSeries = true", rowMapper);
     }
 
+    @Deprecated
     public List<Series> queryAllSeriesWithPaging(Integer limitPerPage, Integer numOfPage) {
         log.info("Going to query all series");
         return jdbcTemplate.query("SELECT * FROM series_tbl LIMIT ? OFFSET ?", rowMapper, limitPerPage, numOfPage);
@@ -157,5 +167,90 @@ public class SeriesRespository {
     public List<Series> queryAllSeries() {
         log.info("Going to query all series.");
         return jdbcTemplate.query("SELECT * FROM series_v2_tbl", rowMapper);
+    }
+
+    public Optional<Series> querySeriesV2ByID(String id) {
+        log.info("Going to query series with id: {}", id);
+
+        List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_v2_tbl WHERE id = ?", rowMapper, id);
+        return seriesList.stream().findFirst();
+    }
+
+    public void createSeriesV2(Series series) {
+        log.info("handle series creation as {}", series);
+
+        if (Toggle.TEST_MODE.isON()) {
+            String insertSql = "INSERT INTO series_v2_tbl " +
+                    " (id, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, " +
+                    " matrixCellImage, columnSize, longImage, boxImage, posterBgImage) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            int update = jdbcTemplate.update(insertSql,
+                    series.getId(),
+                    series.getName(),
+                    series.getReleaseDate(),
+                    series.getIsNewSeries(),
+                    series.getIsPresale(),
+                    series.getPrice(),
+                    series.getSeriesImage(),
+                    series.getMatrixHeaderImage(),
+                    series.getMatrixCellImage(),
+                    series.getColumnSize(),
+                    series.getLongImage(),
+                    series.getBoxImage(),
+                    series.getPosterBgImage());
+            log.info("update row {} ", update);
+        } else {
+            String insertSql = "INSERT ignore INTO series_v2_tbl " +
+                    " (id, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, " +
+                    " matrixCellImage, columnSize, longImage, boxImage, posterBgImage) " +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            int update = jdbcTemplate.update(insertSql,
+                    series.getId(),
+                    series.getName(),
+                    series.getReleaseDate(),
+                    series.getIsNewSeries(),
+                    series.getIsPresale(),
+                    series.getPrice(),
+                    series.getSeriesImage(),
+                    series.getMatrixHeaderImage(),
+                    series.getMatrixCellImage(),
+                    series.getColumnSize(),
+                    series.getLongImage(),
+                    series.getBoxImage(),
+                    series.getPosterBgImage());
+            log.info("update row {} ", update);
+        }
+    }
+
+    public void updateSeriesV2(Series series) {
+        if (StringUtils.isNotBlank(series.getReleaseDate())) {
+            String updateSql = "UPDATE series_v2_tbl " +
+                    " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?, boxImage = ?" +
+                    " WHERE id = ? ";
+            int update = jdbcTemplate.update(updateSql,
+                    series.getName(),
+                    series.getReleaseDate(),
+                    series.getIsNewSeries(),
+                    series.getIsPresale(),
+                    series.getPrice(),
+                    series.getColumnSize(),
+                    series.getBoxImage(),
+                    series.getId());
+            log.info("update row {} ", update);
+        } else {
+            String updateSql = "UPDATE series_v2_tbl " +
+                    " SET name = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?, boxImage = ?" +
+                    " WHERE id = ? ";
+            int update = jdbcTemplate.update(updateSql,
+                    series.getName(),
+                    series.getIsNewSeries(),
+                    series.getIsPresale(),
+                    series.getPrice(),
+                    series.getColumnSize(),
+                    series.getBoxImage(),
+                    series.getId());
+            log.info("update row {} ", update);
+        }
+
     }
 }

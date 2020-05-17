@@ -20,10 +20,16 @@
             }
         });
 
+
     </script>
     <style>
         form {
             text-align: left;
+        }
+
+        .scrollbox {
+            height:200px;
+            overflow-x:scroll;
         }
 
     </style>
@@ -70,19 +76,19 @@
         </div>
         <div class="ui divider"></div>
         <form class="ui form three wide column" enctype="multipart/form-data"
-              method="POST" th:action="@{'/admin-ui/series/v2/form/' + ${roleId}}" th:object="${series}">
+              method="POST" th:action="@{'/admin-ui/series/v2/form'}" th:object="${series}">
             <input style="display: none" th:field="*{id}" type="text">
             <input style="display: none" th:field="*{seriesImage}" type="text">
             <input style="display: none" th:field="*{matrixHeaderImage}" type="text">
             <input style="display: none" th:field="*{matrixCellImage}" type="text">
 
-
+            <h2>基本信息</h2>
+            <div class="ui divider"></div>
             <div class="field required">
                 <label>系列名称</label>
                 <input name="name" th:field="*{name}" type="text">
             </div>
-
-            <div class="three fields">
+            <div class="two fields">
                 <div class="field">
                     <label>发布日期</label>
                     <div class="ui calendar">
@@ -96,26 +102,62 @@
                     <label>售价</label>
                     <input name="price" step="0.01" th:field="*{price}" type="number">
                 </div>
-                <div class="field required">
-                    <label for="columnSize">每行盲盒数</label>
-                    <input id="columnSize" max="4" min="3" th:field="*{columnSize}" type="number">
+            </div>
+            <div class="field">
+                <div class="ui checkbox">
+                    <input id="isNewSeries" th:field="*{isNewSeries}" type="checkbox">
+                    <label for="isNewSeries">新系列？</label>
                 </div>
+            </div>
+            <div class="field">
+                <div class="ui checkbox">
+                    <input id="isPresale" th:field="*{isPresale}" type="checkbox">
+                    <label for="isPresale">预售？</label>
+                </div>
+            </div>
+            <br/>
+
+            <h2>系列图片配置</h2>
+            <div class="ui divider"></div>
+            <br/>
+
+            <div class="field required">
+                <label>产品系列图 (尺寸要求: 694 * 300，抽盒首页系列列表使用)</label>
+                <div>
+                    <img class="ui medium image"
+                         id="seriesImageFileDisplay" th:src="*{seriesImage}">
+                </div>
+                <input id="seriesImageFile" name="seriesImageFile" type="file">
+                <p id="seriesImageFileSize"></p>
+            </div>
+            <div class="field required">
+                <label>海报背景图（'名人堂-生成海报'时使用）</label>
+                <div>
+                    <img class="ui medium image"
+                         id="posterBgImageFileDisplay" th:src="*{posterBgImage}">
+                </div>
+                <input id="posterBgImageFile" name="posterBgImageFile" type="file">
+                <p id="posterBgImageSize"></p>
             </div>
 
 
+            <br/>
+            <h2>抽盒页面配置</h2>
+            <div class="ui divider"></div>
             <div class="two fields">
                 <div class="field required">
-                    <label>产品系列图 (尺寸要求: 694 * 300)</label>
-                    <div>
-                        <img class="ui medium image"
-                             id="seriesImageFileDisplay" th:src="*{seriesImage}">
-                    </div>
-                    <input id="seriesImageFile" name="seriesImageFile" type="file">
-                    <p id="seriesImageFileSize"></p>
+                    <label for="columnSize">每行显示盲盒数(必须<5,建议3或4)</label>
+                    <input id="columnSize" max="4" min="3" th:field="*{columnSize}" type="number">
                 </div>
-
                 <div class="field required">
-                    <label>抽盒页面封面 (尺寸要求: 694 * 300)</label>
+                    <label for="totalSize">显示盲盒总数</label>
+                    <input id="totalSize" min="3" th:field="*{totalSize}" type="number">
+                </div>
+            </div>
+            <br/>
+            <div class="two fields">
+                <div class="field required">
+                    <label>抽盒页面顶部封面 (尺寸要求: 694 * 300)</label>
                     <div>
                         <img class="ui medium image"
                              id="matrixHeaderImageFileDisplay" th:src="*{matrixHeaderImage}">
@@ -123,10 +165,8 @@
                     <input id="matrixHeaderImageFile" name="matrixHeaderImageFile" type="file">
                     <p id="matrixHeaderImageFileSize"></p>
                 </div>
-            </div>
-            <div class="two fields">
                 <div class="field required">
-                    <label>抽盒图</label>
+                    <label>抽盒格仔图</label>
                     <div>
                         <img class="ui medium image"
                              id="matrixCellImageFileDisplay" th:src="*{matrixCellImage}">
@@ -134,17 +174,11 @@
                     <input id="matrixCellImageFile" name="matrixCellImageFile" type="file">
                     <p id="matrixCellImageFileSize"></p>
                 </div>
+            </div>
+            <br/>
+            <div class="two fields">
                 <div class="field required">
-                    <label>产品图鉴</label>
-                    <div>
-                        <img class="ui medium image"
-                             id="longImageFileDisplay" th:src="*{longImage}">
-                    </div>
-                    <input id="longImageFile" name="longImageFile" type="file">
-                    <p id="longImageFileSize"></p>
-                </div>
-                <div class="field required">
-                    <label>产品外包装盒子图</label>
+                    <label>产品外包装盒子图（抽盒后显示）</label>
                     <div>
                         <img class="ui medium image"
                              id="boxImageFileDisplay" th:src="*{boxImage}">
@@ -152,20 +186,29 @@
                     <input id="boxImageFile" name="boxImageFile" type="file">
                     <p id="boxImageFileSize"></p>
                 </div>
-            </div>
-
-            <br/>
-            <div class="field">
-                <div class="ui checkbox">
-                    <input id="isNewSeries" th:field="*{isNewSeries}" type="checkbox">
-                    <label for="isNewSeries">新系列？</label>
+                <div class="field required">
+                    <label>产品图鉴（'抽盒页面-系列预览'时显示）</label>
+                    <div>
+                        <img class="ui medium image"
+                             id="longImageFileDisplay" th:src="*{longImage}">
+                    </div>
+                    <input id="longImageFile" name="longImageFile" type="file">
+                    <p id="longImageFileSize"></p>
                 </div>
-            </div>
 
-            <div class="field">
-                <div class="ui checkbox">
-                    <input id="isPresale" th:field="*{isPresale}" type="checkbox">
-                    <label for="isPresale">预售？</label>
+            </div>
+            <br/>
+            <h2>系列包含角色配置</h2>
+            <div class="ui divider"></div>
+
+            <div class="scrollbox">
+                <div th:each="role : ${roles}">
+                    <div class="field">
+                        <div class="ui checkbox">
+                            <input name="role" th:checked="${role.checked}" th:value="${role.id}" type="checkbox">
+                            <label th:text="${role.name}"></label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -223,6 +266,10 @@
 
     $("#boxImageFile").change(function (e) {
         previewAndShowSize(this, '#boxImageFileSize', '#boxImageFileDisplay');
+    });
+
+    $("#posterBgImageFile").change(function (e) {
+        previewAndShowSize(this, '#posterBgImageFileSize', '#posterBgImageFileDisplay');
     });
 
 

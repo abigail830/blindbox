@@ -49,6 +49,7 @@ public class RolesRepository {
         return jdbcTemplate.query("SELECT * FROM roles_tbl", rowMapper);
     }
 
+
     public void deleteRoles(String id) {
         log.info("Delete role for {}", id);
         jdbcTemplate.update("DELETE FROM roles_tbl WHERE id = ?", id);

@@ -1,10 +1,13 @@
 package com.github.tuding.blindbox.api.admin;
 
+import com.github.tuding.blindbox.api.admin.dto.RoleWithCheck;
 import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
+import com.github.tuding.blindbox.api.admin.dto.SeriesV2DTO;
 import com.github.tuding.blindbox.domain.ImageCategory;
 import com.github.tuding.blindbox.domain.product.Role;
 import com.github.tuding.blindbox.domain.product.Series;
-import com.github.tuding.blindbox.exception.RolesNotFoundException;
+import com.github.tuding.blindbox.exception.BizException;
+import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.exception.SeriesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
@@ -55,97 +58,113 @@ public class SeriesV2Controller {
 
     @GetMapping("/")
     public String seriesPage(Model model) {
-
         List<Series> seriesList = seriesRespository.queryAllSeries();
-        List<SeriesDTO> seriesDTOs = seriesList.stream().map(SeriesDTO::new).collect(Collectors.toList());
+        List<SeriesV2DTO> seriesDTOs = seriesList.stream().map(SeriesV2DTO::new).collect(Collectors.toList());
         model.addAttribute("series", seriesDTOs);
         return "series_v2";
     }
 
     @GetMapping("/seriesform")
     public String createForm(Model model) {
-        model.addAttribute("series", new SeriesDTO());
+        final List<RoleWithCheck> roles = rolesRepository.queryRoles()
+                .stream().map(RoleWithCheck::new).collect(Collectors.toList());
+        model.addAttribute("roles", roles);
+        model.addAttribute("series", new SeriesV2DTO());
         return "seriesform_v2";
     }
 
     @GetMapping("/seriesform/{id}")
     public String editRole(Model model, @PathVariable String id) {
 
-        final Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
-        seriesOptional.ifPresent(series -> {
-                    model.addAttribute("roleId", series.getRoleId());
-                    model.addAttribute("series", new SeriesDTO(series));
-                    log.info("Edit seriesDTO [{}]", series);
-                }
-        );
+        final SeriesV2DTO series = seriesRespository.querySeriesV2ByID(id).map(SeriesV2DTO::new)
+                .orElseThrow(() -> new BizException(ErrorCode.WX_USER_NOT_FOUND));
+
+        final List<RoleWithCheck> roles = rolesRepository.queryRoles()
+                .stream().map(role -> {
+                    if (series.isContainedRole(role.getId()))
+                        return new RoleWithCheck(role, Boolean.TRUE);
+                    else
+                        return new RoleWithCheck(role, Boolean.FALSE);
+                }).collect(Collectors.toList());
+
+        model.addAttribute("roles", roles);
+        model.addAttribute("series", series);
+        log.info("Edit seriesV2DTO [{}]", series);
+
         return "seriesform_v2";
     }
 
-    @PostMapping("/form/{roleID}")
-    public RedirectView handleForm(@PathVariable("roleID") String roleId,
-                                   @ModelAttribute("roleForm") SeriesDTO seriesDTO,
+    @PostMapping("/form")
+    public RedirectView handleForm(@RequestParam("role") List<String> roleList,
+                                   @ModelAttribute("series") SeriesV2DTO seriesDTO,
                                    Model model) throws IOException, ParseException {
-        Optional<Role> roleOptional = rolesRepository.queryRolesByID(roleId);
-        if (roleOptional.isPresent()) {
-            if (StringUtils.isNotBlank(seriesDTO.getId())) {
-                log.info("handle series update as {} ", seriesDTO);
+        seriesDTO.setLinkedRoleIds(roleList);
+        log.info("-------- {}", seriesDTO);
 
-                if (seriesDTO.getSeriesImageFile().getSize() > 0) {
-                    String image = imageRepository.saveImage(seriesDTO.getId(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
-                    seriesDTO.setSeriesImage(image);
-                }
-
-                if (seriesDTO.getMatrixHeaderImageFile().getSize() > 0) {
-                    String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
-                    seriesDTO.setMatrixHeaderImage(image);
-                }
-
-                if (seriesDTO.getMatrixCellImageFile().getSize() > 0) {
-                    String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
-                    seriesDTO.setMatrixCellImage(image);
-                }
-
-                if (seriesDTO.getLongImageFile().getSize() > 0) {
-                    String image = imageRepository.saveImage(seriesDTO.getId() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
-                    seriesDTO.setLongImage(image);
-                }
-
-                if (seriesDTO.getBoxImageFile().getSize() > 0) {
-                    String image = imageRepository.saveImage(seriesDTO.getId() + "-boxImage", ImageCategory.SERIES, seriesDTO.getBoxImageFile());
-                    seriesDTO.setBoxImage(image);
-                } else {
-                    seriesDTO.setBoxImage(imageRepository.getPath(seriesDTO.getId() + "-boxImage", ImageCategory.SERIES));
-                }
-
-                seriesDTO.setRoleId(roleId);
-                seriesRespository.updateSeries(seriesDTO.toDomainObject());
-
-                return new RedirectView("/admin-ui/series/v2/?roleID=" + roleOptional.get().getId());
-
-            } else {
-                UUID seriesID = UUID.randomUUID();
-                log.info("handle series creation as {} id {}", seriesDTO, seriesID.toString());
-
-                String image = imageRepository.saveImage(seriesID.toString(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
-                seriesDTO.setSeriesImage(image);
-                image = imageRepository.saveImage(seriesID.toString() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
-                seriesDTO.setMatrixHeaderImage(image);
-                image = imageRepository.saveImage(seriesID.toString() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
-                seriesDTO.setMatrixCellImage(image);
-                image = imageRepository.saveImage(seriesID.toString() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
-                seriesDTO.setLongImage(image);
-                image = imageRepository.saveImage(seriesID.toString() + "-boxImage", ImageCategory.SERIES, seriesDTO.getBoxImageFile());
-                seriesDTO.setBoxImage(image);
-
-                seriesDTO.setId(seriesID.toString());
-                seriesDTO.setRoleId(roleId);
-                seriesRespository.createSeries(seriesDTO.toDomainObject());
-                return new RedirectView("/admin-ui/series/v2/?roleID=" + roleOptional.get().getId());
-            }
+        if (StringUtils.isNotBlank(seriesDTO.getId())) {
+            updateSeries(seriesDTO);
         } else {
-            throw new RolesNotFoundException();
+            createSeries(seriesDTO);
+        }
+        return new RedirectView("/admin-ui/series/v2/");
+    }
+
+    private void createSeries(@ModelAttribute("series") SeriesV2DTO seriesDTO) {
+        UUID seriesID = UUID.randomUUID();
+        log.info("handle series creation as {} id {}", seriesDTO, seriesID.toString());
+
+        String image = imageRepository.saveImage(seriesID.toString(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
+        seriesDTO.setSeriesImage(image);
+        image = imageRepository.saveImage(seriesID.toString() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
+        seriesDTO.setMatrixHeaderImage(image);
+        image = imageRepository.saveImage(seriesID.toString() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
+        seriesDTO.setMatrixCellImage(image);
+        image = imageRepository.saveImage(seriesID.toString() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
+        seriesDTO.setLongImage(image);
+        image = imageRepository.saveImage(seriesID.toString() + "-boxImage", ImageCategory.SERIES, seriesDTO.getBoxImageFile());
+        seriesDTO.setBoxImage(image);
+        image = imageRepository.saveImage(seriesID.toString() + "-posterBgImage", ImageCategory.SERIES, seriesDTO.getPosterBgImageFile());
+        seriesDTO.setPosterBgImage(image);
+
+        seriesDTO.setId(seriesID.toString());
+        seriesRespository.createSeriesV2(seriesDTO.toDomainObject());
+    }
+
+    private void updateSeries(@ModelAttribute("series") SeriesV2DTO seriesDTO) {
+        log.info("handle series update as {} ", seriesDTO);
+
+        if (seriesDTO.getSeriesImageFile().getSize() > 0) {
+            String image = imageRepository.saveImage(seriesDTO.getId(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
+            seriesDTO.setSeriesImage(image);
         }
 
+        if (seriesDTO.getMatrixHeaderImageFile().getSize() > 0) {
+            String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
+            seriesDTO.setMatrixHeaderImage(image);
+        }
+
+        if (seriesDTO.getMatrixCellImageFile().getSize() > 0) {
+            String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
+            seriesDTO.setMatrixCellImage(image);
+        }
+
+        if (seriesDTO.getLongImageFile().getSize() > 0) {
+            String image = imageRepository.saveImage(seriesDTO.getId() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
+            seriesDTO.setLongImage(image);
+        }
+
+        if (seriesDTO.getBoxImageFile().getSize() > 0) {
+            String image = imageRepository.saveImage(seriesDTO.getId() + "-boxImage", ImageCategory.SERIES, seriesDTO.getBoxImageFile());
+            seriesDTO.setBoxImage(image);
+        } else {
+            seriesDTO.setBoxImage(imageRepository.getPath(seriesDTO.getId() + "-boxImage", ImageCategory.SERIES));
+        }
+        if (seriesDTO.getPosterBgImageFile().getSize() > 0) {
+            String image = imageRepository.saveImage(seriesDTO.getId() + "-posterBgImage", ImageCategory.SERIES, seriesDTO.getPosterBgImageFile());
+            seriesDTO.setPosterBgImage(image);
+        }
+
+        seriesRespository.updateSeriesV2(seriesDTO.toDomainObject());
     }
 
     @GetMapping("/role/{id}")

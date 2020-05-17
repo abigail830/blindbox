@@ -58,6 +58,7 @@ public class ProductionCreationTest {
                 "/app/data/series/header/testSeries.png",
                 "/app/data/series/cell/testSeries.png",
                 3,
+                12,
                 "/app/data/series/cell/longImage.png",
                 "/app/data/series/cell/boxImage.png",
                 ""));
@@ -68,6 +69,7 @@ public class ProductionCreationTest {
                 "/app/data/series/header/testSeries2.png",
                 "/app/data/series/cell/testSeries2.png",
                 3,
+                12,
                 "/app/data/series/cell/longImage.png",
                 "/app/data/series/cell/boxImage.png",
                 ""));

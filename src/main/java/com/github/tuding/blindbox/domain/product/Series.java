@@ -3,6 +3,7 @@ package com.github.tuding.blindbox.domain.product;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,9 +30,33 @@ public class Series {
     String matrixCellImage;
 
     Integer columnSize;
+    Integer totalSize;
+
     String longImage;
 
     String boxImage;
 
     String posterBgImage;
+
+    List<String> linkedRoleIds;
+
+    public Series(String id, String roleId, String name, String releaseDate, Boolean isNewSeries, Boolean isPresale,
+                  BigDecimal price, String seriesImage, String matrixHeaderImage, String matrixCellImage,
+                  Integer columnSize, Integer totalSize, String longImage, String boxImage, String posterBgImage) {
+        this.id = id;
+        this.roleId = roleId;
+        this.name = name;
+        this.releaseDate = releaseDate;
+        this.isNewSeries = isNewSeries;
+        this.isPresale = isPresale;
+        this.price = price;
+        this.seriesImage = seriesImage;
+        this.matrixHeaderImage = matrixHeaderImage;
+        this.matrixCellImage = matrixCellImage;
+        this.columnSize = columnSize;
+        this.totalSize = totalSize;
+        this.longImage = longImage;
+        this.boxImage = boxImage;
+        this.posterBgImage = posterBgImage;
+    }
 }
