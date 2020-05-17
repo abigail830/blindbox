@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.github.tuding.blindbox.infrastructure.Constant.DRAW_INIT_STATUS;
-import static com.github.tuding.blindbox.infrastructure.Constant.DRAW_ORDER_STATUS;
 
 @Service
 @Slf4j
@@ -199,7 +198,17 @@ public class DrawService {
         }
     }
 
-    public Draw exclusiveDraw(List<Product> productBySeries, String openId, String seriesId, Series series) {
+    public static class DrawKV {
+        public final Product product;
+        public final Draw draw;
+
+        public DrawKV(Product product, Draw draw) {
+            this.product = product;
+            this.draw = draw;
+        }
+    }
+
+    public DrawKV exclusiveDraw(List<Product> productBySeries, String openId, String seriesId, Series series) {
         Product selected = drawAProductBaseOnWeight(productBySeries);
         if (selected != null && selected.stock > 0L) {
             UUID drawID = UUID.randomUUID();
@@ -207,7 +216,9 @@ public class DrawService {
                     selected.getId(), seriesId, new Date(), series.price, series.boxImage,
                     selected.isSpecial, selected.productImage, series.name, selected);
             persistDraw(selected, draw);
-            return draw;
+            return new DrawKV(selected, draw);
+        } else if (selected != null){
+            return new DrawKV(selected, null);
         } else {
             return null;
         }
@@ -219,11 +230,13 @@ public class DrawService {
         String lastProductId = null;
         for (int count = 0; count < 12; count ++) {
             productBySeries = removeLastSelectedProduct(productBySeries, lastProductId);
-            Draw draw = exclusiveDraw(productBySeries, openId, seriesId, series);
-            if (draw != null) {
-                log.info("draw product {} to drawListID {}", draw.product.name,drawListID);
-                res.add(draw);
-                lastProductId = draw.getProductId();
+            DrawKV drawkv = exclusiveDraw(productBySeries, openId, seriesId, series);
+            if (drawkv != null) {
+                log.info("draw product {} to drawListID {}", drawkv.product, drawListID);
+                if (drawkv.draw != null) {
+                    res.add(drawkv.draw);
+                }
+                lastProductId = drawkv.product.id;
             } else {
                 lastProductId = null;
             }
@@ -266,5 +279,13 @@ public class DrawService {
                 cancelADrawByDrawId(draw.getDrawId());
             }
         }
+    }
+
+    public void setDrawRepository(DrawRepository drawRepository) {
+        this.drawRepository = drawRepository;
+    }
+
+    public void setProductRepository(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 }
