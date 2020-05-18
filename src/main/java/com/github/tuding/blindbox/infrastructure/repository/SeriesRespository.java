@@ -6,6 +6,7 @@ import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,6 +14,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -187,29 +190,34 @@ public class SeriesRespository {
     public void createSeriesV2(Series series) {
         log.info("handle series creation as {}", series);
         if (Toggle.TEST_MODE.isON()) {
-            insertSeriesTbl(series, "INSERT INTO series_v2_tbl ");
+            insertSeriesTbl(series, "INSERT INTO ");
         } else {
-            insertSeriesTbl(series, "INSERT ignore INTO series_v2_tbl ");
+            insertSeriesTbl(series, "INSERT ignore INTO ");
         }
     }
 
     public void addSeriesRoleMappingV2(String seriesId, List<String> roleIds) {
         log.info("handle series {} mapping with roles {}", seriesId, roleIds);
         if (Toggle.TEST_MODE.isON()) {
-            insertSeriesRoleMapping(seriesId, roleIds, "INSERT INTO series_role_mapping_tbl ");
+            insertSeriesRoleMapping(seriesId, roleIds, "INSERT INTO ");
         } else {
-            insertSeriesRoleMapping(seriesId, roleIds, "INSERT ignore INTO series_role_mapping_tbl ");
+            insertSeriesRoleMapping(seriesId, roleIds, "INSERT ignore INTO ");
         }
     }
 
     private void insertSeriesRoleMapping(String seriesId, List<String> roleIds, String header) {
-        String insertMappingSql = header + " (seriesId, roleId) VALUES (?, ?)";
-        for (String id : roleIds) {
-            int updateMapping = jdbcTemplate.update(insertMappingSql,
-                    seriesId,
-                    id);
-            log.info("update row {} in series_role_mapping_tbl ", updateMapping);
-        }
+        String insertMappingSql = header + "series_role_mapping_tbl (seriesId, roleId) VALUES (?, ?)";
+        jdbcTemplate.batchUpdate(insertMappingSql, new BatchPreparedStatementSetter() {
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setString(1, seriesId);
+                ps.setString(2, roleIds.get(i));
+            }
+
+            public int getBatchSize() {
+                return roleIds.size();
+            }
+        });
+        log.info("insert row {} - {} in series_role_mapping_tbl ", seriesId, roleIds);
     }
 
     public int removeSeriesRoleMapping(String seriesId, List<String> roleIds) {
@@ -225,7 +233,7 @@ public class SeriesRespository {
 
     private void insertSeriesTbl(Series series, String header) {
         String insertSql = header +
-                " (id, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, " +
+                "series_v2_tbl (id, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, " +
                 " matrixCellImage, columnSize, totalSize, longImage, boxImage, posterBgImage) " +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int update = jdbcTemplate.update(insertSql,
