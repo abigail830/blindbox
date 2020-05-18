@@ -36,7 +36,7 @@ public class DrawListRepository {
         drawList.setSeriesId(resultSet.getString("seriesId"));
         drawList.setDrawTime(resultSet.getTimestamp("drawTime"));
         drawList.setDrawGroup(convertStringToDrawGroup(resultSet.getString("drawGroup")));
-        Series series = seriesRespository.querySeriesByID(drawList.getSeriesId()).get();
+        Series series = seriesRespository.querySeriesByIDV2(drawList.getSeriesId()).get();
         drawList.setPrice(series.getPrice());
         drawList.setBoxImage(series.getBoxImage());
         drawList.setSeriesName(series.getName());

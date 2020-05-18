@@ -228,7 +228,7 @@ public class DrawService {
         List<Draw> res = new LinkedList<>();
         List<Product> productBySeries = productRepository.getProductBySeries(seriesId);
         String lastProductId = null;
-        for (int count = 0; count < 12; count ++) {
+        for (int count = 0; count < series.totalSize; count ++) {
             productBySeries = removeLastSelectedProduct(productBySeries, lastProductId);
             DrawKV drawkv = exclusiveDraw(productBySeries, openId, seriesId, series);
             if (drawkv != null) {
@@ -253,7 +253,7 @@ public class DrawService {
     public DrawList drawAListOfProduct(String openIdFromToken, String seriesId) {
         String drawListID = UUID.randomUUID().toString();
         log.info("Draw a list product for {} with drawList ID {}", seriesId, drawListID);
-        Optional<Series> series = seriesRespository.querySeriesByID(seriesId);
+        Optional<Series> series = seriesRespository.querySeriesByIDV2(seriesId);
         List<Draw> draws = handleExclusiveDrawing(openIdFromToken, seriesId, series.get(), drawListID);
         Map<Integer, Draw> drawGroup = new HashMap<>();
         for (int index = 0; index < draws.size(); index ++) {

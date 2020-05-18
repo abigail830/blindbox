@@ -162,7 +162,7 @@ class DrawServiceTest {
                 "","",0L, BigDecimal.valueOf(20), 10L));
         given(productRepository.getProductBySeries(anyString())).willReturn(productList);
         Series series = new Series();
-
+        series.setTotalSize(12);
         DrawService drawService = new DrawService();
         drawService.setDrawRepository(drawRepository);
         drawService.setProductRepository(productRepository);
@@ -195,7 +195,7 @@ class DrawServiceTest {
                 "","",0L, BigDecimal.valueOf(20), 100L));
         given(productRepository.getProductBySeries(anyString())).willReturn(productList);
         Series series = new Series();
-
+        series.setTotalSize(12);
         DrawService drawService = new DrawService();
         drawService.setDrawRepository(drawRepository);
         drawService.setProductRepository(productRepository);
@@ -238,7 +238,7 @@ class DrawServiceTest {
                 "","",0L, BigDecimal.valueOf(20), 100L));
         given(productRepository.getProductBySeries(anyString())).willReturn(productList);
         Series series = new Series();
-
+        series.setTotalSize(12);
         DrawService drawService = new DrawService();
         drawService.setDrawRepository(drawRepository);
         drawService.setProductRepository(productRepository);
@@ -287,7 +287,7 @@ class DrawServiceTest {
                 "","",0L, BigDecimal.valueOf(20), 100L));
         given(productRepository.getProductBySeries(anyString())).willReturn(productList);
         Series series = new Series();
-
+        series.setTotalSize(12);
         DrawService drawService = new DrawService();
         drawService.setDrawRepository(drawRepository);
         drawService.setProductRepository(productRepository);
@@ -341,7 +341,7 @@ class DrawServiceTest {
                 "","",0L, BigDecimal.valueOf(20), 10L));
         given(productRepository.getProductBySeries(anyString())).willReturn(productList);
         Series series = new Series();
-
+        series.setTotalSize(12);
         DrawService drawService = new DrawService();
         drawService.setDrawRepository(drawRepository);
         drawService.setProductRepository(productRepository);
