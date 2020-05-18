@@ -1,6 +1,5 @@
 package com.github.tuding.blindbox.infrastructure.repository;
 
-import com.github.tuding.blindbox.domain.product.Role;
 import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
@@ -13,15 +12,19 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
-public class SeriesRespository {
+public class SeriesRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -32,167 +35,86 @@ public class SeriesRespository {
     private RolesRepository rolesRepository;
 
     private RowMapper<Series> rowMapper = new BeanPropertyRowMapper<>(Series.class);
+    private RowMapper<SeriesEntity> seriesEntityRowMapper = new BeanPropertyRowMapper<>(SeriesEntity.class);
 
-    @Deprecated
-    public void saveSeries(Series series) {
-        log.info("handle series creation as {}", series);
-
-        if (Toggle.TEST_MODE.isON()) {
-            String insertSql = "INSERT INTO series_tbl " +
-                    " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, " +
-                    " matrixCellImage, columnSize, longImage, boxImage) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql,
-                    series.getId(),
-                    series.getRoleId(),
-                    series.getName(),
-                    series.getReleaseDate(),
-                    series.getIsNewSeries(),
-                    series.getIsPresale(),
-                    series.getPrice(),
-                    series.getSeriesImage(),
-                    series.getMatrixHeaderImage(),
-                    series.getMatrixCellImage(),
-                    series.getColumnSize(),
-                    series.getLongImage(),
-                    series.getBoxImage());
-            log.info("update row {} ", update);
-        } else {
-            String insertSql = "INSERT ignore INTO series_tbl " +
-                    " (id, roleID, name, releaseDate, isNewSeries, isPresale, price, seriesImage, matrixHeaderImage, " +
-                    " matrixCellImage, columnSize, longImage, boxImage) " +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            int update = jdbcTemplate.update(insertSql,
-                    series.getId(),
-                    series.getRoleId(),
-                    series.getName(),
-                    series.getReleaseDate(),
-                    series.getIsNewSeries(),
-                    series.getIsPresale(),
-                    series.getPrice(),
-                    series.getSeriesImage(),
-                    series.getMatrixHeaderImage(),
-                    series.getMatrixCellImage(),
-                    series.getColumnSize(),
-                    series.getLongImage(),
-                    series.getBoxImage());
-            log.info("update row {} ", update);
-        }
-    }
-
-
-    @Deprecated
-    public Optional<Series> querySeriesByName(String name) {
+    public Optional<Series> querySeriesByNameWithoutRoleId(String name) {
         log.info("Going to query series with name: {}", name);
 
-        List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_tbl WHERE name = ?", rowMapper, name);
+        List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_v2_tbl WHERE name = ?", rowMapper, name);
         return seriesList.stream().findFirst();
     }
 
-    /* querySeriesByIDV2 */
-    @Deprecated
-    public Optional<Series> querySeriesByID(String id) {
-        log.info("Going to query series with id: {}", id);
-
-        List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_tbl WHERE id = ?", rowMapper, id);
-        return seriesList.stream().findFirst();
-    }
-
-    public Optional<Series> querySeriesByIDV2(String id) {
+    public Optional<Series> querySeriesByIDWithoutRoleIds(String id) {
         log.info("Going to query series with id: {}", id);
 
         List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_v2_tbl WHERE id = ?", rowMapper, id);
         return seriesList.stream().findFirst();
     }
 
-    @Deprecated
+    List<Series> toSeriesList(List<SeriesEntity> seriesEntities) {
+        final Map<Series, List<String>> collect = seriesEntities.stream().collect(Collectors.groupingBy(
+                SeriesEntity::toSeries,
+                Collectors.mapping(SeriesEntity::getId, Collectors.toList())));
+        collect.keySet().forEach(c -> c.setLinkedRoleIds(collect.get(c)));
+        return new ArrayList<>(collect.keySet());
+    }
+
     public List<Series> queryByRoleID(String roleID) {
         log.info("Going to query series with role id: {}", roleID);
-        return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
+
+        String sql = "select s.*, m.roleId from series_v2_tbl s inner join series_role_mapping_tbl m" +
+                " where s.ID = m.seriesId and m.seriesId in" +
+                " (select seriesID from series_role_mapping_tbl where roleId = ?)";
+        final List<SeriesEntity> entities = jdbcTemplate.query(sql, seriesEntityRowMapper, roleID);
+
+        return toSeriesList(entities);
     }
 
-    @Deprecated
-    public List<Series> queryRoles() {
-        log.info("Going to query series ");
-        return jdbcTemplate.query("SELECT * FROM series_tbl", rowMapper);
-    }
-
-    @Deprecated
-    public void createSeries(Series series) {
-        Optional<Role> role = rolesRepository.queryRolesByID(series.getRoleId());
-        if (role.isPresent()) {
-            saveSeries(series);
-        } else {
-            throw new RuntimeException("Role id " + series.getRoleId() + " is not existed");
-        }
-    }
-
-    @Deprecated
+    @Transactional
     public void deleteSeries(String id) {
         log.info("Delete series for {}", id);
-        jdbcTemplate.update("DELETE FROM series_tbl where id = ?", id);
+        jdbcTemplate.update("DELETE FROM series_v2_tbl where id = ?", id);
+        jdbcTemplate.update("DELETE FROM series_role_mapping_tbl where seriesId = ?", id);
     }
 
-    @Deprecated
-    public void updateSeries(Series series) {
-        if (StringUtils.isNotBlank(series.getReleaseDate())) {
-            String updateSql = "UPDATE series_tbl " +
-                    " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?, boxImage = ?" +
-                    " WHERE id = ? ";
-            int update = jdbcTemplate.update(updateSql,
-                    series.getName(),
-                    series.getReleaseDate(),
-                    series.getIsNewSeries(),
-                    series.getIsPresale(),
-                    series.getPrice(),
-                    series.getColumnSize(),
-                    series.getBoxImage(),
-                    series.getId());
-            log.info("update row {} in series_tbl with ReleaseDate", update);
-        } else {
-            String updateSql = "UPDATE series_tbl " +
-                    " SET name = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?, boxImage = ?" +
-                    " WHERE id = ? ";
-            int update = jdbcTemplate.update(updateSql,
-                    series.getName(),
-                    series.getIsNewSeries(),
-                    series.getIsPresale(),
-                    series.getPrice(),
-                    series.getColumnSize(),
-                    series.getBoxImage(),
-                    series.getId());
-            log.info("update row {} in series_tbl without ReleaseDate", update);
-        }
-
-    }
-
-    @Deprecated
     public List<Series> queryAllNewSeries() {
         log.info("Going to query all new series");
-        return jdbcTemplate.query("SELECT * FROM series_tbl where isNewSeries = true", rowMapper);
+        final List<SeriesEntity> entities = jdbcTemplate.query("SELECT s.*, m.roleId FROM series_v2_tbl s" +
+                " inner join series_role_mapping_tbl m" +
+                " where s.ID = m.seriesId and s.isNewSeries = true;", seriesEntityRowMapper);
+        return toSeriesList(entities);
     }
 
-    @Deprecated
     public List<Series> queryAllSeriesWithPaging(Integer limitPerPage, Integer numOfPage) {
         log.info("Going to query all series");
-        return jdbcTemplate.query("SELECT * FROM series_tbl LIMIT ? OFFSET ?", rowMapper, limitPerPage, numOfPage);
+        final List<SeriesEntity> entities = jdbcTemplate.query("SELECT s.*, m.roleId FROM series_v2_tbl s" +
+                " inner join series_role_mapping_tbl m" +
+                " where s.ID = m.seriesId LIMIT ? OFFSET ?", seriesEntityRowMapper, limitPerPage, numOfPage);
+        return toSeriesList(entities);
     }
 
-    public List<Series> queryAllSeries() {
+    public List<Series> queryAllSeriesWithoutRoleIds() {
         log.info("Going to query all series.");
         return jdbcTemplate.query("SELECT * FROM series_v2_tbl", rowMapper);
     }
 
-    public Optional<Series> querySeriesV2ByID(String id) {
+    public Optional<Series> querySeriesByIDWithRoleIds(String id) {
         log.info("Going to query series with id: {}", id);
-
-        List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_v2_tbl WHERE id = ?", rowMapper, id);
-        return seriesList.stream().findFirst();
+        String sql = "SELECT s.*, m.roleId FROM series_v2_tbl s" +
+                " inner join series_role_mapping_tbl m" +
+                " where s.ID = m.seriesId and s.ID = ?";
+        final List<SeriesEntity> entities = jdbcTemplate.query(sql, seriesEntityRowMapper, id);
+        return toSeriesList(entities).stream().findFirst();
     }
 
     public List<String> queryLinkedRoleIdsBySeriesId(String seriesId) {
         String sql = "select roleId from series_role_mapping_tbl where seriesId = ?";
         return jdbcTemplate.queryForList(sql, new Object[]{seriesId}, String.class);
+    }
+
+    public int removeLinkedRolesWhenDelRole(String roleId) {
+        String sql = "delete from series_role_mapping_tbl where roleId = ?";
+        return jdbcTemplate.update(sql, roleId);
     }
 
     public void createSeriesV2(Series series) {
@@ -202,6 +124,8 @@ public class SeriesRespository {
         } else {
             insertSeriesTbl(series, "INSERT ignore INTO ");
         }
+
+        addSeriesRoleMappingV2(series.getId(), series.getLinkedRoleIds());
     }
 
     public void addSeriesRoleMappingV2(String seriesId, List<String> roleIds) {
@@ -294,6 +218,5 @@ public class SeriesRespository {
                     series.getId());
             log.info("update row {} ", update);
         }
-
     }
 }

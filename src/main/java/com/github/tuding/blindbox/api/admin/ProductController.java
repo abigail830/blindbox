@@ -1,14 +1,14 @@
 package com.github.tuding.blindbox.api.admin;
 
 import com.github.tuding.blindbox.api.admin.dto.ProductDTO;
-import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
+import com.github.tuding.blindbox.api.admin.dto.SeriesV2DTO;
 import com.github.tuding.blindbox.domain.ImageCategory;
 import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.exception.SeriesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
-import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
+import com.github.tuding.blindbox.infrastructure.repository.SeriesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     @Autowired
-    SeriesRespository seriesRespository;
+    SeriesRepository seriesRepository;
 
     @Autowired
     ProductRepository productRepository;
@@ -43,12 +43,11 @@ public class ProductController {
     private String imagePath;
 
     @GetMapping("/")
-    public String seriesPage(Model model,
-                             @RequestParam("seriesId") String seriesID) {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByIDV2(seriesID);
+    public String productPage(Model model,
+                              @RequestParam("seriesId") String seriesID) {
+        Optional<Series> seriesOptional = seriesRepository.querySeriesByIDWithoutRoleIds(seriesID);
         List<Product> products = productRepository.getProductBySeries(seriesOptional.get().getId());
-        model.addAttribute("roleId", seriesOptional.get().getRoleId());
-        model.addAttribute("series", new SeriesDTO(seriesOptional.get()));
+        model.addAttribute("series", new SeriesV2DTO(seriesOptional.get()));
         model.addAttribute("products", products.stream().map(ProductDTO::new).collect(Collectors.toList()));
         return "product";
     }
@@ -80,7 +79,7 @@ public class ProductController {
     public RedirectView handleForm(@PathVariable("seriesId") String seriesID,
                                    @ModelAttribute("productForm") ProductDTO productDTO,
                                    Model model) throws IOException {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByIDV2(seriesID);
+        Optional<Series> seriesOptional = seriesRepository.querySeriesByIDWithoutRoleIds(seriesID);
         if (seriesOptional.isPresent()) {
             if (StringUtils.isNotBlank(productDTO.getId())) {
                 log.info("handle product update as {} id {}", productDTO, seriesID);
@@ -121,12 +120,11 @@ public class ProductController {
         } else {
             throw new SeriesNotFoundException();
         }
-
     }
 
     @GetMapping("/series/{id}")
     public List<ProductDTO> getProductList(@PathVariable("id")String seriesID) {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByIDV2(seriesID);
+        Optional<Series> seriesOptional = seriesRepository.querySeriesByIDWithoutRoleIds(seriesID);
         if (seriesOptional.isPresent()) {
             List<Product> productBySeries = productRepository.getProductBySeries(seriesOptional.get().getId());
             return productBySeries.stream().map(ProductDTO::new).collect(Collectors.toList());
@@ -134,8 +132,6 @@ public class ProductController {
             return Collections.emptyList();
         }
     }
-
-
 
     @DeleteMapping("/{id}")
     public @ResponseBody

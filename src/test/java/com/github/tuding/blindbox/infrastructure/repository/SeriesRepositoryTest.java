@@ -19,20 +19,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SeriesRepositoryTest {
 
     @Autowired
-    SeriesRespository seriesRespository;
-
+    SeriesRepository seriesRepository;
 
     @Test
     @DataSet("expect-data/save-product.yml")
     void getSeriesByID() {
-        final Optional<Series> result = seriesRespository.querySeriesByName("testSeries2");
+        final Optional<Series> result = seriesRepository.querySeriesByNameWithoutRoleId("testSeries2");
         assertTrue(result.isPresent());
     }
 
     @Test
     @DataSet("expect-data/save-product.yml")
     void getSeries() {
-        final List<Series> result = seriesRespository.queryByRoleID("roleid1");
+        final List<Series> result = seriesRepository.queryByRoleID("roleid1");
         assertThat(result.size(), is(2));
     }
 

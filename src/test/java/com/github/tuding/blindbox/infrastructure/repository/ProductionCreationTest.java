@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class ProductionCreationTest {
     RolesRepository rolesRepository;
 
     @Autowired
-    SeriesRespository seriesRespository;
+    SeriesRepository seriesRepository;
 
     @Autowired
     ProductRepository productRepository;
@@ -52,7 +53,7 @@ public class ProductionCreationTest {
 
 
         //series
-        seriesRespository.createSeries(new Series("seriesid1", rolesRepository.queryRolesByName("testRole1").get().getId(),
+        Series series1 = new Series("seriesid1",
                 "testSeries", "2020-03-13", false, false, BigDecimal.valueOf(25.5),
                 "/app/data/series/testSeries.png",
                 "/app/data/series/header/testSeries.png",
@@ -61,9 +62,11 @@ public class ProductionCreationTest {
                 12,
                 "/app/data/series/cell/longImage.png",
                 "/app/data/series/cell/boxImage.png",
-                ""));
+                "");
+        series1.setLinkedRoleIds(Arrays.asList("testRole1"));
+        seriesRepository.createSeriesV2(series1);
 
-        seriesRespository.createSeries(new Series("seriesid2", rolesRepository.queryRolesByName("testRole1").get().getId(),
+        Series series2 = new Series("seriesid2",
                 "testSeries2", "2020-03-13", false, false, BigDecimal.valueOf(30),
                 "/app/data/series/testSeries2.png",
                 "/app/data/series/header/testSeries2.png",
@@ -72,12 +75,14 @@ public class ProductionCreationTest {
                 12,
                 "/app/data/series/cell/longImage.png",
                 "/app/data/series/cell/boxImage.png",
-                ""));
-        assertTrue(seriesRespository.querySeriesByName("testSeries").isPresent());
+                "");
+        series2.setLinkedRoleIds(Arrays.asList("testRole1"));
+        seriesRepository.createSeriesV2(series2);
+        assertTrue(seriesRepository.querySeriesByNameWithoutRoleId("testSeries").isPresent());
 
         //product
         productRepository.createProduct(new Product("productid1",
-                seriesRespository.querySeriesByName("testSeries").get().getId(),
+                seriesRepository.querySeriesByNameWithoutRoleId("testSeries").get().getId(),
                 "product1", false,
                 200L,
                 "/app/data/product/image/product1.png",
@@ -87,7 +92,7 @@ public class ProductionCreationTest {
                 200L));
 
         productRepository.createProduct(new Product("productid2",
-                seriesRespository.querySeriesByName("testSeries").get().getId(),
+                seriesRepository.querySeriesByNameWithoutRoleId("testSeries").get().getId(),
                 "product2", false,
                 200L,
                 "/app/data/product/image/product2.png",
@@ -97,7 +102,7 @@ public class ProductionCreationTest {
                 200L));
 
 
-        productRepository.createProduct(new Product("productid3", seriesRespository.querySeriesByName("testSeries").get().getId(),
+        productRepository.createProduct(new Product("productid3", seriesRepository.querySeriesByNameWithoutRoleId("testSeries").get().getId(),
                 "product3", true,
                 10L,
                 "/app/data/product/image/product3.png",

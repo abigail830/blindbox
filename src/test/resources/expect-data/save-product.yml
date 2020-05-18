@@ -5,26 +5,35 @@ roles_tbl:
   - id: roleid2
     name: testRole2
     role_image: "/app/data/role/testRole2/testRole2.png"
-series_tbl:
+series_role_mapping_tbl:
+  - id: 1
+    seriesId: seriesid1
+    roleId: roleid1
+  - id: 2
+    seriesId: seriesid2
+    roleId: roleid1
+series_v2_tbl:
   - id: seriesid1
-    roleID: roleid1
     name: "testSeries"
     isNewSeries: false
     isPresale: false
     releaseDate: "2020-03-13"
     price: 25.5
+    totalSize: 12
+    columnSize: 3
     seriesImage: "/app/data/series/testSeries.png"
     matrixHeaderImage: "/app/data/series/header/testSeries.png"
     matrixCellImage: "/app/data/series/cell/testSeries.png"
     longImage: "/app/data/series/cell/longImage.png"
     boxImage: "/app/data/series/cell/boxImage.png"
   - id: seriesid2
-    roleID: roleid1
     name: "testSeries2"
     isNewSeries: false
     isPresale: false
     releaseDate: "2020-03-13"
     price: 30
+    totalSize: 12
+    columnSize: 3
     seriesImage: "/app/data/series/testSeries2.png"
     matrixHeaderImage: "/app/data/series/header/testSeries2.png"
     matrixCellImage: "/app/data/series/cell/testSeries2.png"
