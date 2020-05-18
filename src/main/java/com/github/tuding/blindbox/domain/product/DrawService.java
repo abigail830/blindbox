@@ -228,7 +228,7 @@ public class DrawService {
         List<Draw> res = new LinkedList<>();
         List<Product> productBySeries = productRepository.getProductBySeries(seriesId);
         String lastProductId = null;
-        for (int count = 0; count < 12; count ++) {
+        for (int count = 0; count < series.totalSize; count ++) {
             productBySeries = removeLastSelectedProduct(productBySeries, lastProductId);
             DrawKV drawkv = exclusiveDraw(productBySeries, openId, seriesId, series);
             if (drawkv != null) {
