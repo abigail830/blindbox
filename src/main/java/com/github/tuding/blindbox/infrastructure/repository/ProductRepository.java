@@ -20,7 +20,7 @@ public class ProductRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private SeriesRespository seriesRespository;
+    private SeriesRepository seriesRepository;
 
     private RowMapper<Product> rowMapper = new BeanPropertyRowMapper<>(Product.class);
 
@@ -64,7 +64,7 @@ public class ProductRepository {
     }
 
     public void createProduct(Product product) {
-        if (seriesRespository.querySeriesByIDV2(product.getSeriesID()).isPresent()) {
+        if (seriesRepository.querySeriesByIDWithoutRoleIds(product.getSeriesID()).isPresent()) {
             saveProduct(product);
         } else {
             throw new RuntimeException("Series id " + product.getSeriesID() + " is not existed");

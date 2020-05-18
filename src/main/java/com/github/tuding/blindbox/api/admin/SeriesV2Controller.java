@@ -1,38 +1,27 @@
 package com.github.tuding.blindbox.api.admin;
 
 import com.github.tuding.blindbox.api.admin.dto.RoleWithCheck;
-import com.github.tuding.blindbox.api.admin.dto.SeriesDTO;
 import com.github.tuding.blindbox.api.admin.dto.SeriesV2DTO;
 import com.github.tuding.blindbox.domain.ImageCategory;
-import com.github.tuding.blindbox.domain.product.Role;
 import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.exception.SeriesNotFoundException;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.RolesRepository;
-import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
+import com.github.tuding.blindbox.infrastructure.repository.SeriesRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,11 +32,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin-ui/series/v2")
 public class SeriesV2Controller {
 
-    private static final ThreadLocal<SimpleDateFormat> simpleDateFormatter
-            = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"));
-
     @Autowired
-    SeriesRespository seriesRespository;
+    SeriesRepository seriesRepository;
 
     @Autowired
     RolesRepository rolesRepository;
@@ -59,7 +45,7 @@ public class SeriesV2Controller {
 
     @GetMapping("/")
     public String seriesPage(Model model) {
-        List<Series> seriesList = seriesRespository.queryAllSeries();
+        List<Series> seriesList = seriesRepository.queryAllSeriesWithoutRoleIds();
         List<SeriesV2DTO> seriesDTOs = seriesList.stream().map(SeriesV2DTO::new).collect(Collectors.toList());
         model.addAttribute("series", seriesDTOs);
         return "series_v2";
@@ -77,9 +63,9 @@ public class SeriesV2Controller {
     @GetMapping("/seriesform/{id}")
     public String editRole(Model model, @PathVariable String id) {
         // construct series
-        final SeriesV2DTO series = seriesRespository.querySeriesV2ByID(id).map(SeriesV2DTO::new)
+        final SeriesV2DTO series = seriesRepository.querySeriesByIDWithRoleIds(id).map(SeriesV2DTO::new)
                 .orElseThrow(() -> new BizException(ErrorCode.WX_USER_NOT_FOUND));
-        final List<String> linkedRoleIds = seriesRespository.queryLinkedRoleIdsBySeriesId(id);
+        final List<String> linkedRoleIds = seriesRepository.queryLinkedRoleIdsBySeriesId(id);
         series.setRoleIds(linkedRoleIds);
 
         // construct roles
@@ -132,27 +118,26 @@ public class SeriesV2Controller {
         seriesDTO.setPosterBgImage(image);
 
         seriesDTO.setId(seriesID.toString());
-        seriesRespository.createSeriesV2(seriesDTO.toDomainObject());
-        seriesRespository.addSeriesRoleMappingV2(seriesDTO.getId(), seriesDTO.getNewlinkedRoleIds());
+        seriesRepository.createSeriesV2(seriesDTO.toDomainObject());
     }
 
     @Transactional
     private void updateSeries(@ModelAttribute("series") SeriesV2DTO seriesDTO) {
         log.info("handle series update as {} ", seriesDTO);
         updateSeriesImages(seriesDTO);
-        seriesRespository.updateSeriesV2(seriesDTO.toDomainObject());
+        seriesRepository.updateSeriesV2(seriesDTO.toDomainObject());
 
         final List<String> toBeRemove = seriesDTO.getOrilinkedRoleIds().stream()
                 .filter(role -> !seriesDTO.getNewlinkedRoleIds().contains(role)).collect(Collectors.toList());
         log.info("toBeRemove: {}", toBeRemove);
         if (!toBeRemove.isEmpty())
-            seriesRespository.removeSeriesRoleMapping(seriesDTO.getId(), toBeRemove);
+            seriesRepository.removeSeriesRoleMapping(seriesDTO.getId(), toBeRemove);
 
         final List<String> toBeAdd = seriesDTO.getNewlinkedRoleIds().stream()
                 .filter(newRole -> !seriesDTO.getOrilinkedRoleIds().contains(newRole)).collect(Collectors.toList());
         log.info("toBeAdd {}", toBeAdd);
         if (!toBeAdd.isEmpty())
-            seriesRespository.addSeriesRoleMappingV2(seriesDTO.getId(), toBeAdd);
+            seriesRepository.addSeriesRoleMappingV2(seriesDTO.getId(), toBeAdd);
     }
 
     private void updateSeriesImages(@ModelAttribute("series") SeriesV2DTO seriesDTO) {
@@ -188,22 +173,11 @@ public class SeriesV2Controller {
         }
     }
 
-    @GetMapping("/role/{id}")
-    public List<SeriesDTO> getSeriesList(@PathVariable("id") String roleID) {
-        Optional<Role> roleOptional = rolesRepository.queryRolesByID(roleID);
-        if (roleOptional.isPresent()) {
-            List<Series> series = seriesRespository.queryByRoleID(roleOptional.get().getId());
-            return series.stream().map(SeriesDTO::new).collect(Collectors.toList());
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
     @GetMapping("/{id}")
-    public SeriesDTO getSeries(@PathVariable("id") String id) {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
+    public SeriesV2DTO getSeries(@PathVariable("id") String id) {
+        Optional<Series> seriesOptional = seriesRepository.querySeriesByIDWithoutRoleIds(id);
         if (seriesOptional.isPresent()) {
-            return new SeriesDTO(seriesOptional.get());
+            return new SeriesV2DTO(seriesOptional.get());
         } else {
             throw new SeriesNotFoundException();
         }
@@ -212,53 +186,7 @@ public class SeriesV2Controller {
     @DeleteMapping("/{id}")
     public @ResponseBody
     void deleteSeries(@PathVariable("id") String id) {
-        seriesRespository.deleteSeries(id);
-    }
-
-
-    @GetMapping("/{id}/images")
-    public ResponseEntity<Resource> getSeriesImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
-        if (seriesOptional.isPresent()) {
-            File file = new File(seriesOptional.get().getSeriesImage());
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            return ResponseEntity.ok()
-                    .contentLength(file.length())
-                    .contentType(MediaType.parseMediaType("image/png"))
-                    .body(resource);
-        } else {
-            throw new SeriesNotFoundException();
-        }
-    }
-
-    @GetMapping("/{id}/headerimage")
-    public ResponseEntity<Resource> getSeriesHeaderImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
-        if (seriesOptional.isPresent()) {
-            File file = new File(seriesOptional.get().getMatrixHeaderImage());
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            return ResponseEntity.ok()
-                    .contentLength(file.length())
-                    .contentType(MediaType.parseMediaType("image/png"))
-                    .body(resource);
-        } else {
-            throw new SeriesNotFoundException();
-        }
-    }
-
-    @GetMapping("/{id}/cellimage")
-    public ResponseEntity<Resource> getSeriesCellImage(@PathVariable("id") String id) throws FileNotFoundException {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(id);
-        if (seriesOptional.isPresent()) {
-            File file = new File(seriesOptional.get().getMatrixCellImage());
-            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-            return ResponseEntity.ok()
-                    .contentLength(file.length())
-                    .contentType(MediaType.parseMediaType("image/png"))
-                    .body(resource);
-        } else {
-            throw new SeriesNotFoundException();
-        }
+        seriesRepository.deleteSeries(id);
     }
 
 }

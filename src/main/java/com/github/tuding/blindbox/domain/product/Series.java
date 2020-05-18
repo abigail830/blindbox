@@ -13,7 +13,10 @@ import java.util.List;
 public class Series {
 
     String id;
+
+    @Deprecated
     String roleId;
+
     String name;
     String releaseDate;
     Boolean isNewSeries;
@@ -40,11 +43,10 @@ public class Series {
 
     List<String> linkedRoleIds;
 
-    public Series(String id, String roleId, String name, String releaseDate, Boolean isNewSeries, Boolean isPresale,
+    public Series(String id, String name, String releaseDate, Boolean isNewSeries, Boolean isPresale,
                   BigDecimal price, String seriesImage, String matrixHeaderImage, String matrixCellImage,
                   Integer columnSize, Integer totalSize, String longImage, String boxImage, String posterBgImage) {
         this.id = id;
-        this.roleId = roleId;
         this.name = name;
         this.releaseDate = releaseDate;
         this.isNewSeries = isNewSeries;

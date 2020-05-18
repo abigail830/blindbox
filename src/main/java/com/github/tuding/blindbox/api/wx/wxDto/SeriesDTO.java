@@ -15,7 +15,10 @@ import java.util.List;
 @Getter
 public class SeriesDTO {
     String id;
+
+    @Deprecated
     String roleId;
+
     String name;
     String releaseDate;
     Boolean isNewSeries;
@@ -32,42 +35,52 @@ public class SeriesDTO {
     String matrixCellImage;
 
     Integer columnSize;
+    Integer totalSize;
+
     String longImage;
 
     Integer productVolume;
 
     String boxImage;
 
-    public SeriesDTO (Series series, List<Product> productList) {
+    String posterBgImage;
+
+    List<String> linkedRoleIds;
+
+    public SeriesDTO(Series series, List<Product> productList) {
         this.id = series.getId();
-        this.roleId = series.getRoleId();
         this.name = series.getName();
         this.releaseDate = series.getReleaseDate();
         this.isNewSeries = series.getIsNewSeries();
         this.isPresale = series.getIsPresale();
         this.price = series.getPrice();
         this.columnSize = series.getColumnSize();
+        this.totalSize = series.getTotalSize();
         this.seriesImage = Constant.WX_UI_IMAGE_PATH + series.getSeriesImage();
         this.matrixHeaderImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixHeaderImage();
         this.matrixCellImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixCellImage();
         this.longImage = Constant.WX_UI_IMAGE_PATH + series.getLongImage();
         this.boxImage = Constant.WX_UI_IMAGE_PATH + series.getBoxImage();
+        this.posterBgImage = Constant.WX_UI_IMAGE_PATH + series.getPosterBgImage();
         this.productVolume = productList.size();
+        this.linkedRoleIds = series.getLinkedRoleIds();
     }
 
     public SeriesDTO (Series series) {
         this.id = series.getId();
-        this.roleId = series.getRoleId();
         this.name = series.getName();
         this.releaseDate = series.getReleaseDate();
         this.isNewSeries = series.getIsNewSeries();
         this.isPresale = series.getIsPresale();
         this.price = series.getPrice();
         this.columnSize = series.getColumnSize();
+        this.totalSize = series.getTotalSize();
         this.seriesImage = Constant.WX_UI_IMAGE_PATH + series.getSeriesImage();
         this.matrixHeaderImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixHeaderImage();
         this.matrixCellImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixCellImage();
         this.longImage = Constant.WX_UI_IMAGE_PATH + series.getLongImage();
         this.boxImage = Constant.WX_UI_IMAGE_PATH + series.getBoxImage();
+        this.posterBgImage = Constant.WX_UI_IMAGE_PATH + series.getPosterBgImage();
+        this.linkedRoleIds = series.getLinkedRoleIds();
     }
 }

@@ -4,7 +4,7 @@ import com.github.tuding.blindbox.exception.DrawNotFoundException;
 import com.github.tuding.blindbox.infrastructure.repository.DrawListRepository;
 import com.github.tuding.blindbox.infrastructure.repository.DrawRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ProductRepository;
-import com.github.tuding.blindbox.infrastructure.repository.SeriesRespository;
+import com.github.tuding.blindbox.infrastructure.repository.SeriesRepository;
 import com.github.tuding.blindbox.infrastructure.util.RetryUtil;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class DrawService {
     ProductRepository productRepository;
 
     @Autowired
-    SeriesRespository seriesRespository;
+    SeriesRepository seriesRepository;
 
     @Autowired
     DrawRepository drawRepository;
@@ -65,7 +65,7 @@ public class DrawService {
 
     public Draw drawAProduct(String openId, String seriesId) {
         log.info("Draw a product for {}", seriesId);
-        Optional<Series> series = seriesRespository.querySeriesByID(seriesId);
+        Optional<Series> series = seriesRepository.querySeriesByIDWithoutRoleIds(seriesId);
         Draw draw = RetryUtil.retryOnTimes(() -> handleDrawing(openId, seriesId, series.get()), 10, 0);
         log.info("Draw is made as {}", draw);
         return draw;
@@ -228,7 +228,7 @@ public class DrawService {
         List<Draw> res = new LinkedList<>();
         List<Product> productBySeries = productRepository.getProductBySeries(seriesId);
         String lastProductId = null;
-        for (int count = 0; count < series.totalSize; count ++) {
+        for (int count = 0; count < 12; count ++) {
             productBySeries = removeLastSelectedProduct(productBySeries, lastProductId);
             DrawKV drawkv = exclusiveDraw(productBySeries, openId, seriesId, series);
             if (drawkv != null) {
@@ -253,7 +253,7 @@ public class DrawService {
     public DrawList drawAListOfProduct(String openIdFromToken, String seriesId) {
         String drawListID = UUID.randomUUID().toString();
         log.info("Draw a list product for {} with drawList ID {}", seriesId, drawListID);
-        Optional<Series> series = seriesRespository.querySeriesByIDV2(seriesId);
+        Optional<Series> series = seriesRepository.querySeriesByIDWithoutRoleIds(seriesId);
         List<Draw> draws = handleExclusiveDrawing(openIdFromToken, seriesId, series.get(), drawListID);
         Map<Integer, Draw> drawGroup = new HashMap<>();
         for (int index = 0; index < draws.size(); index ++) {

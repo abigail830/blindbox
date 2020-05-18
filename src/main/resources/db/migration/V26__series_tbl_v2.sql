@@ -6,13 +6,13 @@ create TABLE series_v2_tbl (
   isPresale boolean NOT NULL,
   price double NOT NULL,
   columnSize INT DEFAULT 3,
-  totalSize INT NOT NULL,
+  totalSize INT DEFAULT 3,
   seriesImage varchar(1000) NOT NULL,
   matrixHeaderImage varchar(1000) NOT NULL,
   matrixCellImage varchar(1000) NOT NULL,
   longImage varchar(1000) DEFAULT NULL,
   boxImage varchar(1000) DEFAULT NULL,
-  posterBgImage varchar(1000) NOT NULL,
+  posterBgImage varchar(1000) DEFAULT NULL,
   update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
