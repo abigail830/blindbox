@@ -89,11 +89,19 @@ public class SeriesRespository {
         return seriesList.stream().findFirst();
     }
 
+    /* querySeriesByIDV2 */
     @Deprecated
     public Optional<Series> querySeriesByID(String id) {
         log.info("Going to query series with id: {}", id);
 
         List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_tbl WHERE id = ?", rowMapper, id);
+        return seriesList.stream().findFirst();
+    }
+
+    public Optional<Series> querySeriesByIDV2(String id) {
+        log.info("Going to query series with id: {}", id);
+
+        List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_v2_tbl WHERE id = ?", rowMapper, id);
         return seriesList.stream().findFirst();
     }
 

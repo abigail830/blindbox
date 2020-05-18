@@ -64,7 +64,7 @@ public class ProductRepository {
     }
 
     public void createProduct(Product product) {
-        if (seriesRespository.querySeriesByID(product.getSeriesID()).isPresent()) {
+        if (seriesRespository.querySeriesByIDV2(product.getSeriesID()).isPresent()) {
             saveProduct(product);
         } else {
             throw new RuntimeException("Series id " + product.getSeriesID() + " is not existed");

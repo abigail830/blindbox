@@ -45,7 +45,7 @@ public class ProductController {
     @GetMapping("/")
     public String seriesPage(Model model,
                              @RequestParam("seriesId") String seriesID) {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(seriesID);
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByIDV2(seriesID);
         List<Product> products = productRepository.getProductBySeries(seriesOptional.get().getId());
         model.addAttribute("roleId", seriesOptional.get().getRoleId());
         model.addAttribute("series", new SeriesDTO(seriesOptional.get()));
@@ -80,7 +80,7 @@ public class ProductController {
     public RedirectView handleForm(@PathVariable("seriesId") String seriesID,
                                    @ModelAttribute("productForm") ProductDTO productDTO,
                                    Model model) throws IOException {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(seriesID);
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByIDV2(seriesID);
         if (seriesOptional.isPresent()) {
             if (StringUtils.isNotBlank(productDTO.getId())) {
                 log.info("handle product update as {} id {}", productDTO, seriesID);
@@ -126,7 +126,7 @@ public class ProductController {
 
     @GetMapping("/series/{id}")
     public List<ProductDTO> getProductList(@PathVariable("id")String seriesID) {
-        Optional<Series> seriesOptional = seriesRespository.querySeriesByID(seriesID);
+        Optional<Series> seriesOptional = seriesRespository.querySeriesByIDV2(seriesID);
         if (seriesOptional.isPresent()) {
             List<Product> productBySeries = productRepository.getProductBySeries(seriesOptional.get().getId());
             return productBySeries.stream().map(ProductDTO::new).collect(Collectors.toList());
