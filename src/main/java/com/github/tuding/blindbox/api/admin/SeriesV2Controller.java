@@ -85,10 +85,11 @@ public class SeriesV2Controller {
     }
 
     @PostMapping("/form")
-    public RedirectView handleForm(@RequestParam("role") List<String> roleList,
+    public RedirectView handleForm(@RequestParam(value = "role", required = false) List<String> roleList,
                                    @ModelAttribute("series") SeriesV2DTO seriesDTO,
                                    Model model) throws IOException, ParseException {
-        seriesDTO.setNewlinkedRoleIds(roleList);
+        if (roleList != null && !roleList.isEmpty())
+            seriesDTO.setNewlinkedRoleIds(roleList);
         log.debug("-------- {}", seriesDTO);
 
         if (StringUtils.isNotBlank(seriesDTO.getId())) {
@@ -119,6 +120,7 @@ public class SeriesV2Controller {
 
         seriesDTO.setId(seriesID.toString());
         seriesRepository.createSeriesV2(seriesDTO.toDomainObject());
+        seriesRepository.addSeriesRoleMappingV2(seriesDTO.getId(), seriesDTO.getNewlinkedRoleIds());
     }
 
     @Transactional

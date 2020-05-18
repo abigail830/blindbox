@@ -5,12 +5,28 @@
     <title>blindbox</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
+
     <script crossorigin="anonymous" th:src="@{/javascript/jquery-3.1.1.min.js}"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $('#aform form')
+        .form({
+            fields: {
+                name: 'empty'
+            }
+        });
+    }
+
+    </script>
     <style>
         form {
             text-align: left;
         }
+
+
+
+
 
 
     </style>
@@ -55,7 +71,7 @@
             </div>
         </div>
         <div class="ui divider"></div>
-        <form action="/admin-ui/role/v2/roleform" class="ui form three wide column"
+        <form action="/admin-ui/role/v2/roleform" class="ui form" id="aform"
               enctype="multipart/form-data" method="POST" th:object="${role}">
             <input style="display: none" th:field="*{id}" type="text">
             <input style="display: none" th:field="*{roleImage}" type="text">

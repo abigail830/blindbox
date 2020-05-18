@@ -65,6 +65,7 @@ public class ProductionCreationTest {
                 "");
         series1.setLinkedRoleIds(Arrays.asList("testRole1"));
         seriesRepository.createSeriesV2(series1);
+        seriesRepository.addSeriesRoleMappingV2(series1.getId(), series1.getLinkedRoleIds());
 
         Series series2 = new Series("seriesid2",
                 "testSeries2", "2020-03-13", false, false, BigDecimal.valueOf(30),
@@ -78,6 +79,7 @@ public class ProductionCreationTest {
                 "");
         series2.setLinkedRoleIds(Arrays.asList("testRole1"));
         seriesRepository.createSeriesV2(series2);
+        seriesRepository.addSeriesRoleMappingV2(series1.getId(), series1.getLinkedRoleIds());
         assertTrue(seriesRepository.querySeriesByNameWithoutRoleId("testSeries").isPresent());
 
         //product
