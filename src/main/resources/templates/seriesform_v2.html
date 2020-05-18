@@ -10,16 +10,15 @@
     <script type="text/javascript">
         $(document).ready(function(){
             $('.ui.checkbox').checkbox();
-        });
 
-        $('.ui.form').form({
-            fields: {
-                releaseDate: 'empty',
-                activityStartDate: 'empty',
-                activityEndDate: 'empty',
-            }
+            $('#aform form').form({
+                fields: {
+                    name: 'empty',
+                    releaseDate: 'empty',
+                    roles: 'empty',
+                }
+            });
         });
-
 
     </script>
     <style>
@@ -74,7 +73,7 @@
             </div>
         </div>
         <div class="ui divider"></div>
-        <form class="ui form three wide column" enctype="multipart/form-data"
+        <form class="ui form three wide column" enctype="multipart/form-data" id="aform"
               method="POST" th:action="@{'/admin-ui/series/v2/form'}" th:object="${series}">
             <input style="display: none" th:field="*{id}" type="text">
             <input style="display: none" th:field="*{seriesImage}" type="text">
@@ -203,7 +202,7 @@
 
             <div class="scrollbox">
                 <div th:each="role : ${roles}">
-                    <div class="field">
+                    <div class="field required">
                         <div class="ui checkbox">
                             <input name="role" th:checked="${role.checked}" th:value="${role.id}" type="checkbox">
                             <label th:text="${role.name}"></label>

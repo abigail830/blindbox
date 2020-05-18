@@ -124,8 +124,6 @@ public class SeriesRepository {
         } else {
             insertSeriesTbl(series, "INSERT ignore INTO ");
         }
-
-        addSeriesRoleMappingV2(series.getId(), series.getLinkedRoleIds());
     }
 
     public void addSeriesRoleMappingV2(String seriesId, List<String> roleIds) {
