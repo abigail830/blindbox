@@ -4,7 +4,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://rm-m5ea3hl71812628z090130.mysql.rds.aliyuncs.com:3306/box_game?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://rm-m5ea3hl71812628z090130.mysql.rds.aliyuncs.com:3306/box_game?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai
     username: box_game
     password: ENC(pl3QmGys+EYeFm1wxWJBC2cwufAwi229)
   druid:

@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -128,5 +129,19 @@ public class ProductRepository {
     public List<String> getThreeRandomProductName() {
         String sql = "select name from product_v2_tbl order by rand() limit 3";
         return jdbcTemplate.queryForList(sql, String.class);
+    }
+
+    public void reduceStock(List<String> productIDs) {
+        long start = System.currentTimeMillis();
+        List<String> sqlList = new ArrayList<>(productIDs.size());
+        for (String productID : productIDs) {
+            sqlList.add("insert product_v2_tbl " +
+                    " select id, (version +1), seriesID, name, isSpecial, (stock -1), productImage, productGrayImage, now(), weight from " +
+                    " product_v2_tbl " +
+                    " where version =  (select max(version) as mv  from product_v2_tbl where id = '" + productID + "')" +
+                    " and id = '" + productID + "'");
+        }
+        jdbcTemplate.batchUpdate(sqlList.toArray(new String[sqlList.size()]));
+        log.info("Updated product stock in {}", System.currentTimeMillis() - start);
     }
 }

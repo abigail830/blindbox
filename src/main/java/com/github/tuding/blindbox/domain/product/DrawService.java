@@ -215,7 +215,6 @@ public class DrawService {
             Draw draw = new Draw(openId, drawID.toString(), DRAW_INIT_STATUS,
                     selected.getId(), seriesId, new Date(), series.price, series.boxImage,
                     selected.isSpecial, selected.productImage, series.name, selected);
-            persistDraw(selected, draw);
             return new DrawKV(selected, draw);
         } else if (selected != null){
             return new DrawKV(selected, null);
@@ -263,6 +262,7 @@ public class DrawService {
                 series.get().price, series.get().boxImage, series.get().name);
         log.info("Draw result {}", draws.stream().map(item -> item.product.name).collect(Collectors.toList()));
         log.info("Draw List is made as {}", drawList);
+        drawRepository.saveDraw(draws);
         drawListRepository.saveDrawList(drawList);
         return drawList;
     }

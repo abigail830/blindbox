@@ -9,6 +9,7 @@ import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,8 +17,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -105,6 +110,32 @@ public class DrawRepository {
 
     public void confirmDrawToOrder(String drawId) {
         jdbcTemplate.update("UPDATE draw_tbl SET drawStatus = ? WHERE drawId = ?", Constant.DRAW_ORDER_STATUS, drawId);
+
+    }
+
+    @Transactional
+    public void saveDraw(List<Draw> draws) {
+        List<String> productIDs = draws.stream().map(item -> item.getProductId()).collect(Collectors.toList());
+        productRepository.reduceStock(productIDs);
+        String insertSql = "INSERT INTO draw_tbl (openId, drawId, drawStatus, productId, seriesId, boxImage, price, seriesName) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        jdbcTemplate.batchUpdate(insertSql, new BatchPreparedStatementSetter() {
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setString(1, draws.get(i).getOpenId());
+                ps.setString(2, draws.get(i).getDrawId());
+                ps.setString(3, draws.get(i).getDrawStatus());
+                ps.setString(4, draws.get(i).getProductId());
+                ps.setString(5, draws.get(i).getSeriesId());
+                ps.setString(6, draws.get(i).getBoxImage());
+                ps.setBigDecimal(7, draws.get(i).getPrice());
+                ps.setString(8, draws.get(i).getSeriesName());
+            }
+
+            public int getBatchSize() {
+                return draws.size();
+            }
+        });
 
     }
 }
