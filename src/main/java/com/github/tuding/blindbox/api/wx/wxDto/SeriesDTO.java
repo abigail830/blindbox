@@ -49,6 +49,7 @@ public class SeriesDTO {
 
     public SeriesDTO(Series series, List<Product> productList) {
         this.id = series.getId();
+        this.roleId = series.getRoleId();
         this.name = series.getName();
         this.releaseDate = series.getReleaseDate();
         this.isNewSeries = series.getIsNewSeries();
@@ -68,6 +69,7 @@ public class SeriesDTO {
 
     public SeriesDTO (Series series) {
         this.id = series.getId();
+        this.roleId = series.getId();
         this.name = series.getName();
         this.releaseDate = series.getReleaseDate();
         this.isNewSeries = series.getIsNewSeries();

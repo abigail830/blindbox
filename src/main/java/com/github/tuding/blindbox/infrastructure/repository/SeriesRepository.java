@@ -59,12 +59,6 @@ public class SeriesRepository {
         return seriesList.stream().findFirst();
     }
 
-    @Deprecated
-    public List<Series> querySeriesByRoleIDOld(String roleID) {
-        log.info("Going to query series with role id: {}", roleID);
-        return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
-    }
-
     List<Series> toSeriesList(List<SeriesEntity> seriesEntities) {
         final Map<Series, List<String>> collect = seriesEntities.stream().collect(Collectors.groupingBy(
                 SeriesEntity::toSeries,

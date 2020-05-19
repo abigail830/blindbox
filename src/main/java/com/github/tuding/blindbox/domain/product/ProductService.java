@@ -36,7 +36,7 @@ public class ProductService {
 
     @Deprecated
     public List<Series> getSeriesListOld(String roleId) {
-        return seriesRepository.queryByRoleID(roleId);
+        return seriesRepository.queryByRoleIDOld(roleId);
     }
 
     public List<Series> getSeriesList(String roleId) {
