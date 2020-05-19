@@ -125,9 +125,10 @@ public class SeriesRepository {
 
     public List<Series> queryAllSeriesWithPaging(Integer limitPerPage, Integer numOfPage) {
         log.info("Going to query all series with paging");
-        final List<SeriesEntity> entities = jdbcTemplate.query("SELECT s.*, m.roleId FROM series_v2_tbl s" +
-                " inner join series_role_mapping_tbl m" +
-                " where s.ID = m.seriesId LIMIT ? OFFSET ?", seriesEntityRowMapper, limitPerPage, numOfPage);
+        String sql = "SELECT s.*, m.roleId as roleId FROM series_v2_tbl s " +
+                "inner join series_role_mapping_tbl m on s.ID = m.seriesId" +
+                " where s.ID in (select * from ( select s.id from series_v2_tbl s limit ? offset ?) as t)";
+        final List<SeriesEntity> entities = jdbcTemplate.query(sql, seriesEntityRowMapper, limitPerPage, numOfPage);
         return toSeriesList(entities);
     }
 
