@@ -173,11 +173,6 @@ class DrawServiceTest {
         assertThat(draws.size(), is(12));
         assertThat(productIdSet.size(), is(12));
 
-        for (Draw draw : draws) {
-            assertThat(draw.getProduct().getVersion(), is(1L));
-            assertThat(draw.getProduct().getStock(), is(99L));
-        }
-
     }
 
     @Test
