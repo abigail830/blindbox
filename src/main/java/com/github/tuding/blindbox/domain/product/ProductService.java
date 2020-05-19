@@ -34,6 +34,11 @@ public class ProductService {
         return rolesRepository.queryRoles();
     }
 
+    @Deprecated
+    public List<Series> getSeriesListOld(String roleId) {
+        return seriesRepository.queryByRoleID(roleId);
+    }
+
     public List<Series> getSeriesList(String roleId) {
         return seriesRepository.queryByRoleID(roleId);
     }

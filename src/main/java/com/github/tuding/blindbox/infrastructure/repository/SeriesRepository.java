@@ -79,6 +79,12 @@ public class SeriesRepository {
         return new ArrayList<>(collect.keySet());
     }
 
+    @Deprecated
+    public List<Series> queryByRoleIDOld(String roleID) {
+        log.info("Going to query series with role id: {}", roleID);
+        return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
+    }
+
     public List<Series> queryByRoleID(String roleID) {
         log.info("Going to query series with role id: {}", roleID);
 

@@ -51,6 +51,14 @@ public class WxProductController {
     @GetMapping("/{roleId}/series")
     @NeedWxVerifyToken
     @ApiOperation("根据角色ID，获取关联产品系列(需要带token)")
+    @Deprecated
+    public List<SeriesDTO> getSeriesListByRoleOld(@PathVariable("roleId") String roleId) {
+        return productService.getSeriesListOld(roleId).stream().map(SeriesDTO::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/v2/{roleId}/series")
+    @NeedWxVerifyToken
+    @ApiOperation("根据角色ID，获取关联产品系列(需要带token)")
     public List<SeriesDTO> getSeriesListByRole(@PathVariable("roleId") String roleId) {
         return productService.getSeriesList(roleId).stream().map(SeriesDTO::new).collect(Collectors.toList());
     }
