@@ -244,7 +244,7 @@ public class WxProductController {
     public DrawListDTO drawAListOfProductOld(HttpServletRequest request, @PathVariable("seriesId") String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         try {
-            return new DrawListDTO(drawService.drawAListOfProduct(jwt.getOpenIdFromToken(token), seriesId));
+            return new DrawListDTO(drawService.drawAListOfProductOld(jwt.getOpenIdFromToken(token), seriesId));
         } catch (Exception ex) {
             log.error("Failed to draw a list of product", ex);
             throw new DrawException();
