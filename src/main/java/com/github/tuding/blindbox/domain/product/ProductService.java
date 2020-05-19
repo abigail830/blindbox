@@ -42,9 +42,23 @@ public class ProductService {
         return seriesRepository.querySeriesByIDWithRoleIds(seriesId);
     }
 
+    @Deprecated
+    public Optional<Series> getSeriesOld(String seriesId) {
+        return seriesRepository.querySeriesByID(seriesId);
+    }
+
+    @Deprecated
+    public List<Series> getAllNewSeriesOld() {
+        return seriesRepository.queryAllNewSeriesOld();
+    }
 
     public List<Series> getAllNewSeries() {
         return seriesRepository.queryAllNewSeries();
+    }
+
+    @Deprecated
+    public List<Series> getAllSeriesOld(Integer limitPerPage, Integer numOfPage) {
+        return seriesRepository.queryAllSeriesWithPagingOld(limitPerPage, numOfPage);
     }
 
     public List<Series> getAllSeries(Integer limitPerPage, Integer numOfPage) {
@@ -58,6 +72,11 @@ public class ProductService {
 
     public List<Product> getProduct(String seriesId) {
         return productRepository.getProductBySeries(seriesId);
+    }
+
+    @Deprecated
+    public List<Product> getProductWithPriceOld(String seriesId) {
+        return productRepository.getProductWithPriceBySeriesIDOld(seriesId);
     }
 
     public List<Product> getProductWithPrice(String seriesId) {

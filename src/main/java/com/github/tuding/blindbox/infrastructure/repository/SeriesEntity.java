@@ -12,6 +12,30 @@ public class SeriesEntity extends Series {
     String roleId;
 
     public Series toSeries() {
-        return this;
+        return new Series(this.getId(), this.getName(), this.getReleaseDate(), this.getIsNewSeries(), this.getIsPresale(),
+                this.getPrice(), this.getSeriesImage(), this.getMatrixHeaderImage(), this.getMatrixCellImage(),
+                this.getColumnSize(), this.getTotalSize(), this.getLongImage(), this.getBoxImage(), this.getPosterBgImage());
+    }
+
+    @Override
+    public String toString() {
+        return "Series{" +
+                "id='" + getId() + '\'' +
+                ", name='" + getName() + '\'' +
+                ", releaseDate='" + getReleaseDate() + '\'' +
+                ", isNewSeries=" + getIsNewSeries() +
+                ", isPresale=" + getIsPresale() +
+                ", price=" + getPrice() +
+                ", seriesImage='" + getSeriesImage() + '\'' +
+                ", matrixHeaderImage='" + getMatrixHeaderImage() + '\'' +
+                ", matrixCellImage='" + getMatrixCellImage() + '\'' +
+                ", columnSize=" + getColumnSize() +
+                ", totalSize=" + getTotalSize() +
+                ", longImage='" + getLongImage() + '\'' +
+                ", boxImage='" + getBoxImage() + '\'' +
+                ", posterBgImage='" + getPosterBgImage() + '\'' +
+                ", linkedRoleIds=" + getLinkedRoleIds() + '\'' +
+                ", roleId=" + getRoleId() +
+                '}';
     }
 }

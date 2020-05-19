@@ -12,16 +12,12 @@ import lombok.*;
 public class RoleDTO {
     String id;
     String name;
-    String category;
-    String description;
     //Image c
     String roleImage;
 
     public RoleDTO(Role role) {
         this.id = role.getId();
         this.name = role.getName();
-        this.category = "";
-        this.description = "";
         this.roleImage = Constant.WX_UI_IMAGE_PATH + role.getRoleImage();
     }
 }

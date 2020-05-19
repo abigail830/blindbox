@@ -4,6 +4,7 @@ import com.github.tuding.blindbox.api.wx.wxDto.*;
 import com.github.tuding.blindbox.domain.product.DrawService;
 import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.domain.product.ProductService;
+import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.domain.user.UserService;
 import com.github.tuding.blindbox.exception.DrawException;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -56,18 +58,46 @@ public class WxProductController {
     @GetMapping("/series/{seriesId}")
     @NeedWxVerifyToken
     @ApiOperation("根据ID，获取指定产品系列， 包括产品数量(需要带token)")
+    @Deprecated
+    public SeriesDTO getSeriesOld(@PathVariable("seriesId") String seriesId) {
+        final Optional<Series> seriesOld = productService.getSeriesOld(seriesId);
+        return seriesOld.map(series -> new SeriesDTO(series, productService.getProduct(seriesId)))
+                .orElseGet(SeriesDTO::new);
+    }
+
+    @GetMapping("/v2/series/{seriesId}")
+    @NeedWxVerifyToken
+    @ApiOperation("根据ID，获取指定产品系列， 包括产品数量(需要带token)")
     public SeriesDTO getSeries(@PathVariable("seriesId") String seriesId) {
         return new SeriesDTO(productService.getSeries(seriesId).get(), productService.getProduct(seriesId));
     }
+
+
     @GetMapping("/series/{seriesId}/products")
     @NeedWxVerifyToken
     @ApiOperation("根据产品系列ID，获取产品列表(需要带token)")
+    @Deprecated
+    public List<ProductDTO> getProductBySeriesIdOld(@PathVariable("seriesId") String seriesId) {
+        return productService.getProductWithPriceOld(seriesId).stream().map(ProductDTO::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/v2/series/{seriesId}/products")
+    @NeedWxVerifyToken
+    @ApiOperation("根据产品系列ID，获取产品列表(需要带token) - 接口没变，从新表获取")
     public List<ProductDTO> getProductBySeriesId(@PathVariable("seriesId") String seriesId) {
         return productService.getProductWithPrice(seriesId).stream().map(ProductDTO::new).collect(Collectors.toList());
     }
 
-
     @GetMapping("/series/new")
+    @NeedWxVerifyToken
+    @ApiOperation("获取所有新品系列(需要带token)")
+    @Deprecated
+    public List<SeriesDTO> getAllNewSeriesOld() {
+        return productService.getAllNewSeriesOld().stream()
+                .map(SeriesDTO::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/v2/series/new")
     @NeedWxVerifyToken
     @ApiOperation("获取所有新品系列(需要带token)")
     public List<SeriesDTO> getAllNewSeries() {
@@ -78,7 +108,16 @@ public class WxProductController {
     @GetMapping("/series/all/paging")
     @NeedWxVerifyToken
     @ApiOperation("分页获取所有产品系列(需要带token), numOfPage start from 0")
-    public List<SeriesDTO> getAllNewSeries(@RequestParam Integer limitPerPage, Integer numOfPage) {
+    @Deprecated
+    public List<SeriesDTO> getAllSeriesWithPagingOld(@RequestParam Integer limitPerPage, Integer numOfPage) {
+        return productService.getAllSeriesOld(limitPerPage, numOfPage).stream()
+                .map(SeriesDTO::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/v2/series/all/paging")
+    @NeedWxVerifyToken
+    @ApiOperation("分页获取所有产品系列(需要带token), numOfPage start from 0")
+    public List<SeriesDTO> getAllSeriesWithPaging(@RequestParam Integer limitPerPage, Integer numOfPage) {
         return productService.getAllSeries(limitPerPage, numOfPage).stream()
                 .map(SeriesDTO::new).collect(Collectors.toList());
     }
@@ -87,10 +126,23 @@ public class WxProductController {
     @PutMapping("/draw/{seriesId}")
     @NeedWxVerifyToken
     @ApiOperation("在指定产品系列下抽一盒， 返回抽盒信息(需要带token)")
-    public DrawDTO drawAProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
+    @Deprecated
+    public DrawDTO drawAProductOld(HttpServletRequest request, @PathVariable("seriesId") String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         try {
-            return new DrawDTO(drawService.drawAProduct(jwt.getOpenIdFromToken(token),seriesId));
+            return new DrawDTO(drawService.drawAProductOld(jwt.getOpenIdFromToken(token), seriesId));
+        } catch (Exception ex) {
+            throw new DrawException();
+        }
+    }
+
+    @PutMapping("/v2/draw/{seriesId}")
+    @NeedWxVerifyToken
+    @ApiOperation("在指定产品系列下抽一盒， 返回抽盒信息(需要带token)")
+    public DrawDTO drawAProduct(HttpServletRequest request, @PathVariable("seriesId") String seriesId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        try {
+            return new DrawDTO(drawService.drawAProduct(jwt.getOpenIdFromToken(token), seriesId));
         } catch (Exception ex) {
             throw new DrawException();
         }
@@ -99,6 +151,7 @@ public class WxProductController {
     @GetMapping("/draw/")
     @NeedWxVerifyToken
     @ApiOperation("获取当前的抽盒 (需要带token) - 此接口已停用")
+    @Deprecated
     public DrawDTO getADrawForUserOpenID(HttpServletRequest request) {
         log.warn("getADrawForUserOpenID 接口应停用");
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
@@ -122,6 +175,7 @@ public class WxProductController {
     @DeleteMapping("/draw/")
     @NeedWxVerifyToken
     @ApiOperation("取消已有的抽盒 (需要带token) - 此接口已停用")
+    @Deprecated
     public void cancelADrawForUserOpenID(HttpServletRequest request) {
         log.warn("cancelADrawForUserOpenID 接口应停用");
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
@@ -174,15 +228,29 @@ public class WxProductController {
     }
 
 
-
     @PutMapping("/v2/drawList/{seriesId}")
     @NeedWxVerifyToken
     @ApiOperation(value = "在指定产品系列下抽一组（12盒）， 返回抽盒信息(需要带token)",
             notes = "每次都会从该系列下所有产品中，按照机率抽取12个，在map中返回。如果抽中的某产品对应库存为0，则map中该index对应draw为null")
-    public DrawListDTO drawAListOfProduct(HttpServletRequest request,  @PathVariable("seriesId") String seriesId) {
+    @Deprecated
+    public DrawListDTO drawAListOfProductOld(HttpServletRequest request, @PathVariable("seriesId") String seriesId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         try {
-            return new DrawListDTO(drawService.drawAListOfProduct(jwt.getOpenIdFromToken(token),seriesId));
+            return new DrawListDTO(drawService.drawAListOfProduct(jwt.getOpenIdFromToken(token), seriesId));
+        } catch (Exception ex) {
+            log.error("Failed to draw a list of product", ex);
+            throw new DrawException();
+        }
+    }
+
+    @PutMapping("/v3/drawList/{seriesId}")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "在指定产品系列下抽一组（12盒）， 返回抽盒信息(需要带token)",
+            notes = "每次都会从该系列下所有产品中，按照机率抽取12个，在map中返回。如果抽中的某产品对应库存为0，则map中该index对应draw为null")
+    public DrawListDTO drawAListOfProduct(HttpServletRequest request, @PathVariable("seriesId") String seriesId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        try {
+            return new DrawListDTO(drawService.drawAListOfProduct(jwt.getOpenIdFromToken(token), seriesId));
         } catch (Exception ex) {
             log.error("Failed to draw a list of product", ex);
             throw new DrawException();
@@ -192,10 +260,10 @@ public class WxProductController {
     @GetMapping("/v2/drawList/{drawListID}")
     @NeedWxVerifyToken
     @ApiOperation("获取已抽的抽盒组 (需要带token)")
-    public DrawListDTO getDrawList(HttpServletRequest request,  @PathVariable("drawListID") String drawListID) {
+    public DrawListDTO getDrawList(HttpServletRequest request, @PathVariable("drawListID") String drawListID) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         try {
-            return new DrawListDTO(drawService.getDrawList(jwt.getOpenIdFromToken(token),drawListID));
+            return new DrawListDTO(drawService.getDrawList(jwt.getOpenIdFromToken(token), drawListID));
         } catch (Exception ex) {
             log.error("Failed to get draw list", ex);
             throw new DrawException();

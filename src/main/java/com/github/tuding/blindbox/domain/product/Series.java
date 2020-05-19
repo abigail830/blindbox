@@ -10,6 +10,7 @@ import java.util.List;
 @ToString
 @Setter
 @Getter
+@EqualsAndHashCode
 public class Series {
 
     String id;
@@ -61,4 +62,5 @@ public class Series {
         this.boxImage = boxImage;
         this.posterBgImage = posterBgImage;
     }
+
 }

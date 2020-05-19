@@ -37,7 +37,7 @@ public class RoleV2Controller {
 
     @GetMapping("/")
     public String roleList(Model model) {
-        List<Role> roles = rolesRepository.queryRoles();
+        List<Role> roles = rolesRepository.queryRolesOrderByName();
         List<RoleDTO> roleDTOS = roles.stream().map(RoleDTO::new).collect(Collectors.toList());
         log.info(roleDTOS.toString());
         model.addAttribute("roles", roleDTOS);

@@ -5,29 +5,26 @@
     <title>blindbox</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
+    <link rel="stylesheet" th:href="@{/style/quill.snow.css}">
 
     <script crossorigin="anonymous" th:src="@{/javascript/jquery-3.1.1.min.js}"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
+    <script th:src="@{/javascript/quill.js}"></script>
+
     <script type="text/javascript">
     $(document).ready(function(){
-        $('#aform form')
-        .form({
-            fields: {
+
+        $('.ui.form').form({
                 name: 'empty'
-            }
-        });
-    }
+         });
+    });
 
     </script>
+
     <style>
         form {
             text-align: left;
         }
-
-
-
-
-
 
     </style>
 
@@ -93,6 +90,7 @@
         </form>
     </div>
 </div>
+
 <script>
     var _URL = window.URL || window.webkitURL;
 
@@ -121,6 +119,7 @@
         readUrl(this);
 
     })
+
 
 </script>
 </body>

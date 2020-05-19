@@ -51,11 +51,31 @@ public class SeriesRepository {
         return seriesList.stream().findFirst();
     }
 
+    @Deprecated
+    public Optional<Series> querySeriesByID(String id) {
+        log.info("Going to query series with id: {}", id);
+
+        List<Series> seriesList = jdbcTemplate.query("SELECT * FROM series_tbl WHERE id = ?", rowMapper, id);
+        return seriesList.stream().findFirst();
+    }
+
+    @Deprecated
+    public List<Series> querySeriesByRoleIDOld(String roleID) {
+        log.info("Going to query series with role id: {}", roleID);
+        return jdbcTemplate.query("SELECT * FROM series_tbl WHERE roleId = ?", rowMapper, roleID);
+    }
+
     List<Series> toSeriesList(List<SeriesEntity> seriesEntities) {
         final Map<Series, List<String>> collect = seriesEntities.stream().collect(Collectors.groupingBy(
                 SeriesEntity::toSeries,
-                Collectors.mapping(SeriesEntity::getId, Collectors.toList())));
-        collect.keySet().forEach(c -> c.setLinkedRoleIds(collect.get(c)));
+                Collectors.mapping(SeriesEntity::getRoleId, Collectors.toList())));
+        log.info("----- {}", collect);
+
+        List<Series> series = new ArrayList<>();
+        collect.keySet().forEach(c -> {
+            c.setLinkedRoleIds(collect.get(c));
+            log.info("----- {}", c);
+        });
         return new ArrayList<>(collect.keySet());
     }
 
@@ -77,6 +97,12 @@ public class SeriesRepository {
         jdbcTemplate.update("DELETE FROM series_role_mapping_tbl where seriesId = ?", id);
     }
 
+    @Deprecated
+    public List<Series> queryAllNewSeriesOld() {
+        log.info("Going to query all new series");
+        return jdbcTemplate.query("SELECT * FROM series_tbl where isNewSeries = true", rowMapper);
+    }
+
     public List<Series> queryAllNewSeries() {
         log.info("Going to query all new series");
         final List<SeriesEntity> entities = jdbcTemplate.query("SELECT s.*, m.roleId FROM series_v2_tbl s" +
@@ -85,8 +111,20 @@ public class SeriesRepository {
         return toSeriesList(entities);
     }
 
-    public List<Series> queryAllSeriesWithPaging(Integer limitPerPage, Integer numOfPage) {
+    @Deprecated
+    public List<Series> querySeriesOld() {
+        log.info("Going to query all series ");
+        return jdbcTemplate.query("SELECT * FROM series_tbl", rowMapper);
+    }
+
+    @Deprecated
+    public List<Series> queryAllSeriesWithPagingOld(Integer limitPerPage, Integer numOfPage) {
         log.info("Going to query all series");
+        return jdbcTemplate.query("SELECT * FROM series_tbl LIMIT ? OFFSET ?", rowMapper, limitPerPage, numOfPage);
+    }
+
+    public List<Series> queryAllSeriesWithPaging(Integer limitPerPage, Integer numOfPage) {
+        log.info("Going to query all series with paging");
         final List<SeriesEntity> entities = jdbcTemplate.query("SELECT s.*, m.roleId FROM series_v2_tbl s" +
                 " inner join series_role_mapping_tbl m" +
                 " where s.ID = m.seriesId LIMIT ? OFFSET ?", seriesEntityRowMapper, limitPerPage, numOfPage);

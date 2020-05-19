@@ -58,9 +58,18 @@ public class DrawService {
                 log.info("Cancel the timeout draw {}", draw);
                 cancelADraw(draw);
             }
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             log.error("Failed to handle draw scan. ", ex);
         }
+    }
+
+    @Deprecated
+    public Draw drawAProductOld(String openId, String seriesId) {
+        log.info("Draw a product for {}", seriesId);
+        Optional<Series> series = seriesRepository.querySeriesByID(seriesId);
+        Draw draw = RetryUtil.retryOnTimes(() -> handleDrawing(openId, seriesId, series.get()), 10, 0);
+        log.info("Draw is made as {}", draw);
+        return draw;
     }
 
     public Draw drawAProduct(String openId, String seriesId) {
@@ -249,13 +258,31 @@ public class DrawService {
                 .collect(Collectors.toList());
     }
 
+    @Deprecated
+    public DrawList drawAListOfProductOld(String openIdFromToken, String seriesId) {
+        String drawListID = UUID.randomUUID().toString();
+        log.info("Draw a list product for {} with drawList ID {}", seriesId, drawListID);
+        Optional<Series> series = seriesRepository.querySeriesByIDWithoutRoleIds(seriesId);
+        List<Draw> draws = handleExclusiveDrawing(openIdFromToken, seriesId, series.get(), drawListID);
+        Map<Integer, Draw> drawGroup = new HashMap<>();
+        for (int index = 0; index < draws.size(); index++) {
+            drawGroup.put(index, draws.get(index));
+        }
+        DrawList drawList = new DrawList(openIdFromToken, drawListID, drawGroup, seriesId, new Date(),
+                series.get().price, series.get().boxImage, series.get().name);
+        log.info("Draw result {}", draws.stream().map(item -> item.product.name).collect(Collectors.toList()));
+        log.info("Draw List is made as {}", drawList);
+        drawListRepository.saveDrawList(drawList);
+        return drawList;
+    }
+
     public DrawList drawAListOfProduct(String openIdFromToken, String seriesId) {
         String drawListID = UUID.randomUUID().toString();
         log.info("Draw a list product for {} with drawList ID {}", seriesId, drawListID);
         Optional<Series> series = seriesRepository.querySeriesByIDWithoutRoleIds(seriesId);
         List<Draw> draws = handleExclusiveDrawing(openIdFromToken, seriesId, series.get(), drawListID);
         Map<Integer, Draw> drawGroup = new HashMap<>();
-        for (int index = 0; index < draws.size(); index ++) {
+        for (int index = 0; index < draws.size(); index++) {
             drawGroup.put(index, draws.get(index));
         }
         DrawList drawList = new DrawList(openIdFromToken, drawListID, drawGroup, seriesId, new Date(),

@@ -97,12 +97,20 @@ public class ProductRepository {
         log.info("update row {} ", update);
     }
 
+    @Deprecated
+    public List<Product> getProductWithPriceBySeriesIDOld(String id) {
+        log.info("Going to query product with product series: {}", id);
+        return jdbcTemplate.query(" SELECT p.id, p.seriesId, p.name, p.productImage, p.productGrayImage, price, p.weight FROM product_v2_tbl p " +
+                " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion " +
+                " inner join series_tbl as series on p.seriesId = series.id " +
+                " WHERE p.seriesID = ?", rowMapper, id);
+    }
 
     public List<Product> getProductWithPriceBySeriesID(String id) {
         log.info("Going to query product with product series: {}", id);
         return jdbcTemplate.query(" SELECT p.id, p.seriesId, p.name, p.productImage, p.productGrayImage, price, p.weight FROM product_v2_tbl p " +
                 " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion " +
-                " inner join series_tbl as series on p.seriesId = series.id " +
+                " inner join series_v2_tbl as series on p.seriesId = series.id " +
                 " WHERE p.seriesID = ?", rowMapper, id);
     }
 
