@@ -23,8 +23,8 @@ import static com.github.tuding.blindbox.infrastructure.Constant.DRAW_INIT_STATU
 @Service
 @Slf4j
 public class DrawService {
-    //1 day
-    public static long DRAW_TIMEOUT = 86400000;
+    //1 hour
+    public static long DRAW_TIMEOUT = 3600000;
 
     @Autowired
     ProductRepository productRepository;
