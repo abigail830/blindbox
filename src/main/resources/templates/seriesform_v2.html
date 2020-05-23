@@ -90,10 +90,10 @@
             <div class="two fields">
                 <div class="field">
                     <label>发布日期</label>
-                    <div class="ui calendar">
+                    <div class="ui calendar" id="releaseCal">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input name="releaseDate" th:field="*{releaseDate}" th:value="*{releaseDate}" type="date">
+                            <input name="releaseDate" th:field="*{releaseDate}" th:value="*{releaseDate}" type="text">
                         </div>
                     </div>
                 </div>
@@ -271,6 +271,19 @@
         previewAndShowSize(this, '#posterBgImageFileSize', '#posterBgImageFileDisplay');
     });
 
+    $('#releaseCal').calendar({
+        type: 'date',
+        formatter: {
+          date: function (date, setting) {
+              if (!date) return "";
+              var day = date.getDate();
+              var month = date.getMonth() + 1;
+              var year = date.getFullYear();
+              return year + '-' + month + '-' + day;
+
+          }
+        }
+    });
 
 </script>
 </body>
