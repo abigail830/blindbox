@@ -7,6 +7,7 @@ import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.client.WxClient;
 import com.github.tuding.blindbox.infrastructure.file.ImageRepository;
 import com.github.tuding.blindbox.infrastructure.repository.ActivityRepository;
+import com.github.tuding.blindbox.infrastructure.repository.UserRepository;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class ActivityService {
 
     @Autowired
     ActivityRepository activityRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     WxClient wxClient;
@@ -95,9 +99,14 @@ public class ActivityService {
         }
 
         final Activity existingRecord = activity.get();
+        //add bonus
+        if (existingRecord.isExistingSubscriber(openId)) {
+            userRepository.addBonus(openId, existingRecord.getGiftBonus());
+            log.info("Added bonus for user {} when 1st subscribe to activity {}", openId, activityId);
+        }
+        //add notifier
         existingRecord.addNotifyInfo(openId, redirectPage);
         activityRepository.addNotification(existingRecord);
-
     }
 
     public void sendActivityNotify(String activityId) {

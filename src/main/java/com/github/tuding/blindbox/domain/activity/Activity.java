@@ -119,6 +119,10 @@ public class Activity {
         }
     }
 
+    public Boolean isExistingSubscriber(String openId) {
+        return this.notify.contains(openId);
+    }
+
     public void setNotify(Set<String> notifySet) {
         if (null != notifySet && !notifySet.isEmpty()) {
             this.notify = String.join(Activity.NOTIFY_SEPARATOR, notifySet);
