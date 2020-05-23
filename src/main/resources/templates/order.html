@@ -84,7 +84,7 @@
                         <a href="#" th:if="${item.status =='运费已付'}" title="发货">
                             <i class="paper plane outline icon"
                                th:attr="onclick=|showModal('${item.orderId}', '${item.productName}',
-                               '${item.combineAddr}', '', '')|"></i>
+                               '${item.combineAddr}', '顺丰', '')|"></i>
                         </a>
                         <a href="#" th:if="${item.status =='已发货'}" title="发货">
                             <i class="paper edit outline icon"
