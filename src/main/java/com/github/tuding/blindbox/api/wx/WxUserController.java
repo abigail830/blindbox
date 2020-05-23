@@ -49,7 +49,9 @@ public class WxUserController {
     @ApiOperation("根据Token获取用户信息(需要带token)")
     public User getUserByToken(HttpServletRequest request) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        return userService.getUserByToken(token);
+        final User userByToken = userService.getUserByToken(token);
+        log.info("User info {}", userByToken);
+        return userByToken;
     }
 
 
