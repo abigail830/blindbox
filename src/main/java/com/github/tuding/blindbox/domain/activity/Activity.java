@@ -29,18 +29,24 @@ public class Activity {
     String activityName;
     String activityDescription;
     MultipartFile mainImg;
+    MultipartFile contentImg;
     Boolean shownInAd;
     Timestamp activityStartDate;
     Timestamp activityEndDate;
 
     Timestamp lastUpdateTime;
     String mainImgAddr;
+    String contentImgAddr;
 
     String notify;
     String notifyJumpPage;
 
+    Integer giftBonus;
+
     public Activity(String id, String name, String description, Boolean shownInAd,
-                    Date activityStartDate, Date activityEndDate, MultipartFile mainImg, String mainImgAddr) {
+                    Date activityStartDate, Date activityEndDate,
+                    MultipartFile mainImg, String mainImgAddr,
+                    MultipartFile contentImg, String contentImgAddr, Integer giftBonus) {
         this.id = Strings.isNullOrEmpty(id) ? null : id;
         this.activityName = Strings.isNullOrEmpty(name) ? null : name;
         this.activityDescription = Strings.isNullOrEmpty(description) ? "" : description;
@@ -57,10 +63,14 @@ public class Activity {
         }
         this.mainImg = mainImg;
         this.mainImgAddr = mainImgAddr;
+        this.contentImg = contentImg;
+        this.contentImgAddr = contentImgAddr;
+        this.giftBonus = giftBonus;
     }
 
     public Activity(String id, String activityName, String activityDescription, Boolean shownInAd,
-                    Date activityStartDate, Date activityEndDate, String mainImgAddr) {
+                    Date activityStartDate, Date activityEndDate, String mainImgAddr, String contentImgAddr,
+                    Integer giftBonus) {
         this.id = id;
         this.activityName = activityName;
         this.activityDescription = activityDescription;
@@ -68,6 +78,8 @@ public class Activity {
         this.activityStartDate = new Timestamp(activityStartDate.getTime());
         this.activityEndDate = new Timestamp(activityEndDate.getTime());
         this.mainImgAddr = mainImgAddr;
+        this.contentImgAddr = contentImgAddr;
+        this.giftBonus = giftBonus;
     }
 
     public void addNotifyInfo(String openId, String redirectPage) {

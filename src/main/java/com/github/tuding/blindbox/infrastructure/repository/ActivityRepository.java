@@ -27,30 +27,34 @@ public class ActivityRepository {
 
         if (Toggle.TEST_MODE.isON()) {
             String insertSql = "INSERT INTO activity_tbl (id, activity_name, activity_description, shown_in_ad, " +
-                    "main_img_addr, activity_start_date, activity_end_date) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    "main_img_addr, content_img_addr, activity_start_date, activity_end_date, gift_bonus) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql,
                     activity.getId(),
                     activity.getActivityName(),
                     activity.getActivityDescription(),
                     activity.getShownInAd(),
                     activity.getMainImgAddr(),
+                    activity.getContentImgAddr(),
                     activity.getActivityStartDate(),
-                    activity.getActivityEndDate()
+                    activity.getActivityEndDate(),
+                    activity.getGiftBonus()
             );
             log.info("update row {} ", update);
         } else {
             String insertSql = "INSERT ignore INTO activity_tbl (id, activity_name, activity_description, shown_in_ad, " +
-                    "main_img_addr, activity_start_date, activity_end_date) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    "main_img_addr, content_img_addr, activity_start_date, activity_end_date, gift_bonus) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             int update = jdbcTemplate.update(insertSql,
                     activity.getId(),
                     activity.getActivityName(),
                     activity.getActivityDescription(),
                     activity.getShownInAd(),
                     activity.getMainImgAddr(),
+                    activity.getContentImgAddr(),
                     activity.getActivityStartDate(),
-                    activity.getActivityEndDate()
+                    activity.getActivityEndDate(),
+                    activity.getGiftBonus()
             );
             log.info("update row {} ", update);
         }
@@ -77,7 +81,7 @@ public class ActivityRepository {
 
         String updateSQL = "UPDATE activity_tbl " +
                 " SET activity_name=?, activity_description=?, shown_in_ad=?" +
-                ", activity_start_date=?, activity_end_date=?, main_img_addr=? " +
+                ", activity_start_date=?, activity_end_date=?, main_img_addr=?, content_img_addr=?, gift_bonus=? " +
                 " WHERE id = ?";
         int update = jdbcTemplate.update(updateSQL,
                 activity.getActivityName(),
@@ -86,6 +90,8 @@ public class ActivityRepository {
                 activity.getActivityStartDate(),
                 activity.getActivityEndDate(),
                 activity.getMainImgAddr(),
+                activity.getContentImgAddr(),
+                activity.getGiftBonus(),
                 activity.getId());
         log.info("update row {} ", update);
     }

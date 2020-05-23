@@ -5,11 +5,9 @@
     <title>blindbox</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
-    <link rel="stylesheet" th:href="@{/style/quill.snow.css}">
 
     <script th:src="@{/javascript/jquery-3.1.1.min.js}" crossorigin="anonymous"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
-    <script th:src="@{/javascript/quill.js}"></script>
 
     <script type="text/javascript">
         $(document).ready(function(){
@@ -22,6 +20,8 @@
                     name: 'empty',
                     activityStartDate: 'empty',
                     activityEndDate: 'empty',
+                    description: 'empty',
+                    giftBonus: 'empty',
                 }
             });
 
@@ -53,30 +53,6 @@
                 }
             });
 
-            //editor
-            var options = {
-                debug: 'info',
-                modules: {
-                    toolbar: ['bold', 'link', 'image']
-                },
-                placeholder: '输入活动内容介绍',
-                theme: 'snow'
-             };
-              var quill = new Quill('#editor', options);
-
-              quill.getModule('toolbar').addHandler('image', showImageUI);
-
-            var showImageUI = function(image, callback) {
-                var range = quill.getSelection();
-                var value = prompt('image URL');
-                this.quill.insertEmbed(range.index, 'image', value, Quill.sources.USER);
-            };
-
-            quill.on('editor-change', function(eventName, ...args) {
-                $('#content').val(quill.root.innerHTML)
-                //console.log($('#content').val())
-            });
-
          });
 
 
@@ -86,15 +62,9 @@
             text-align: left;
         }
 
-        .editor_container {
-            height: 300px;
-        }
         .submit_btn {
-            margin-top: 80px;
+            margin-top: 20px;
         }
-
-
-
     </style>
 
 </head>
@@ -144,12 +114,11 @@
             <p th:text="${activityForm.errorMsg}" th:if="${activityForm.errorMsg!=null}">errorMsg</p>
         </div>
 
-        <form id="aform" class="ui form" enctype="multipart/form-data" method="POST" autocomplete="off"
+        <form autocomplete="off" class="ui form" enctype="multipart/form-data" method="POST"
               action="#" th:action="@{/admin-ui/activities/form}" th:object="${activityForm}">
 
             <input type="text" th:field="*{id}" style="display: none">
             <input type="text" th:field="*{mode}" style="display: none">
-            <input type="text" id="description" name="description" style="display: none">
 
             <div class="field required ">
                 <label>活动名称</label>
@@ -182,6 +151,19 @@
                 </div>
             </div>
 
+            <div class="field required ">
+                <label>活动规则</label>
+                <input name="description" placeholder="Description" th:field="*{description}"
+                       th:readonly="${activityForm.readOnly}"
+                       type="text">
+            </div>
+
+            <div class="field required ">
+                <label>活动奖励积分</label>
+                <input name="giftBonus" placeholder="100" th:field="*{giftBonus}" th:readonly="${activityForm.readOnly}"
+                       type="number">
+            </div>
+
             <div class="field">
                 <div class="ui checkbox">
                     <input id="showInAd-box" type="checkbox" th:field="*{shownInAd}"
@@ -196,17 +178,20 @@
                     <img class="ui small image"
                          th:src="*{mainImgAddr}">
                 </div>
-                <input type="file" th:field="*{mainImg}" name="mainImg" th:if="*{!readOnly}">
+                <input id="mainImg" name="mainImg" th:field="*{mainImg}" th:if="*{!readOnly}" type="file">
                 <input type="text" th:field="*{mainImgAddr}" style="display: none">
             </div>
 
-            <br/>
-            <div class="editor_container field">
-                <!-- Create the editor container -->
-                <div id="editor" th:readonly="${activityForm.readOnly}" th:utext="*{description}"
-                     th:name="*{description}">
+            <div class="inline field required">
+                <label>活动内容图</label>
+                <div th:if="*{contentImgAddr!=null and contentImgAddr!=''}">
+                    <img class="ui small image"
+                         th:src="*{contentImgAddr}">
                 </div>
+                <input id="contentImg" name="contentImg" th:field="*{contentImg}" th:if="*{!readOnly}" type="file">
+                <input style="display: none" th:field="*{contentImgAddr}" type="text">
             </div>
+
             <div th:if="${!activityForm.readOnly}" class="submit_btn">
                 <button class="ui button">提交</button>
             </div>
@@ -214,15 +199,5 @@
 
     </div>
 </div>
-
-<script type="text/javascript">
-
-
-    document.getElementById('aform').onsubmit=function () {
-        $("#description").val($('.ql-editor')[0].innerHTML);
-    }
-
-</script>
-
 </body>
 </html>

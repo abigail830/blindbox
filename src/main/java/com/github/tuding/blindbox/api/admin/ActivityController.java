@@ -97,6 +97,13 @@ public class ActivityController {
             model.addAttribute("activityForm", activityForm);
             return "activityForm";
         }
+        if (activityForm.getContentImg().isEmpty() && Strings.isNullOrEmpty(activityForm.getContentImgAddr())) {
+            activityForm.setupMode(Mode.valueOf(activityForm.getMode()));
+            activityForm.setErrorMsg("活动内容图缺失！");
+            log.info("Lack of content image, redirect back to form [{}]", activityForm);
+            model.addAttribute("activityForm", activityForm);
+            return "activityForm";
+        }
 
         if (activityForm.getActivityStartDateAsTS().after(activityForm.getActivityEndDateAsTS())) {
             activityForm.setupMode(Mode.valueOf(activityForm.getMode()));
