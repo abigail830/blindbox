@@ -51,16 +51,8 @@ public class Activity {
         this.activityName = Strings.isNullOrEmpty(name) ? null : name;
         this.activityDescription = Strings.isNullOrEmpty(description) ? "" : description;
         this.shownInAd = shownInAd;
-        if (activityStartDate != null) {
-            this.activityStartDate = new Timestamp(activityStartDate.getTime());
-        } else {
-            this.activityStartDate = new Timestamp(new Date().getTime());
-        }
-        if (activityEndDate != null) {
-            this.activityEndDate = new Timestamp(activityEndDate.getTime());
-        } else {
-            this.activityEndDate = new Timestamp(new Date().getTime());
-        }
+        this.activityStartDate = new Timestamp(activityStartDate.getTime());
+        this.activityEndDate = new Timestamp(activityEndDate.getTime());
         this.mainImg = mainImg;
         this.mainImgAddr = mainImgAddr;
         this.contentImg = contentImg;
