@@ -120,7 +120,10 @@ public class Activity {
     }
 
     public Boolean isExistingSubscriber(String openId) {
-        return this.notify.contains(openId);
+        if (Strings.isNullOrEmpty(this.notify))
+            return Boolean.FALSE;
+        else
+            return this.notify.contains(openId);
     }
 
     public void setNotify(Set<String> notifySet) {
