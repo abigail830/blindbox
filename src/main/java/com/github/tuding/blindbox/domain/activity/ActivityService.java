@@ -100,7 +100,7 @@ public class ActivityService {
 
         final Activity existingRecord = activity.get();
         //add bonus
-        if (existingRecord.isExistingSubscriber(openId)) {
+        if (!existingRecord.isExistingSubscriber(openId)) {
             userRepository.addBonus(openId, existingRecord.getGiftBonus());
             log.info("Added bonus for user {} when 1st subscribe to activity {}", openId, activityId);
         }
