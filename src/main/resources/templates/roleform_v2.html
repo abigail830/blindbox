@@ -70,7 +70,7 @@
         <form action="/admin-ui/role/v2/roleform" class="ui form" id="roleForm"
               enctype="multipart/form-data" method="POST" th:object="${role}">
             <input style="display: none" th:field="*{id}" type="text">
-            <input style="display: none" th:field="*{roleImage}" type="text">
+            <input style="display: none" th:field="*{roleImage}" type="text" id="checked" required="required">
             <div class="field required">
                 <label>角色名称</label>
                 <input data-validate="name" name="name" th:field="*{name}" type="text">
@@ -79,7 +79,7 @@
                 <label>角色图片 (尺寸要求: 150 * 190)</label>
                 <div>
                     <img class="ui medium circular image" id="roleImageFileDisplay"
-                         th:src="${role.roleImage}">
+                         th:src="${role.roleImage}" >
                 </div>
                 <input id="roleImageFile" name="roleImageFile" type="file">
                 <p id="roleImageFileSize"></p>
@@ -109,7 +109,16 @@
             img = new Image();
             var objectUrl = _URL.createObjectURL(file);
             img.onload = function () {
-                $('#roleImageFileSize').text("当前尺寸: " +  this.width + "*" + this.height)
+                if (this.width != 150 || this.height != 190) {
+                    $('#roleImageFileSize').text("*当前尺寸不符合上传规格: " +  this.width + "*" + this.height);
+                    $('#roleImageFileSize').css('color','red');
+                    $('#checked').val('');
+                } else {
+                    $('#roleImageFileSize').text("当前尺寸符合上传规格: " +  this.width + "*" + this.height);
+                    $('#roleImageFileSize').css('color','green');
+                    $('#checked').val('pass');
+
+                }
                 _URL.revokeObjectURL(objectUrl);
 
             };
@@ -118,6 +127,7 @@
         readUrl(this);
 
     })
+
 
 
 </script>

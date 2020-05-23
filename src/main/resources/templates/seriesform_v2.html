@@ -76,8 +76,8 @@
         <form class="ui form three wide column" enctype="multipart/form-data" id="aform"
               method="POST" th:action="@{'/admin-ui/series/v2/form'}" th:object="${series}">
             <input style="display: none" th:field="*{id}" type="text">
-            <input style="display: none" th:field="*{seriesImage}" type="text">
-            <input style="display: none" th:field="*{matrixHeaderImage}" type="text">
+            <input style="display: none" th:field="*{seriesImage}" type="text" required="required" id="seriesImageChecked">
+            <input style="display: none" th:field="*{matrixHeaderImage}" type="text" required="required" id="matrixHeaderImageChecked">
             <input style="display: none" th:field="*{matrixCellImage}" type="text">
             <input style="display: none" th:field="*{orilinkedRoleIds}" type="text">
 
@@ -246,13 +246,36 @@
         readUrl(previewElementID, thisElement);
     }
 
+    function previewAndShowSizeAndValidate(thisElement, sizeElementID, previewElementID, width, height, checkedElementID) {
+        var file, img;
+        if ((file = thisElement.files[0])) {
+            img = new Image();
+            var objectUrl = _URL.createObjectURL(file);
+            img.onload = function () {
+                if (this.width != width || this.height != height) {
+                    $(sizeElementID).text("*当前尺寸不符合上传规格: " +  this.width + "*" + this.height);
+                    $(sizeElementID).css('color','red');
+                    $(checkedElementID).val('');
+                } else {
+                    $(sizeElementID).text("当前尺寸符合上传规格: " +  this.width + "*" + this.height)
+                    $(sizeElementID).css('color','green');
+                    $(checkedElementID).val('pass');
+
+                }
+                _URL.revokeObjectURL(objectUrl);
+            };
+            img.src = objectUrl;
+        }
+        readUrl(previewElementID, thisElement);
+    }
+
     $("#seriesImageFile").change(function (e) {
-        previewAndShowSize(this, '#seriesImageFileSize', '#seriesImageFileDisplay');
+        previewAndShowSizeAndValidate(this, '#seriesImageFileSize', '#seriesImageFileDisplay', 694, 300, '#seriesImageChecked');
 
     });
 
     $("#matrixHeaderImageFile").change(function (e) {
-        previewAndShowSize(this, '#matrixHeaderImageFileSize', '#matrixHeaderImageFileDisplay');
+        previewAndShowSizeAndValidate(this, '#matrixHeaderImageFileSize', '#matrixHeaderImageFileDisplay', 694, 300, '#matrixHeaderImageChecked');
     });
 
     $("#matrixCellImageFile").change(function (e) {
