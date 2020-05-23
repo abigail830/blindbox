@@ -103,10 +103,10 @@ public class WxClient {
         activity.getNotifierAsSet().forEach(notifierOpenId -> {
             Map<String, TemplateData> data = new HashMap<>();
             data.put("thing1", new TemplateData(activity.getActivityName()));
-            data.put("thing4", new TemplateData("这是一个活动规则"));
+            data.put("thing4", new TemplateData(activity.getActivityDescription()));
             data.put("date6", new TemplateData(simpleDateFormatter.format(activity.getActivityStartDate())));
             data.put("time8", new TemplateData(simpleTimeFormatter.format(activity.getActivityStartDate())));
-            data.put("thing13", new TemplateData("这是奖励礼品"));
+            data.put("thing13", new TemplateData("奖励积分" + activity.getGiftBonus()));
 
             final WxNotifyRequest request = new WxNotifyRequest(access_token, activity.getNotifyJumpPage(),
                     notifierOpenId, TEMPLATE_ID, data);
