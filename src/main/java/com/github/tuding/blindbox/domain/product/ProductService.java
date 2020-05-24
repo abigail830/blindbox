@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -91,5 +92,10 @@ public class ProductService {
     public Product getProductWithoutPrice(String drawId) {
         return productRepository.getProductWithoutPriceByDrawID(drawId)
                 .orElseThrow(ProductNotFoundException::new);
+    }
+
+    public List<String> getBoughtProductIds(List<Product> products) {
+        final List<String> ids = products.stream().map(Product::getId).collect(Collectors.toList());
+        return productRepository.getProductIdWhichPayed(ids);
     }
 }

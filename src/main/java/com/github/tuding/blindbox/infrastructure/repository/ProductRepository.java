@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +22,9 @@ import java.util.Optional;
 public class ProductRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     private SeriesRepository seriesRepository;
@@ -151,5 +157,19 @@ public class ProductRepository {
         }
         jdbcTemplate.batchUpdate(sqlList.toArray(new String[sqlList.size()]));
         log.info("Updated product stock in {}", System.currentTimeMillis() - start);
+    }
+
+    public List<String> getProductIdWhichPayed(List<String> ids) {
+        final List<String> status = Arrays.asList(OrderStatus.NEW.name(),
+                OrderStatus.PAY_PRODUCT_EXPIRY.name(), OrderStatus.PAY_PRODUCT_FAIL.name());
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", ids);
+        parameters.addValue("status", status);
+
+        String sql = "select DISTINCT d.productId from draw_tbl d where" +
+                " d.productId in (:ids) and" +
+                " d.drawId in (select o.drawId drawId from order_tbl o where status not in (:status))";
+        return namedParameterJdbcTemplate.queryForList(sql, parameters, String.class);
     }
 }

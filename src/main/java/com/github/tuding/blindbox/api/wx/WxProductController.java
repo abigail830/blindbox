@@ -100,8 +100,11 @@ public class WxProductController {
     @NeedWxVerifyToken
     @ApiOperation("根据产品系列ID，获取产品列表, buy标示该用户是否购买了该产品 (需要带token)")
     public List<ProductWithBuyFlagDTO> getProductWithBuyFlagBySeriesId(@PathVariable("seriesId") String seriesId) {
-        return productService.getProductWithPrice(seriesId).stream()
-                .map(p -> new ProductWithBuyFlagDTO(p, Boolean.FALSE))
+        final List<Product> products = productService.getProductWithPrice(seriesId);
+        List<String> boughtProductId = productService.getBoughtProductIds(products);
+
+        return products.stream()
+                .map(p -> new ProductWithBuyFlagDTO(p, boughtProductId))
                 .collect(Collectors.toList());
     }
 
