@@ -159,15 +159,17 @@ public class ProductRepository {
         log.info("Updated product stock in {}", System.currentTimeMillis() - start);
     }
 
-    public List<String> getProductIdWhichPayed(List<String> ids) {
+    public List<String> getProductIdWhichPayed(List<String> ids, String openId) {
         final List<String> status = Arrays.asList(OrderStatus.NEW.name(),
                 OrderStatus.PAY_PRODUCT_EXPIRY.name(), OrderStatus.PAY_PRODUCT_FAIL.name());
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);
         parameters.addValue("status", status);
+        parameters.addValue("openId", openId);
 
         String sql = "select DISTINCT d.productId from draw_tbl d where" +
+                " d.openId = (:openId) and" +
                 " d.productId in (:ids) and" +
                 " d.drawId in (select o.drawId from order_tbl o where o.status not in (:status))";
         return namedParameterJdbcTemplate.queryForList(sql, parameters, String.class);

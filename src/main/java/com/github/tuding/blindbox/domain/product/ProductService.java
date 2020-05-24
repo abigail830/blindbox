@@ -94,8 +94,8 @@ public class ProductService {
                 .orElseThrow(ProductNotFoundException::new);
     }
 
-    public List<String> getBoughtProductIds(List<Product> products) {
+    public List<String> getBoughtProductIds(List<Product> products, String openId) {
         final List<String> ids = products.stream().map(Product::getId).collect(Collectors.toList());
-        return productRepository.getProductIdWhichPayed(ids);
+        return productRepository.getProductIdWhichPayed(ids, openId);
     }
 }
