@@ -169,7 +169,7 @@ public class ProductRepository {
 
         String sql = "select DISTINCT d.productId from draw_tbl d where" +
                 " d.productId in (:ids) and" +
-                " d.drawId in (select o.drawId drawId from order_tbl o where status not in (:status))";
+                " d.drawId in (select o.drawId from order_tbl o where o.status not in (:status))";
         return namedParameterJdbcTemplate.queryForList(sql, parameters, String.class);
     }
 }

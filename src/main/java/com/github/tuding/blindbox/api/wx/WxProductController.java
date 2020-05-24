@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -101,11 +102,16 @@ public class WxProductController {
     @ApiOperation("根据产品系列ID，获取产品列表, buy标示该用户是否购买了该产品 (需要带token)")
     public List<ProductWithBuyFlagDTO> getProductWithBuyFlagBySeriesId(@PathVariable("seriesId") String seriesId) {
         final List<Product> products = productService.getProductWithPrice(seriesId);
-        List<String> boughtProductId = productService.getBoughtProductIds(products);
 
-        return products.stream()
-                .map(p -> new ProductWithBuyFlagDTO(p, boughtProductId))
-                .collect(Collectors.toList());
+        if (products != null && !products.isEmpty()) {
+            List<String> boughtProductId = productService.getBoughtProductIds(products);
+            return products.stream()
+                    .map(p -> new ProductWithBuyFlagDTO(p, boughtProductId))
+                    .collect(Collectors.toList());
+        }
+
+        log.warn("No product found for specified series {}", seriesId);
+        return Collections.emptyList();
     }
 
     @GetMapping("/series/new")
