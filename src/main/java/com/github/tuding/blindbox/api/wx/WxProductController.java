@@ -96,6 +96,15 @@ public class WxProductController {
         return productService.getProductWithPrice(seriesId).stream().map(ProductDTO::new).collect(Collectors.toList());
     }
 
+    @GetMapping("/v2/series/{seriesId}/products-with-buy-flag")
+    @NeedWxVerifyToken
+    @ApiOperation("根据产品系列ID，获取产品列表, buy标示该用户是否购买了该产品 (需要带token)")
+    public List<ProductWithBuyFlagDTO> getProductWithBuyFlagBySeriesId(@PathVariable("seriesId") String seriesId) {
+        return productService.getProductWithPrice(seriesId).stream()
+                .map(p -> new ProductWithBuyFlagDTO(p, Boolean.FALSE))
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/series/new")
     @NeedWxVerifyToken
     @ApiOperation("获取所有新品系列(需要带token)")
@@ -217,7 +226,7 @@ public class WxProductController {
     @NeedWxVerifyToken
     @ApiOperation(value = "扣减积分以兑换提示券, 返回提示信息/剩余积分 (需要带token)")
     public TipsCouponDTO getTipsByBonus(HttpServletRequest request,
-                                                @PathVariable String drawId) {
+                                        @PathVariable String drawId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_DISCOUNT_COUPON_CONSUME_BONUS);
         Product excludedProduct = drawService.getExcludedProduct(drawId);
@@ -228,7 +237,7 @@ public class WxProductController {
     @NeedWxVerifyToken
     @ApiOperation(value = "扣减积分以兑换提示券, 返回抽中产品信息/剩余积分 (需要带token)")
     public DisplayCouponDTO getDisplayByBonus(HttpServletRequest request,
-                                        @PathVariable String drawId) {
+                                              @PathVariable String drawId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_DISCOUNT_COUPON_CONSUME_BONUS);
         Product excludedProduct = drawService.getDrawProduct(drawId);
@@ -281,7 +290,7 @@ public class WxProductController {
     @DeleteMapping("/v2/drawList/{drawListID}")
     @NeedWxVerifyToken
     @ApiOperation("取消之前已抽（已锁定库存的）抽盒组 (需要带token)")
-    public void cancelDrawList(HttpServletRequest request,  @PathVariable("drawListID") String drawListID) {
+    public void cancelDrawList(HttpServletRequest request, @PathVariable("drawListID") String drawListID) {
         drawService.cancelADrawListbyDrawListId(drawListID);
     }
 }

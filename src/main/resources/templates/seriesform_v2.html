@@ -11,7 +11,7 @@
         $(document).ready(function(){
             $('.ui.checkbox').checkbox();
 
-            $('#aform form').form({
+            $('#seriesForm').form({
                 fields: {
                     name: 'empty',
                     releaseDate: 'empty',
@@ -73,11 +73,13 @@
             </div>
         </div>
         <div class="ui divider"></div>
-        <form class="ui form three wide column" enctype="multipart/form-data" id="aform"
+        <form class="ui form three wide column" enctype="multipart/form-data" id="seriesForm"
               method="POST" th:action="@{'/admin-ui/series/v2/form'}" th:object="${series}">
             <input style="display: none" th:field="*{id}" type="text">
-            <input style="display: none" th:field="*{seriesImage}" type="text" required="required" id="seriesImageChecked">
-            <input style="display: none" th:field="*{matrixHeaderImage}" type="text" required="required" id="matrixHeaderImageChecked">
+            <input style="display: none" th:field="*{seriesImage}" type="text" required="required"
+                   id="seriesImageChecked">
+            <input style="display: none" th:field="*{matrixHeaderImage}" type="text" required="required"
+                   id="matrixHeaderImageChecked">
             <input style="display: none" th:field="*{matrixCellImage}" type="text">
             <input style="display: none" th:field="*{orilinkedRoleIds}" type="text">
 
