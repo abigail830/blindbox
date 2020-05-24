@@ -83,7 +83,7 @@ public class ActivityService {
         if (!activity.getContentImg().isEmpty()) {
             final String contentImgAddr = imageRepository.saveImage(activity.getId() + "-content",
                     ImageCategory.ACTIVITY, activity.getContentImg());
-            activity.setMainImgAddr(contentImgAddr);
+            activity.setContentImgAddr(contentImgAddr);
         }
 
         activityRepository.updateActivity(activity);
