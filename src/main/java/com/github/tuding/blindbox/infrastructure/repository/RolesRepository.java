@@ -45,12 +45,12 @@ public class RolesRepository {
     }
 
     public List<Role> queryRoles() {
-        log.info("Going to query roles ");
+        log.info("Going to query all roles ");
         return jdbcTemplate.query("SELECT * FROM roles_tbl", rowMapper);
     }
 
     public List<Role> queryRolesOrderByName() {
-        log.info("Going to query roles ");
+        log.info("Going to query all roles by name ");
         return jdbcTemplate.query("SELECT * FROM roles_tbl order by name", rowMapper);
     }
 
@@ -66,6 +66,7 @@ public class RolesRepository {
     }
 
     public void updateRole(Role role) {
+        log.info("Going to update role {}", role);
         String insertSql = "UPDATE roles_tbl SET name = ? WHERE id = ? ";
         int update = jdbcTemplate.update(insertSql, role.getName(), role.getId());
         log.info("update row {} ", update);
