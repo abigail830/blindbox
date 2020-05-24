@@ -119,4 +119,10 @@ public class ActivityService {
         return activityRepository.queryActivityById(activityId)
                 .orElseThrow(ActivityNotFoundException::new);
     }
+
+    public Boolean ifRegisterActivity(String activityId, String openId) {
+        final Activity activity = activityRepository.queryActivityById(activityId)
+                .orElseThrow(() -> new BizException(ErrorCode.INVALID_ACTIVITY_ID));
+        return activity.isExistingSubscriber(openId);
+    }
 }

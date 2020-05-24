@@ -2,9 +2,11 @@ package com.github.tuding.blindbox.api.wx;
 
 import com.github.tuding.blindbox.api.wx.wxDto.ActivityBriefDTO;
 import com.github.tuding.blindbox.api.wx.wxDto.ActivityDetailDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.ActivityRegisterFlag;
 import com.github.tuding.blindbox.domain.activity.ActivityService;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
+import com.github.tuding.blindbox.infrastructure.security.Jwt;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,9 @@ public class WxActivityController {
 
     @Autowired
     ActivityService activityService;
+
+    @Autowired
+    Jwt jwt;
 
     @GetMapping("/front-page")
     @NeedWxVerifyToken
@@ -57,6 +62,18 @@ public class WxActivityController {
                                           @RequestParam String redirectPage) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         activityService.acceptActivityNotify(token, activityId, redirectPage);
+    }
+
+    @GetMapping("/id/{activityId}/accept-notify")
+    @NeedWxVerifyToken
+    @ApiOperation(value = "判断用户是否已经订阅了活动开始通知(需要带token")
+    public ActivityRegisterFlag ifUserRegisterActivity(HttpServletRequest request,
+                                                       @PathVariable String activityId) {
+        String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
+        final String openId = jwt.getOpenIdFromToken(token);
+
+        final Boolean reg = activityService.ifRegisterActivity(activityId, openId);
+        return new ActivityRegisterFlag(reg);
     }
 
 }
