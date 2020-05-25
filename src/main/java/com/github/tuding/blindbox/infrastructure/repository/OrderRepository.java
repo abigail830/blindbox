@@ -4,6 +4,7 @@ import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderStatus;
 import com.github.tuding.blindbox.domain.order.OrderWithProductInfo;
 import com.github.tuding.blindbox.domain.order.TransportOrder;
+import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,5 +166,14 @@ public class OrderRepository {
                 " inner join order_tbl o on o.drawId = d.drawId" +
                 " WHERE o.status in (:status) AND o.orderId in (:orders)";
         return namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
+    }
+
+    public List<Order> queryOrderWithPaging(Integer limitPerPage, Integer numOfPage) {
+        log.info("Going to query order with limit {} page {}", limitPerPage, numOfPage);
+        return jdbcTemplate.query("SELECT * FROM order_tbl order by createTime desc LIMIT ? OFFSET ?", rowMapper, limitPerPage, numOfPage);
+    }
+
+    public Integer getTotalCount() {
+        return namedParameterJdbcTemplate.queryForObject("select count(1) from order_tbl", new MapSqlParameterSource(), Integer.class);
     }
 }
