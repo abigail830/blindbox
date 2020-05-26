@@ -5,8 +5,10 @@
     <title>main</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
+        <link rel="stylesheet" th:href="@{/style/pagination.css}">
     <script th:src="@{/javascript/jquery-3.1.1.min.js}" crossorigin="anonymous"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
+        <script th:src="@{/javascript/pagination.min.js}"></script>
     <style>
         .empty-block {
             text-align: center;
@@ -19,6 +21,68 @@
         }
 
     </style>
+    <script>
+
+        function getOrderCount() {
+            var res = null;
+            $.ajax({
+                url: '/admin-ui/orders/count',
+                type: 'get',
+                async: false,
+                success: function (data) {
+                    res = data;
+                }
+            });
+            return res.count;
+        }
+
+
+        $(function () {
+            let container = $('#pagination');
+            container.pagination({
+                dataSource: '/admin-ui/orders/items',
+                locator: 'data',
+                pageSize: 10,
+                totalNumber: getOrderCount(),
+                jump: true,
+                coping: true,
+                homePage: '首页',
+                endPage: '末页',
+                preContent: '上页',
+                nextContent: '下页',
+                callback: function (data) {
+                    $('#orderTableBody tr').remove();
+                    for (var i =0; i < data.length; i++) {
+                        var row$ = $('<tr/>');
+                        row$.append($('<td/>').html(data[i].orderId));
+                        row$.append($('<td/>').html(data[i].productName));
+                        row$.append($('<td/>').html(data[i].createTime));
+                        row$.append($('<td/>').html(data[i].combineAddr));
+                        row$.append($('<td/>').html(data[i].shippingCompany));
+                        row$.append($('<td/>').html(data[i].shippingTicket));
+                        row$.append($('<td/>').html(data[i].status));
+                        if (data[i].status ==='运费已付') {
+                            row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper plane outline icon" onclick="showModal\(\''
+                                + data[i].orderId + '\',\'' + data[i].productName + '\',\'' + data[i].combineAddr + '\', \'顺丰\', \'\')"/></a>'));
+                        } else if (data[i].status ==='已发货') {
+                            row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper edit outline icon" onclick="showModal\(\''
+                                + data[i].orderId + '\',\'' + data[i].productName + '\',\''
+                                + data[i].combineAddr + '\', \''+ data[i].shippingCompany + '\', \''+ data[i].shippingTicket +'\')"/></a>'));
+                        } else {
+                            row$.append($('<td/>').html(''));
+                        }
+
+                        $('#orderTableBody').append(row$);
+
+                    }
+                    console.info(data);
+                }
+            })
+
+        })
+
+
+    </script>
 </head>
 
 <body>
@@ -56,50 +120,24 @@
             </div>
         </div>
         <div class="ui divider"></div>
-        <div th:if="${!orders.empty}">
-            <table class="ui striped table">
-                <thead>
-                <tr>
-                    <th>订单号</th>
-                    <th>产品名称</th>
-                    <th>创建时间</th>
-                    <th>收件信息</th>
-                    <th>快递公司</th>
-                    <th>快递号</th>
-                    <th>状态</th>
-                    <th>更多操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="item : ${orders}">
-                    <td><span th:text="${item.orderId}">订单号</span></td>
-                    <td><span th:text="${item.productName}">产品名称</span></td>
-                    <td><span th:text="${item.createTime}">创建时间</span></td>
-                    <td><span th:text="${item.combineAddr}">收件信息</span></td>
-                    <td><span th:text="${item.shippingCompany}">快递公司</span></td>
-                    <td><span th:text="${item.shippingTicket}">快递号</span></td>
-                    <td><span th:text="${item.status}">状态</span></td>
-                    <td>
-                        <!--                        <a th:if="${item.status =='PAY_TRANSPORT_SUCCESS'}" title="发货" href="#">-->
-                        <a href="#" th:if="${item.status =='运费已付'}" title="发货">
-                            <i class="paper plane outline icon"
-                               th:attr="onclick=|showModal('${item.orderId}', '${item.productName}',
-                               '${item.combineAddr}', '顺丰', '')|"></i>
-                        </a>
-                        <a href="#" th:if="${item.status =='已发货'}" title="发货">
-                            <i class="paper edit outline icon"
-                               th:attr="onclick=|showModal('${item.orderId}', '${item.productName}',
-                               '${item.combineAddr}', '${item.shippingCompany}', '${item.shippingTicket}')|"></i>
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div th:if="${orders ==null or orders.empty}" class="empty-block">
-            <img th:src="@{/img/empty.png}">
-            <h3>暂时还没有订单...</h3>
-        </div>
+        <table class="ui striped table" id="orderTable">
+            <thead>
+            <tr>
+                <th>订单号</th>
+                <th>产品名称</th>
+                <th>创建时间</th>
+                <th>收件信息</th>
+                <th>快递公司</th>
+                <th>快递号</th>
+                <th>状态</th>
+                <th>更多操作</th>
+            </tr>
+            </thead>
+            <tbody id="orderTableBody">
+            </tbody>
+        </table>
+        <div id="pagination"></div>
+
         <div class="ui modal">
             <div id="modalHeader" class="header"></div>
             <div class="content content">
@@ -151,6 +189,7 @@
         $('#shippingTicket').val(shippingTicket);
         $('.ui.modal').modal('show');
     }
+
 
 </script>
 </body>
