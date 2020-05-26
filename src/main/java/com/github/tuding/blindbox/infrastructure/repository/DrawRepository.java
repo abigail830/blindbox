@@ -93,7 +93,7 @@ public class DrawRepository {
     }
 
     public BigDecimal getPriceByDrawId(String drawId) {
-        String sql = "select s.price from series_tbl s left join draw_tbl d on s.ID = d.seriesId where d.drawId = ?";
+        String sql = "select s.price from series_v2_tbl s left join draw_tbl d on s.ID = d.seriesId where d.drawId = ?";
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{drawId}, BigDecimal.class);
         } catch (EmptyResultDataAccessException ex) {
