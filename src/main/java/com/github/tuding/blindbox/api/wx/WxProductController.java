@@ -147,7 +147,7 @@ public class WxProductController {
     @NeedWxVerifyToken
     @ApiOperation("分页获取所有产品系列(需要带token), numOfPage start from 0")
     public List<SeriesDTO> getAllSeriesWithPaging(@RequestParam Integer limitPerPage, Integer numOfPage) {
-        return productService.getAllSeries(limitPerPage, numOfPage).stream()
+        return productService.getAllSeries(limitPerPage, numOfPage * limitPerPage).stream()
                 .map(SeriesDTO::new).collect(Collectors.toList());
     }
 

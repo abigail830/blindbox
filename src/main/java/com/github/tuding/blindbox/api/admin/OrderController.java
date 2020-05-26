@@ -26,6 +26,11 @@ public class OrderController {
 
     @GetMapping("/")
     public String greeting(Model model) {
+        List<OrderDTO> allOutstandingOrder =
+                orderRepository.getAllOrder()
+                        .stream().map(OrderDTO::new).collect(Collectors.toList());
+
+        model.addAttribute("orders", allOutstandingOrder);
         return "order";
     }
 
