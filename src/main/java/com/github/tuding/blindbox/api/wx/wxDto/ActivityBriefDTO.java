@@ -17,6 +17,7 @@ public class ActivityBriefDTO {
     String activityStartDate;
     String activityEndDate;
     String mainImgUrl;
+    String contentImgUrl;
 
     public ActivityBriefDTO(Activity activity) {
         this.id = activity.getId();
@@ -25,5 +26,6 @@ public class ActivityBriefDTO {
         this.activityStartDate = activity.getActivityStartDate().toLocalDateTime().toString();
         this.activityEndDate = activity.getActivityEndDate().toLocalDateTime().toString();
         this.mainImgUrl = Constant.WX_UI_IMAGE_PATH + activity.getMainImgAddr();
+        this.contentImgUrl = Constant.WX_UI_IMAGE_PATH + activity.getContentImgAddr();
     }
 }
