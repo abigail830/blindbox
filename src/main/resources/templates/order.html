@@ -21,68 +21,6 @@
         }
 
     </style>
-    <script>
-
-        function getOrderCount() {
-            var res = null;
-            $.ajax({
-                url: '/admin-ui/orders/count',
-                type: 'get',
-                async: false,
-                success: function (data) {
-                    res = data;
-                }
-            });
-            return res.count;
-        }
-
-
-        $(function () {
-            let container = $('#pagination');
-            container.pagination({
-                dataSource: '/admin-ui/orders/items',
-                locator: 'data',
-                pageSize: 10,
-                totalNumber: getOrderCount(),
-                jump: true,
-                coping: true,
-                homePage: '首页',
-                endPage: '末页',
-                preContent: '上页',
-                nextContent: '下页',
-                callback: function (data) {
-                    $('#orderTableBody tr').remove();
-                    for (var i =0; i < data.length; i++) {
-                        var row$ = $('<tr/>');
-                        row$.append($('<td/>').html(data[i].orderId));
-                        row$.append($('<td/>').html(data[i].productName));
-                        row$.append($('<td/>').html(data[i].createTime));
-                        row$.append($('<td/>').html(data[i].combineAddr));
-                        row$.append($('<td/>').html(data[i].shippingCompany));
-                        row$.append($('<td/>').html(data[i].shippingTicket));
-                        row$.append($('<td/>').html(data[i].status));
-                        if (data[i].status ==='运费已付') {
-                            row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper plane outline icon" onclick="showModal\(\''
-                                + data[i].orderId + '\',\'' + data[i].productName + '\',\'' + data[i].combineAddr + '\', \'顺丰\', \'\')"/></a>'));
-                        } else if (data[i].status ==='已发货') {
-                            row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper edit outline icon" onclick="showModal\(\''
-                                + data[i].orderId + '\',\'' + data[i].productName + '\',\''
-                                + data[i].combineAddr + '\', \''+ data[i].shippingCompany + '\', \''+ data[i].shippingTicket +'\')"/></a>'));
-                        } else {
-                            row$.append($('<td/>').html(''));
-                        }
-
-                        $('#orderTableBody').append(row$);
-
-                    }
-                    console.info(data);
-                }
-            })
-
-        })
-
-
-    </script>
 </head>
 
 <body>
@@ -118,6 +56,26 @@
             <div class="sixteen wide column right aligned">
                 <div class="title"><h2>订单管理</h2></div>
             </div>
+        </div>
+        <div class="ui divider"></div>
+        <div class="sixteen wide column left aligned">
+                <label for="statusFilter">订单状态</label>
+                <select name="statusFilter" id="statusFilter" onchange="refreshFilter()">
+                    <option value="ALL">全部</option>
+                    <option value="DELIVERED">已发货</option>
+                    <option value="PAY_TRANSPORT_SUCCESS">运费已付</option>
+                    <option value="NEW_TRANSPORT">运费待付</option>
+                    <option value="PAY_TRANSPORT_FAIL">运费付款失败</option>
+                    <option value="PAY_TRANSPORT_EXPIRY">运费付款超时</option>
+
+                    <option value="NEW">新产品订单</option>
+                    <option value="PAY_PRODUCT_EXPIRY">产品付款超时</option>
+                    <option value="PAY_PRODUCT_FAIL">产品付款失败</option>
+                    <option value="PAY_PRODUCT_SUCCESS">产品已付款</option>
+
+
+                </select>
+
         </div>
         <div class="ui divider"></div>
         <table class="ui striped table" id="orderTable">
@@ -189,6 +147,71 @@
         $('#shippingTicket').val(shippingTicket);
         $('.ui.modal').modal('show');
     }
+
+    function refresh(status) {
+        let container = $('#pagination');
+        container.pagination({
+            dataSource: '/admin-ui/orders/items/' + status,
+            locator: 'data',
+            pageSize: 200,
+            totalNumber: getOrderCount(status),
+            jump: true,
+            coping: true,
+            homePage: '首页',
+            endPage: '末页',
+            preContent: '上页',
+            nextContent: '下页',
+            callback: function (data) {
+                $('#orderTableBody tr').remove();
+                for (var i =0; i < data.length; i++) {
+                    var row$ = $('<tr/>');
+                    row$.append($('<td/>').html(data[i].orderId));
+                    row$.append($('<td/>').html(data[i].productName));
+                    row$.append($('<td/>').html(data[i].createTime));
+                    row$.append($('<td/>').html(data[i].combineAddr));
+                    row$.append($('<td/>').html(data[i].shippingCompany));
+                    row$.append($('<td/>').html(data[i].shippingTicket));
+                    row$.append($('<td/>').html(data[i].status));
+                    if (data[i].status ==='运费已付') {
+                        row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper plane outline icon" onclick="showModal\(\''
+                            + data[i].orderId + '\',\'' + data[i].productName + '\',\'' + data[i].combineAddr + '\', \'顺丰\', \'\')"/></a>'));
+                    } else if (data[i].status ==='已发货') {
+                        row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper edit outline icon" onclick="showModal\(\''
+                            + data[i].orderId + '\',\'' + data[i].productName + '\',\''
+                            + data[i].combineAddr + '\', \''+ data[i].shippingCompany + '\', \''+ data[i].shippingTicket +'\')"/></a>'));
+                    } else {
+                        row$.append($('<td/>').html(''));
+                    }
+
+                    $('#orderTableBody').append(row$);
+
+                }
+                console.info(data);
+            }
+        })
+
+    }
+
+    function refreshFilter() {
+        console.info($('#statusFilter').val());
+        refresh($('#statusFilter').val());
+    }
+
+
+    function getOrderCount(status) {
+        var res = null;
+        $.ajax({
+            url: '/admin-ui/orders/count/' + status,
+            type: 'get',
+            async: false,
+            success: function (data) {
+                res = data;
+            }
+        });
+        return res.count;
+    }
+
+    refresh('ALL');
 
 
 </script>

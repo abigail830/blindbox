@@ -34,21 +34,22 @@ public class OrderController {
         return "order";
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<String> getItems() {
+    @GetMapping("/count/{status}")
+    public ResponseEntity<String> getItems(@PathVariable String status) {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("count", orderRepository.getTotalCount());
+        jsonObject.addProperty("count", orderRepository.getTotalCount(status));
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/json"))
                 .body(jsonObject.toString());
     }
 
-    @GetMapping("/items")
-    public ResponseEntity<OrderDTOWrapper> getItems(@RequestParam("pageSize") int pageSize,
+    @GetMapping("/items/{status}")
+    public ResponseEntity<OrderDTOWrapper> getItems(@PathVariable String status,
+                                                    @RequestParam("pageSize") int pageSize,
                                                     @RequestParam("pageNumber") int pageNumber) {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/json"))
-                .body(new OrderDTOWrapper(orderRepository.queryOrderWithPaging(pageSize, pageSize * (pageNumber - 1))
+                .body(new OrderDTOWrapper(orderRepository.queryOrderWithPaging(status, pageSize, pageSize * (pageNumber - 1))
                         .stream().map(OrderDTO::new).collect(Collectors.toList())));
     }
 

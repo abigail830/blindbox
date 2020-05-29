@@ -168,12 +168,27 @@ public class OrderRepository {
         return namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
     }
 
-    public List<Order> queryOrderWithPaging(Integer limitPerPage, Integer numOfPage) {
-        log.info("Going to query order with limit {} page {}", limitPerPage, numOfPage);
-        return jdbcTemplate.query("SELECT * FROM order_tbl order by createTime desc LIMIT ? OFFSET ?", rowMapper, limitPerPage, numOfPage);
+    public List<Order> queryOrderWithPaging(String status, Integer limitPerPage, Integer numOfPage) {
+        log.info("Going to query order with status {} limit {} page {}", status, limitPerPage, numOfPage);
+        if ("ALL".equalsIgnoreCase(status)) {
+            return jdbcTemplate.query("SELECT * FROM order_tbl order by createTime desc LIMIT ? OFFSET ?",
+                    rowMapper, limitPerPage, numOfPage);
+        } else {
+            return jdbcTemplate.query("SELECT * FROM order_tbl where status = ? order by createTime desc LIMIT ? OFFSET ?",
+                    rowMapper, status, limitPerPage, numOfPage);
+        }
     }
 
-    public Integer getTotalCount() {
-        return namedParameterJdbcTemplate.queryForObject("select count(1) from order_tbl", new MapSqlParameterSource(), Integer.class);
+    public Integer getTotalCount(String status) {
+        log.info("Going to item count with status {}", status);
+        if ("ALL".equalsIgnoreCase(status)) {
+            return namedParameterJdbcTemplate.queryForObject("select count(1) from order_tbl",
+                    new MapSqlParameterSource(), Integer.class);
+        } else {
+            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            parameters.addValue("status", status);
+            return namedParameterJdbcTemplate.queryForObject("select count(1) from order_tbl  where status = (:status)",
+                    parameters, Integer.class);
+        }
     }
 }
