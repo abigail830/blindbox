@@ -63,15 +63,13 @@
                 <select name="statusFilter" id="statusFilter" onchange="refreshFilter()">
                     <option value="ALL">全部</option>
                     <option value="DELIVERED">已发货</option>
-                    <option value="PAY_TRANSPORT_SUCCESS">运费已付</option>
-                    <option value="NEW_TRANSPORT">运费待付</option>
-                    <option value="PAY_TRANSPORT_FAIL">运费付款失败</option>
-                    <option value="PAY_TRANSPORT_EXPIRY">运费付款超时</option>
+                    <option value="PAY_TRANSPORT_SUCCESS">待发货</option>
+<!--                    <option value="NEW_TRANSPORT">运费待付</option>-->
+<!--                    <option value="PAY_TRANSPORT_FAIL">运费付款失败</option>-->
+<!--                    <option value="PAY_TRANSPORT_EXPIRY">未付运费</option>-->
+                    <option value="PENDING_PAY_TRANSPORT">未付运费</option>
 
-                    <option value="NEW">新产品订单</option>
-                    <option value="PAY_PRODUCT_EXPIRY">产品付款超时</option>
-                    <option value="PAY_PRODUCT_FAIL">产品付款失败</option>
-                    <option value="PAY_PRODUCT_SUCCESS">产品已付款</option>
+                    <option value="PAY_PRODUCT_SUCCESS">未申请发货</option>
 
 
                 </select>

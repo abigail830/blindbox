@@ -168,26 +168,30 @@ public class OrderRepository {
         return namedParameterJdbcTemplate.queryForObject(sql, parameters, Integer.class);
     }
 
-    public List<Order> queryOrderWithPaging(String status, Integer limitPerPage, Integer numOfPage) {
+    public List<Order> queryOrderWithPaging(List<String> status, Integer limitPerPage, Integer numOfPage) {
         log.info("Going to query order with status {} limit {} page {}", status, limitPerPage, numOfPage);
-        if ("ALL".equalsIgnoreCase(status)) {
+        if ("ALL".equalsIgnoreCase(status.get(0))) {
             return jdbcTemplate.query("SELECT * FROM order_tbl order by createTime desc LIMIT ? OFFSET ?",
                     rowMapper, limitPerPage, numOfPage);
         } else {
-            return jdbcTemplate.query("SELECT * FROM order_tbl where status = ? order by createTime desc LIMIT ? OFFSET ?",
-                    rowMapper, status, limitPerPage, numOfPage);
+            MapSqlParameterSource parameters = new MapSqlParameterSource();
+            parameters.addValue("status", status);
+            parameters.addValue("limit", limitPerPage);
+            parameters.addValue("offset", numOfPage);
+            return namedParameterJdbcTemplate.query("SELECT * FROM order_tbl where status in (:status) order by createTime desc LIMIT :limit OFFSET :offset",
+                    parameters, rowMapper);
         }
     }
 
-    public Integer getTotalCount(String status) {
+    public Integer getTotalCount(List<String> status) {
         log.info("Going to item count with status {}", status);
-        if ("ALL".equalsIgnoreCase(status)) {
+        if ("ALL".equalsIgnoreCase(status.get(0))) {
             return namedParameterJdbcTemplate.queryForObject("select count(1) from order_tbl",
                     new MapSqlParameterSource(), Integer.class);
         } else {
             MapSqlParameterSource parameters = new MapSqlParameterSource();
             parameters.addValue("status", status);
-            return namedParameterJdbcTemplate.queryForObject("select count(1) from order_tbl  where status = (:status)",
+            return namedParameterJdbcTemplate.queryForObject("select count(1) from order_tbl  where status in (:status)",
                     parameters, Integer.class);
         }
     }
