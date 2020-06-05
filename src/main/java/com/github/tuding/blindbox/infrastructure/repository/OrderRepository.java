@@ -7,6 +7,7 @@ import com.github.tuding.blindbox.domain.order.TransportOrder;
 import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -178,7 +179,7 @@ public class OrderRepository {
             parameters.addValue("status", status);
             parameters.addValue("limit", limitPerPage);
             parameters.addValue("offset", numOfPage);
-            return namedParameterJdbcTemplate.query("SELECT * FROM order_tbl where status in (:status) order by createTime desc LIMIT :limit OFFSET :offset",
+            return namedParameterJdbcTemplate.query("SELECT * FROM order_tbl where status in (:status) order by createTime LIMIT :limit OFFSET :offset",
                     parameters, rowMapper);
         }
     }
@@ -194,5 +195,107 @@ public class OrderRepository {
             return namedParameterJdbcTemplate.queryForObject("select count(1) from order_tbl  where status in (:status)",
                     parameters, Integer.class);
         }
+    }
+
+    public MapSqlParameterSource buildParam(List<String> status, String orderID, String receiver, String mobile,
+                                            Integer limitPerPage, Integer numOfPage) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        if (!"ALL".equalsIgnoreCase(status.get(0))) {
+            parameters.addValue("status", status);
+        }
+        if (!"*".equalsIgnoreCase(orderID)) {
+            parameters.addValue("orderId", "%" + orderID + "%");
+        }
+        if (!"*".equalsIgnoreCase(receiver)) {
+            parameters.addValue("receiver", receiver);
+        }
+        if (!"*".equalsIgnoreCase(mobile)) {
+            parameters.addValue("mobile", mobile);
+        }
+        parameters.addValue("limit", limitPerPage);
+        parameters.addValue("offset", numOfPage);
+        return parameters;
+    }
+
+    public String buildSql(List<String> status, String orderID, String receiver, String mobile) {
+        StringBuilder stringBuilder = new StringBuilder("SELECT * FROM order_tbl");
+
+        if ("ALL".equalsIgnoreCase(status.get(0))
+                && !StringUtils.isNotBlank(orderID)
+                && !StringUtils.isNotBlank(receiver)
+                && !StringUtils.isNotBlank(mobile)) {
+            stringBuilder.append(" order by createTime desc LIMIT ? OFFSET ?");
+        } else {
+            stringBuilder.append(" where ");
+            if (!"ALL".equalsIgnoreCase(status.get(0))) {
+                stringBuilder.append("  status in (:status) ");
+            } else {
+                stringBuilder.append("  status is not null ");
+            }
+
+            if (!"*".equalsIgnoreCase(orderID)) {
+                stringBuilder.append(" and orderID like :orderId ");
+            }
+
+            if (!"*".equalsIgnoreCase(receiver)) {
+                stringBuilder.append(" and receiver = :receiver ");
+            }
+
+            if (!"*".equalsIgnoreCase(mobile)) {
+                stringBuilder.append(" and mobile = :mobile ");
+            }
+            stringBuilder.append( " order by createTime LIMIT :limit OFFSET :offset");
+        }
+        return stringBuilder.toString();
+    }
+
+    public List<Order> queryOrderWithDetail(List<String> status, String orderID, String receiver, String mobile,
+                                            Integer limitPerPage, Integer numOfPage) {
+        log.info("Going to query order with status {} orderID {} receiver {} mobile {}", status, orderID, receiver, mobile);
+        String sql = buildSql(status, orderID, receiver, mobile);
+        MapSqlParameterSource mapSqlParameterSource = buildParam(status, orderID, receiver, mobile, limitPerPage, numOfPage);
+        log.info("Going to run sql {}", sql);
+
+        return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
+    }
+
+    public String buildSqlCount(List<String> status, String orderID, String receiver, String mobile) {
+        StringBuilder stringBuilder = new StringBuilder("SELECT count(1) FROM order_tbl");
+
+        if ("ALL".equalsIgnoreCase(status.get(0))
+                && !StringUtils.isNotBlank(orderID)
+                && !StringUtils.isNotBlank(receiver)
+                && !StringUtils.isNotBlank(mobile)) {
+            return stringBuilder.toString();
+        } else {
+            stringBuilder.append(" where ");
+            if (!"ALL".equalsIgnoreCase(status.get(0))) {
+                stringBuilder.append("  status in (:status) ");
+            } else {
+                stringBuilder.append("  status is not null ");
+            }
+
+            if (!"*".equalsIgnoreCase(orderID)) {
+                stringBuilder.append(" and orderID like :orderId ");
+            }
+
+            if (!"*".equalsIgnoreCase(receiver)) {
+                stringBuilder.append(" and receiver = :receiver ");
+            }
+
+            if (!"*".equalsIgnoreCase(mobile)) {
+                stringBuilder.append(" and mobile = :mobile ");
+            }
+            return stringBuilder.toString();
+        }
+    }
+
+    public Integer getTotalCount(List<String> status, String orderID, String receiver, String mobile) {
+        log.info("Going to query order count with status {} orderID {} receiver {} mobile {}", status, orderID, receiver, mobile);
+        String sql = buildSqlCount(status, orderID, receiver, mobile);
+        MapSqlParameterSource mapSqlParameterSource = buildParam(status, orderID, receiver, mobile, null, null);
+        log.info("Going to run sql {}", sql);
+
+        return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
     }
 }

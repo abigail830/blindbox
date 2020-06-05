@@ -62,6 +62,41 @@ public class OrderController {
                         .stream().map(OrderDTO::new).collect(Collectors.toList())));
     }
 
+    @GetMapping("/v2/items/{status}/{orderId}/{receiver}/{mobile}")
+    public ResponseEntity<OrderDTOWrapper> getItems(@PathVariable String status,
+                                                    @PathVariable String orderId,
+                                                    @PathVariable String receiver,
+                                                    @PathVariable String mobile,
+                                                    @RequestParam("pageSize") int pageSize,
+                                                    @RequestParam("pageNumber") int pageNumber) {
+        log.info("query order paging for status {} orderId {} receiver {} mobile {}, pageSize {}, pageNumber {}",
+                status, orderId, receiver, mobile, pageSize, pageNumber);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/json"))
+                .body(new OrderDTOWrapper(orderRepository.queryOrderWithDetail(UI_STATUS_FILTER_MAP.get(status),
+                        orderId,
+                        receiver,
+                        mobile,
+                        pageSize,
+                        pageSize * (pageNumber - 1))
+                        .stream().map(OrderDTO::new).collect(Collectors.toList())));
+    }
+
+
+    @GetMapping("/v2/count/{status}/{orderId}/{receiver}/{mobile}")
+    public ResponseEntity<String> getCount(@PathVariable String status,
+                                           @PathVariable String orderId,
+                                           @PathVariable String receiver,
+                                           @PathVariable String mobile) {
+        log.info("query order paging for status {} orderId {} receiver {} mobile {}",
+                status, orderId, receiver, mobile);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("count", orderRepository.getTotalCount(UI_STATUS_FILTER_MAP.get(status), orderId, receiver, mobile));
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/json"))
+                .body(jsonObject.toString());
+    }
+
     @PostMapping("/deliver/{orderId}")
     public
     String placeOrder(Model model,

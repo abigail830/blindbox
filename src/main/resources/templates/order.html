@@ -5,10 +5,10 @@
     <title>main</title>
     <link rel="stylesheet" th:href="@{/style/semantic.css}">
     <link rel="stylesheet" th:href="@{/style/style.css}">
-        <link rel="stylesheet" th:href="@{/style/pagination.css}">
+    <link rel="stylesheet" th:href="@{/style/pagination.css}">
     <script th:src="@{/javascript/jquery-3.1.1.min.js}" crossorigin="anonymous"></script>
     <script th:src="@{/javascript/semantic.min.js}"></script>
-        <script th:src="@{/javascript/pagination.min.js}"></script>
+    <script th:src="@{/javascript/pagination.min.js}"></script>
     <style>
         .empty-block {
             text-align: center;
@@ -59,21 +59,21 @@
         </div>
         <div class="ui divider"></div>
         <div class="sixteen wide column left aligned">
-                <label for="statusFilter">订单状态</label>
-                <select name="statusFilter" id="statusFilter" onchange="refreshFilter()">
-                    <option value="ALL">全部</option>
-                    <option value="DELIVERED">已发货</option>
-                    <option value="PAY_TRANSPORT_SUCCESS">待发货</option>
-<!--                    <option value="NEW_TRANSPORT">运费待付</option>-->
-<!--                    <option value="PAY_TRANSPORT_FAIL">运费付款失败</option>-->
-<!--                    <option value="PAY_TRANSPORT_EXPIRY">未付运费</option>-->
-                    <option value="PENDING_PAY_TRANSPORT">未付运费</option>
+            <label for="statusFilter">订单状态</label>
+            <select name="statusFilter" id="statusFilter" onchange="refreshFilter()">
+                <option value="ALL">全部</option>
+                <option value="DELIVERED">已发货</option>
+                <option value="PAY_TRANSPORT_SUCCESS">待发货</option>
+                <option value="PENDING_PAY_TRANSPORT">未付运费</option>
+                <option value="PAY_PRODUCT_SUCCESS">未申请发货</option>
+            </select>
 
-                    <option value="PAY_PRODUCT_SUCCESS">未申请发货</option>
-
-
-                </select>
-
+            <label for="orderId"> 订单号 </label>
+            <input type="text" name="orderId" id="orderId" size="36" onfocusout="refreshFilter()"/>
+            <label for="receiver"> 收货人 </label>
+            <input type="text" name="receiver" id="receiver" onfocusout="refreshFilter()"/>
+            <label for="mobile"> 电话 </label>
+            <input type="text" name="mobile" id="mobile" onfocusout="refreshFilter()"/>
         </div>
         <div class="ui divider"></div>
         <table class="ui striped table" id="orderTable">
@@ -146,13 +146,17 @@
         $('.ui.modal').modal('show');
     }
 
-    function refresh(status) {
+    function refresh(status, orderId, receiver, mobile) {
         let container = $('#pagination');
+        orderId = orderId || '*';
+        receiver = receiver || '*';
+        mobile = mobile || '*';
+
         container.pagination({
-            dataSource: '/admin-ui/orders/items/' + status,
+            dataSource: '/admin-ui/orders/v2/items/' + status + '/' + orderId + '/' + receiver + '/' + mobile,
             locator: 'data',
             pageSize: 200,
-            totalNumber: getOrderCount(status),
+            totalNumber: getOrderCount(status, orderId, receiver, mobile),
             jump: true,
             coping: true,
             homePage: '首页',
@@ -161,7 +165,7 @@
             nextContent: '下页',
             callback: function (data) {
                 $('#orderTableBody tr').remove();
-                for (var i =0; i < data.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     var row$ = $('<tr/>');
                     row$.append($('<td/>').html(data[i].orderId));
                     row$.append($('<td/>').html(data[i].productName));
@@ -170,13 +174,13 @@
                     row$.append($('<td/>').html(data[i].shippingCompany));
                     row$.append($('<td/>').html(data[i].shippingTicket));
                     row$.append($('<td/>').html(data[i].status));
-                    if (data[i].status ==='运费已付') {
+                    if (data[i].status === '运费已付') {
                         row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper plane outline icon" onclick="showModal\(\''
                             + data[i].orderId + '\',\'' + data[i].productName + '\',\'' + data[i].combineAddr + '\', \'顺丰\', \'\')"/></a>'));
-                    } else if (data[i].status ==='已发货') {
+                    } else if (data[i].status === '已发货') {
                         row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper edit outline icon" onclick="showModal\(\''
                             + data[i].orderId + '\',\'' + data[i].productName + '\',\''
-                            + data[i].combineAddr + '\', \''+ data[i].shippingCompany + '\', \''+ data[i].shippingTicket +'\')"/></a>'));
+                            + data[i].combineAddr + '\', \'' + data[i].shippingCompany + '\', \'' + data[i].shippingTicket + '\')"/></a>'));
                     } else {
                         row$.append($('<td/>').html(''));
                     }
@@ -192,14 +196,18 @@
 
     function refreshFilter() {
         console.info($('#statusFilter').val());
-        refresh($('#statusFilter').val());
+        refresh($('#statusFilter').val(),
+            $('#orderId').val(),
+            $('#receiver').val(),
+            $('#mobile').val(),
+        );
     }
 
 
-    function getOrderCount(status) {
+    function getOrderCount(status, orderId, receiver, mobile) {
         var res = null;
         $.ajax({
-            url: '/admin-ui/orders/count/' + status,
+            url: '/admin-ui/orders/v2/count/' + status + '/' + orderId + '/' + receiver + '/' + mobile,
             type: 'get',
             async: false,
             success: function (data) {
