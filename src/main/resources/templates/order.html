@@ -120,19 +120,17 @@
         </table>
         <div id="pagination"></div>
 
-        <div class="ui modal">
+        <div class="ui modal" id="deliverModal">
             <div id="modalHeader" class="header"></div>
             <div class="content content">
                 <div class="description">
+                    <input style="display: none" id="orderItemId" type="text">
                     <p id="productName"></p>
                     <!--                    <p id="receiver"></p>-->
                     <p id="address"></p>
                     <!--                    <p id="mobile"></p>-->
                 </div>
-                <form id="shippingForm" class="ui form three wide column"
-                      enctype="multipart/form-data"
-                      action="/admin-ui/orders/deliver/"
-                      method="POST">
+                <div id="shippingForm" class="ui form three wide column">
                     <div class="field required">
                         <label>快递公司</label>
                         <input required="required" type="text" name="shippingCompany" id="shippingCompany">
@@ -141,34 +139,57 @@
                         <label>快递单号</label>
                         <input required="required" type="text" name="shippingTicket" id="shippingTicket">
                     </div>
-                    <button class="ui button">确认</button>
+                    <button class="ui button" onclick="deliver()">确认</button>
 
-                </form>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
 <script type="text/javascript">
+    function deliver() {
+        var delivery = new FormData();
+        delivery.append('shippingCompany', $('#shippingCompany').val());
+        delivery.append('shippingTicket', $('#shippingTicket').val());
+        console.info(delivery);
+        $.ajax({
+            url: "/admin-ui/orders/v2/deliver/" + $('#orderItemId').val(),
+            type: "POST",
+            data: delivery,
+            contentType: false,
+            processData: false,
+            success: function (status) {
+                refreshFilter();
+                $('#deliverModal').modal('hide');
+            },
+            error: function () {
+                console.info("error");
+            }
+
+
+        });
+    }
+
     function deliverItem(item) {
         $.ajax({
             url: "/admin-ui/orders/deliver/" + item,
             type: "PUT",
             success: function (data, status) {
                 console.info("Got update status " + status);
-                location.reload();
+                refreshFilter()
             }
         })
     };
 
     function showModal(item, productName, address, shippingCompany, shippingTicket) {
-        $('#shippingForm').attr('action', '/admin-ui/orders/deliver/' + item);
         $('#modalHeader').text("订单号: " + item);
         $('#productName').text("产品名称: " + productName);
         $('#address').text("收件信息: " + address);
         $('#deliveryStatus').text("状态: " + status);
         $('#shippingCompany').val(shippingCompany);
         $('#shippingTicket').val(shippingTicket);
+        $('#orderItemId').val(item);
         $('.ui.modal').modal('show');
     }
 

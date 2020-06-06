@@ -113,4 +113,18 @@ public class OrderController {
         model.addAttribute("orders", allOutstandingOrder);
         return "order";
     }
+
+    @PostMapping("/v2/deliver/{orderId}")
+    public
+    ResponseEntity<String>   placeOrder2(
+                      @PathVariable String orderId,
+                      @RequestParam("shippingCompany") String shippingCompany,
+                      @RequestParam("shippingTicket") String shippingTicket) {
+        log.info("v2 confirm deliver for {} {} {}", orderId, shippingCompany, shippingTicket);
+        orderRepository.updateOrderDeliveryStatus(orderId,
+                OrderStatus.DELIVERED.name(), shippingCompany, shippingTicket);
+
+        return ResponseEntity.ok()
+                .body("");
+    }
 }
