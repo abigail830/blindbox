@@ -19,6 +19,11 @@
             width: 40%;
             margin-top: 60px;
         }
+        .margin-field {
+            margin-top: 3px;
+        }
+
+
 
     </style>
 </head>
@@ -58,23 +63,44 @@
             </div>
         </div>
         <div class="ui divider"></div>
-        <div class="sixteen wide column left aligned">
-            <label for="statusFilter">订单状态</label>
-            <select name="statusFilter" id="statusFilter" onchange="refreshFilter()">
-                <option value="ALL">全部</option>
-                <option value="DELIVERED">已发货</option>
-                <option value="PAY_TRANSPORT_SUCCESS">待发货</option>
-                <option value="PENDING_PAY_TRANSPORT">未付运费</option>
-                <option value="PAY_PRODUCT_SUCCESS">未申请发货</option>
-            </select>
+        <div class="ui grid left aligned">
+            <div class=" sixteen wide column">
+                <div class="ui labeled input">
+                    <div class="ui label">订单状态</div>
+                    <select id="statusFilter" name="statusFilter">
+                        <option value="ALL">全部</option>
+                        <option value="DELIVERED">已发货</option>
+                        <option value="PAY_TRANSPORT_SUCCESS">待发货</option>
+                        <option value="PENDING_PAY_TRANSPORT">未付运费</option>
+                        <option value="PAY_PRODUCT_SUCCESS">未申请发货</option>
+                    </select>
+                </div>
 
-            <label for="orderId"> 订单号(模糊查询)</label>
-            <input type="text" name="orderId" id="orderId" size="36" onfocusout="refreshFilter()"/>
-            <label for="receiver"> 收货人 </label>
-            <input type="text" name="receiver" id="receiver" onfocusout="refreshFilter()"/>
-            <label for="mobile"> 电话 </label>
-            <input type="text" name="mobile" id="mobile" onfocusout="refreshFilter()"/>
+            </div>
+            <div class=" sixteen wide column">
+                <div class="ui labeled input">
+                    <div class="ui label">
+                        订单号(模糊查询)
+                    </div>
+                    <input id="orderId" name="orderId" size="36" type="text">
+                </div>
+                <div class="ui labeled input">
+                    <div class="ui label">收货人</div>
+                    <input id="receiver" name="receiver" type="text"/>
+                </div>
+                <div class="ui labeled input">
+                    <div class="ui label">电话</div>
+                    <input id="mobile" name="mobile" type="text"/>
+                </div>
+            </div>
+            <div class=" sixteen wide column">
+            </div>
         </div>
+        <div class="ui bottom attached button margin-field" onclick="refreshFilter()">
+            <i class="search icon"></i>查找
+        </div>
+
+
         <div class="ui divider"></div>
         <table class="ui striped table" id="orderTable">
             <thead>
@@ -218,6 +244,11 @@
     }
 
     refresh('ALL');
+
+
+
+
+
 
 
 </script>
