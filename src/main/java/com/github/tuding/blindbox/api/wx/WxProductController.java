@@ -6,7 +6,9 @@ import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.domain.product.ProductService;
 import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.domain.user.UserService;
+import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.DrawException;
+import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.filter.NeedWxVerifyToken;
 import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.security.Jwt;
@@ -241,8 +243,13 @@ public class WxProductController {
                                         @PathVariable String drawId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
         Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_DISCOUNT_COUPON_CONSUME_BONUS);
-        Product excludedProduct = drawService.getExcludedProduct(drawId);
-        return new TipsCouponDTO(excludedProduct, remainBonus);
+        try {
+            Product excludedProduct = drawService.getExcludedProduct(drawId);
+            return new TipsCouponDTO(excludedProduct, remainBonus);
+        } catch (Exception ex) {
+            log.error("Failed to use tip coupon", ex);
+            throw new BizException(ErrorCode.NO_TIPS_AVAILABLE);
+        }
     }
 
     @PostMapping("/use-display/{drawId}")
