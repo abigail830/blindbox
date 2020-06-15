@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-01 20:59:35
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-05-05 19:18:23
+ * @Last Modified time: 2020-05-23 14:03:17
  -->
 <template>
 	<view class="page page-me">
@@ -152,6 +152,7 @@ import { mapState, mapGetters } from 'vuex';
 import zParser from '@/components/util/zParse';
 import zLoginBtn from '@/components/util/zLoginBtn';
 import { onShareAppMessage } from '@/common/mixins';
+import appApi from '@/apis/util';
 import { RuleDescription as help } from '@/config';
 
 export default {
@@ -161,6 +162,15 @@ export default {
 			help: {}
 		};
 	},
+	async onShow() {
+		let res = await appApi.getUserInfo();
+		if (res) {
+			this.$store.commit(
+				'USER_SIGNIN',
+				Object.assign({}, this.$store.getters.userInfo, res)
+			);
+		}
+	},
 	computed: {
 		showHelp() {
 			return typeof this.help === 'object' && !!this.help.title;
@@ -169,6 +179,9 @@ export default {
 			return this.userInfo.nickName || '';
 		},
 		bonus() {
+			// bonus
+			console.log(this.userInfo);
+
 			return this.userInfo.bonus || 0;
 		},
 		...mapState(['system']),

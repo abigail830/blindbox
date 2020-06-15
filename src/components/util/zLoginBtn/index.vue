@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-16 11:46:28
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-16 19:04:02
+ * @Last Modified time: 2020-05-21 11:21:08
  -->
 <template>
 	<button
@@ -42,7 +42,6 @@ export default {
 			if (this.btnOpenType) {
 				return;
 			}
-			console.log(this.authState, 'clickclickclickclickclickclickclickclick');
 			this.$emit('run');
 		},
 		getuserinfo({ detail }) {

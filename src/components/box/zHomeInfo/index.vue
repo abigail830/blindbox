@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 11:53:51
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-17 21:15:11
+ * @Last Modified time: 2020-05-25 15:18:11
  -->
 <template>
 	<view class="z-home-info-box">
@@ -18,10 +18,10 @@
 				:class="{'sheet-box_on':isShowBottom}"
 				@click.stop
 			>
-				<image v-for="(v,k) in images" :key="k" class="content-image" :src="v" mode="aspectFill" />
+				<image v-for="(v,k) in images" :key="k" class="content-image" :src="v" mode="widthFix" />
 			</scroll-view>
 			<view class="close-icon-box" @click="closeSheet">
-				<image class="close-image" src="/static/universal-icon.png" mode />
+				<image class="close-image" src="/static/universal-icon.png" mode="" />
 			</view>
 		</view>
 	</view>

@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-11-08 14:06:18
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-03 17:28:23
+ * @Last Modified time: 2020-06-06 15:37:13
  */
 
 let app;
@@ -101,7 +101,8 @@ export const $systems = (() => {
   if (typeof s.safeArea === 'undefined') {
     s.safeArea = {
       width: s.windowWidth,
-      height: s.windowHeight
+      height: s.windowHeight,
+      bottom: s.windowHeight,
     };
   }
 

@@ -6,7 +6,8 @@
  */
 import { mapState, mapGetters } from 'vuex';
 import { themeColor } from '@/common/var';
-export const computed = _ => {
+
+export const computed = (_) => {
   return {
     isNew() {
       return this.tabActive === 'new';
@@ -23,11 +24,11 @@ export const computed = _ => {
       return this.series.items || [];
     },
     ...mapState(['system', 'series']),
-    ...mapGetters(['userInfo', 'authState', 'banState'])
+    ...mapGetters(['userInfo', 'authState', 'banState']),
   };
 };
 
-export const data = _ => {
+export const data = (_) => {
   return {
     seriesActive: 'all',
     isShowBottom: false, // 显示全部系列
@@ -38,28 +39,28 @@ export const data = _ => {
       indicatorDots: true,
       autoplay: true,
       interval: 2000,
-      duration: 500
+      duration: 500,
     },
     swiperItems: [],
     itemsNewData: [],
     itemsData: [],
-    itemsDataPage: 1,
-    itemsNewPage: 1
+    itemsDataPage: 0,
+    itemsNewPage: 1,
   };
 };
 
-export const methods = _ => {
+export const methods = (_) => {
   return {
     setBarrage() {
       if (!this.system.barrage) return;
 
-      this.$api('home.barrage').then(e => {
+      this.$api('home.barrage').then((e) => {
         e.map((e, k) => {
           if (k === 0) {
             this.$refs.zBarrage.add(e);
             return;
           }
-          setTimeout(_ => {
+          setTimeout((_) => {
             this.$refs.zBarrage.add(e);
           }, Math.ceil(Math.random() * 2000));
         });
@@ -73,24 +74,25 @@ export const methods = _ => {
       if (id != 'all') {
         this.$log('加载指定系列:', id);
         this.itemsDataPage = 1;
-        this.$api(_ => {
+        this.$api((_) => {
           return ['products.series', id];
-        }).then(e => {
-          this.itemsData = e.map(e => {
+        }).then((e) => {
+          this.itemsData = e.map((e) => {
             e.image = this.$websiteUrl + e.seriesImage;
             return e;
           });
         });
       } else {
         this.$log('加载全部系列:', id);
-        this.$api(_ => {
+        this.$api((_) => {
           return ['products.all', 10, this.itemsDataPage];
-        }).then(e => {
-          let itemsData = e.map(e => {
+        }).then((e) => {
+          let itemsData = e.map((e) => {
             e.image = this.$websiteUrl + e.seriesImage;
             return e;
           });
-          if (this.itemsDataPage > 1) {
+          // 后端页码是从 0 开始的
+          if (this.itemsDataPage >= 1) {
             this.itemsData = this.itemsData.concat(itemsData);
           } else {
             this.itemsData = itemsData;
@@ -98,17 +100,13 @@ export const methods = _ => {
         });
       }
     },
-    goInfo(data, id) {
-      this.$store.commit('current/setSeriesData', data);
-      this.$go('./info?id=' + data.id);
-    },
     reloadItems() {
       this.itemsNewPage = 1;
       this.getItems();
     },
     getSwiper() {
-      this.$api('home.swiper').then(e => {
-        let swiperItems = e.map(e => {
+      this.$api('home.swiper').then((e) => {
+        let swiperItems = e.map((e) => {
           let data = e;
           data.image = this.$websiteUrl + e.mainImgUrl;
           return data;
@@ -124,16 +122,20 @@ export const methods = _ => {
       this.getSwiper();
       let done = this.$loading();
       this.$api('home.newSeries')
-        .then(e => {
-          this.itemsNewData = e.map(e => {
+        .then((e) => {
+          this.itemsNewData = e.map((e) => {
             e.image = this.$websiteUrl + e.seriesImage;
             return e;
           });
           done();
         })
-        .catch(e => {
+        .catch((e) => {
           done();
         });
-    }
+    },
+    goInfo(data, id) {
+      this.$store.commit('current/setSeriesData', data);
+      this.$go('./info?id=' + data.id);
+    },
   };
 };

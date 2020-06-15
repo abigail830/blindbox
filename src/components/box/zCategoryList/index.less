@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-11 18:20:31
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-16 18:44:30
+ * @Last Modified time: 2020-06-06 15:42:08
  */
 @import '../../../common/var.less';
 .z-category-list-view-box {
@@ -20,6 +20,8 @@
   box-sizing: border-box;
   font-size: 23.6rpx;
   display: inline-block;
+  display: block;
+  float: left;
   .item-box {
     // padding-left: 20rpx;
     position: relative;
@@ -46,6 +48,8 @@
 .z-category-list-main {
   width: 750rpx - @leftWidth;
   display: inline-block;
+  display: block;
+  float: right;
   .main-box {
     display: flex;
     flex-wrap: wrap;
@@ -96,14 +100,14 @@
   }
 }
 
-canvas {
-  position: fixed;
-  top: 0;
-  pointer-events: none;
-  left: 0;
-  width: 300rpx;
-  height: 600rpx;
-  z-index: 999999999999999;
-}
+// canvas {
+//   position: fixed;
+//   top: 0;
+//   pointer-events: none;
+//   left: 0;
+//   width: 300rpx;
+//   height: 600rpx;
+//   z-index: 999999999999999;
+// }
 
 .close-icon();

@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 15:35:11
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-05-05 19:48:05
+ * @Last Modified time: 2020-06-03 17:25:24
  -->
 <template>
 	<view class="page page-buy">
@@ -134,6 +134,8 @@ export default {
 	data() {
 		return {
 			help: {},
+			index: 0,
+			drawId: '',
 			id: '', // 系列 id
 			paymentState: false,
 			showPurchase: false,
@@ -167,10 +169,10 @@ export default {
 		price() {
 			return this.series.price || 99999999999;
 		},
-		drawId() {
-			this.$log('drawId', JSON.stringify(this.series));
-			return this.series.drawId;
-		},
+		// drawId() {
+		// 	this.$log('drawId', JSON.stringify(this.series));
+		// 	return this.series.drawId;
+		// },
 		showHelp() {
 			return JSON.stringify(this.help) !== '{}';
 		},
@@ -199,15 +201,18 @@ export default {
 		this.$log(o, 'current series', JSON.stringify(this.series));
 		if (o.id) {
 			this.id = o.id;
+			this.index = o.index;
+			this.drawId = o.drawId;
 			this.selectId();
 		} else {
 			this.$log('没有 id 是不是回到其他页面');
 		}
+		// this.cancelBox();
 	},
 	beforeDestroy() {
 		if (!this.paymentState) {
 			this.$log('没有发起支付关闭了页面,需要告诉后端放弃该盒子');
-			this.cancelDraw();
+			// this.cancelDraw();
 		} else {
 			this.$log('发起支付关闭了页面');
 		}
@@ -219,6 +224,8 @@ export default {
 				this.$api(_ => ['buy.info', this.drawId]);
 			},
 			async selectId() {
+				this.series = this.$store.state.current.draw;
+				return;
 				const done = this.$loading();
 				try {
 					let res = await this.$api(_ => {
@@ -250,6 +257,9 @@ export default {
 				this.showPurchase = true;
 			},
 			back() {
+				// this.$alert("换一盒")
+				// this.drawId = this.$store.getters["current/draw"].drawId;
+				// 换一盒
 				this.$back();
 			},
 			purchasePost(discount = false) {
@@ -279,14 +289,34 @@ export default {
 						done();
 					});
 			},
+			cancelBox() {
+				let items = JSON.parse(
+					JSON.stringify(this.$store.state['current']['items'])
+				);
+				let drawGroup = JSON.parse(
+					JSON.stringify(this.$store.state['current']['draws'])
+				);
+				items[this.index].id = 0;
+				items[this.index].image = '/static/been-icon.png';
+				items[this.index].state = false;
+				for (let i in drawGroup) {
+					if (drawGroup[i].drawId === this.drawId) {
+						drawGroup.splice(i, 1);
+						break;
+					}
+				}
+				this.$store.commit('current/setDraws', drawGroup);
+				this.$store.commit('current/setItems', items);
+			},
 			ok() {
+				this.cancelBox();
 				this.$go(
 					'lottery/wobble?id=' +
 						this.drawId +
 						'&img=' +
 						this.$websiteUrl +
 						this.series.boxImage,
-					true
+				true	// null
 				);
 			}
 		},

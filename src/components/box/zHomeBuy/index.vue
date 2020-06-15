@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 11:53:51
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-11 15:23:12
+ * @Last Modified time: 2020-06-02 15:27:11
  -->
 <template>
 	<view class="z-home-buy-box">
@@ -33,7 +33,10 @@
 							数量：
 							<text class="price-box-value">1</text>
 						</text>
-						<text class="price-box-text" v-if="priceAfterDiscount<100">
+						<text
+							class="price-box-text"
+							v-if="priceAfterDiscount<100"
+						>
 							折扣：
 							<text class="price-box-value">{{priceAfterDiscount/10}}折</text>
 						</text>
@@ -43,7 +46,10 @@
 						无理由退货换货
 					</view>
 					<view class="statistics">小计：￥{{finalPrice}}</view>
-					<button class="buy-btn" @click="closeSheet(true)">去支付 ￥{{finalPrice}}</button>
+					<button
+						class="buy-btn"
+						@click="closeSheet(true)"
+					>去支付 ￥{{finalPrice}}</button>
 				</div>
 			</scroll-view>
 		</view>
@@ -51,6 +57,22 @@
 </template>
 
 <script>
+const toFixed = num => {
+	let bb = num + '';
+	let dian = bb.indexOf('.');
+	let result = '';
+	if (dian == -1) {
+		result = num.toFixed(2);
+	} else {
+		var cc = bb.substring(dian + 1, bb.length);
+		if (cc.length >= 3) {
+			result = ((Number(num.toFixed(2)) + 0.01) * 100000000000) / 100000000000;
+		} else {
+			result = num.toFixed(2);
+		}
+	}
+	return +result;
+};
 export default {
 	props: {
 		price: {
@@ -74,7 +96,7 @@ export default {
 	},
 	computed: {
 		finalPrice() {
-			return (this.price / 100) * this.priceAfterDiscount;
+			return toFixed((this.price / 100) * this.priceAfterDiscount);
 		}
 	},
 	methods: {

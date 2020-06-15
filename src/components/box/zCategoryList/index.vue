@@ -2,12 +2,15 @@
  * @Author: seekwe
  * @Date: 2020-03-11 18:17:03
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-19 12:41:08
+ * @Last Modified time: 2020-06-11 11:57:25
  -->
 <template>
 	<view class="z-category-list-view-box">
 		<view class="z-category-list-left">
-			<scroll-view :scroll-y="true" :style="{'height':height+'rpx' }">
+			<scroll-view
+				:scroll-y="true"
+				:style="{'height':height+'rpx' }"
+			>
 				<view
 					class="item-box one-text"
 					v-for="(item,index) in leftArray"
@@ -15,7 +18,7 @@
 					:class="{'active':index===leftIndex}"
 					:data-index="index"
 					@click="leftTap"
-				>{{item}}</view>
+				>{{item.name}}</view>
 			</scroll-view>
 		</view>
 		<scroll-view
@@ -29,12 +32,24 @@
 		>
 			<view id="#position"></view>
 			<view class="main-box">
-				<view class="cover-box" v-for="(v,i) in itemsData" :key="i" @click="tapItem(v,i)">
-					<image class="cover-image" :src="v.image" mode="aspectFill" />
+				<view
+					class="cover-box"
+					v-for="(v,i) in itemsData"
+					:key="i"
+					@click="tapItem(v,i)"
+				>
+					<image
+						class="cover-image"
+						:src="v.image"
+						mode="aspectFill"
+					/>
 					<view class="cover-title">{{v.title}}</view>
 				</view>
 			</view>
-			<view class="z-category-tools">
+			<view
+				class="z-category-tools"
+				:style="{'bottom':$bottom+'rpx'}"
+			>
 				<zLoginBtn
 					:authState="!!nickName"
 					@run="createPoster"
@@ -43,7 +58,12 @@
 				>生成海报</zLoginBtn>
 			</view>
 		</scroll-view>
-		<zPoster ref="poster" @result="posterResult" :config="posterConfig" :show="false" />
+		<zPoster
+			ref="poster"
+			@result="posterResult"
+			:config="posterConfig"
+			:show="false"
+		/>
 		<!-- <view @click="posterImage = ''" v-show="posterImage" class="poster-image-block">
 			<image
 				@longpress.stop="savePoster"
@@ -63,7 +83,11 @@
 			mode="widthFix"
 			class="demo"
 		/>
-		<zRankingPreview @buy="goBuy" :data="preview" @close="closePreview" />
+		<zRankingPreview
+			@buy="goBuy"
+			:data="preview"
+			@close="closePreview"
+		/>
 	</view>
 </template>
 
@@ -73,7 +97,7 @@ import zPoster from '@/components/util/zPoster';
 import zLoginBtn from '@/components/util/zLoginBtn';
 import zRankingPreview from '@/components/box/zRankingPreview';
 import { all as $all } from '@/apis/index';
-import { posterCopywriting } from '@/config';
+import { posterCopywritingAll } from '@/config';
 let padding = 94;
 let preview = {};
 // let width = this.$to.px2rpx(this.$systems.windowWidth);
@@ -111,6 +135,7 @@ export default {
 	data() {
 		return {
 			debug: process.env.NODE_ENV === 'development',
+			$bottom: 50,
 			seriesItems: [],
 			leftArray: [],
 			mainArray: [],
@@ -137,6 +162,15 @@ export default {
 		avatarUrl() {
 			return this.userInfo.avatarUrl || '';
 		},
+		posterBgImage() {
+			let posterBgImage = '/static/p-bg.jpg';
+
+			let data = this.leftArray[this.leftIndex];
+			if (data) {
+				posterBgImage = this.$websiteUrl + data.posterBgImage;
+			}
+			return posterBgImage;
+		},
 		currentSeries() {
 			return this.seriesItems[this.leftIndex] || {};
 		},
@@ -156,15 +190,18 @@ export default {
 		if (process.env.NODE_ENV === 'development') {
 			setTimeout(this.createPoster, 2000);
 		}
+		this.$bottom =
+			this.$systems.safeArea.height - this.$systems.safeArea.bottom + 100;
+		// this.$log(this.$systems.safeArea);
 	},
 	methods: {
+		closePreview() {
+			this.preview = {};
+		},
 		goBuy() {
 			this.$store.commit('current/setSeriesData', this.currentSeries);
 			this.$go('index/info?id=' + this.currentSeries.id);
 			this.closePreview();
-		},
-		closePreview() {
-			this.preview = {};
 		},
 		posterResult(e, state) {
 			console.timeEnd('poster');
@@ -182,8 +219,7 @@ export default {
 			}
 		},
 		getPosterConfig() {
-			let config = {};
-			let views = [];
+			let [config, views] = [{}, []];
 			views.push({
 				type: 'rect',
 				x: padding,
@@ -218,24 +254,21 @@ export default {
 				type: 'text',
 				x: padding + 40,
 				y: 280,
-
-				text: posterCopywriting,
+				text: posterCopywritingAll,
 				color: '#000',
 				width: 480,
 				fontSize: 36,
 				height: 100,
 				maxLine: 2
 			});
-
-			config = {
+			this.posterConfig = {
 				width: width,
 				backgroundColor: '#f7b52c',
 				backgroundColor: '#000',
-				backgroundImage: '/static/p-bg.jpg',
+				backgroundImage: this.posterBgImage,
 				height: height,
 				views: views
 			};
-			this.posterConfig = config;
 		},
 		getPosterViewsConfig() {
 			let views = [];
@@ -246,19 +279,9 @@ export default {
 			this.$log('this.mainArray', this.mainArray[this.leftIndex]);
 			let len = data.length;
 			for (let i = 0; i < len; i++) {
-				this.$log('添加系列图片', {
-					type: 'text',
-					text: data[i].title,
-					width: 259,
-					x: x,
-					fontSize: 16,
-					y: y + 397 / proportion,
-					maxLine: 1
-				});
-
 				// for (let i = 0; i < 17; i++) {
 				let index = i % 4;
-				if (i > 4 && index === 0) {
+				if (i >= 4 && index === 0) {
 					y = y + 397 / proportion;
 				}
 
@@ -267,16 +290,18 @@ export default {
 				} else {
 					x = x + 259 / proportion + 6;
 				}
+				// const isGray = data[i].gray;
 				views.push({
 					type: 'img',
 					src: data[i].image,
+					// src: isGray ? data[i].grayImage : data[i].image,
 					title: data[i].title,
-					// src: 'https://blindbox.fancier.store/images/product/1a2c7268-c30e-462b-966c-3213bda90656.png',
 					width: 259 / proportion,
 					height: 331.52 / proportion,
 					x: x,
 					y: y
 				});
+
 				views.push({
 					type: 'text',
 					text: data[i].title,
@@ -299,7 +324,6 @@ export default {
 		},
 		async createPoster(e) {
 			this.$log(e);
-
 			// 如果没有登录需要登录获取昵称
 			if (!this.nickName) {
 				if (!(e && e.rawData)) {
@@ -310,10 +334,12 @@ export default {
 			this.$loading('海报生成中...');
 			this.$nextTick(_ => {
 				this.$log('海报生成中...', this.nickName);
-
 				this.getPosterConfig();
 				this.getPosterViewsConfig();
 				this.$refs['poster'].clear();
+				this.$api(_ => {
+					return ['user.shareCollection', this.seriesActive];
+				});
 				setTimeout(_ => {
 					console.time('poster');
 					this.$refs['poster'].create();
@@ -330,24 +356,50 @@ export default {
 		getListData() {
 			const done = this.$loading();
 			let [left, main] = [[], []];
+
 			this.$api(_ => {
 				return ['products.series', this.seriesActive];
 			}).then(async e => {
 				let apis = [];
 				e.forEach((e, k) => {
-					left.push(e.name);
-					// 获取数据
+					left.push({ name: e.name, posterBgImage: e.posterBgImage });
+					console.log('获取数据', e.name);
+					let id = e.id;
 					apis[k] = this.$api(_ => {
-						return ['products.childProducts', e.id];
+						return ['products.childProducts', id];
 					})
-						.then(e => {
+						.then(async e => {
+							let flags = [];
+							try {
+								flags = await this.$api(_ => [
+									'products.productsWithBuyFlag',
+									id
+								]);
+							} catch (e) {
+								console.error('获取是否抽中过失败', e);
+							}
 							let data = e.map(e => {
+								const id = e.id;
+								let gray = true;
+								for (const flag of flags) {
+									if (id == flag.id) {
+										gray = !flag.buy;
+										break;
+									}
+								}
 								return {
-									id: e.id,
+									id: id,
 									title: `${e.name}`,
-									image: this.$websiteUrl + e.productImage
+									image:
+										this.$websiteUrl +
+										(gray ? e.productGrayImage : e.productImage),
+									// grayImage: this.$websiteUrl + e.productGrayImage,
+									// 海报产品是否灰色
+									gray: gray
 								};
 							});
+							// todo dev
+							// data = data.concat(data, data);
 							if (!!data.length && !!(data.length % 2)) {
 								this.$log('需要补位');
 								data.push({

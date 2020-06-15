@@ -2,13 +2,27 @@
  * @Author: seekwe
  * @Date: 2020-04-03 10:35:52
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-25 16:54:05
+ * @Last Modified time: 2020-05-26 11:52:47
  */
+
 export default {
   get: [
     'put',
     function(seriesId = 0) {
-      return `/wx/products/draw/${seriesId}`;
+      return `/wx/products/v2/draw/${seriesId}`;
+      // return `/wx/products/draw/${seriesId}`;
+    },
+  ],
+  lock: [
+    'put',
+    function(seriesId = 0) {
+      return `/wx/products/v3/drawList/${seriesId}`;
+    },
+  ],
+  unlock: [
+    'delete',
+    function(drawListID = 0) {
+      return `/wx/products/v2/drawList/${drawListID}`;
     },
   ],
   info: [

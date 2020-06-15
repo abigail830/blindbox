@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-03 18:24:34
+ * @Last Modified time: 2020-05-21 11:31:47
  */
 import cfg from '../config';
 import util from '../common/util';
@@ -17,7 +17,7 @@ const files = require.context('./modules', false, /\.js$/);
 let apis = {},
   defModule = {},
   getTokenStatsu = false;
-files.keys().forEach(key => {
+files.keys().forEach((key) => {
   if (key === './index.js') {
     defModule = files(key).default;
     return;
@@ -29,8 +29,8 @@ files.keys().forEach(key => {
 Promise.prototype['finally'] = function(callback) {
   let P = this.constructor;
   return this.then(
-    value => P.resolve(callback(value)),
-    err => P.resolve(callback(err))
+    (value) => P.resolve(callback(value)),
+    (err) => P.resolve(callback(err))
   );
 };
 
@@ -48,7 +48,7 @@ const log = (...msg) => {
     console.log('%c API ', 'background:#f5f5dc;color:#bada55', ...msg);
   }
 };
-const noJSON = data => {
+const noJSON = (data) => {
   if (typeof data === 'string') {
     util.$log('NoJSON');
     return { code: 200, msg: 'toJson', data: data };
@@ -109,16 +109,16 @@ const api = async (
         data,
         Object.assign(
           {
-            method: type
+            method: type,
           },
           opt
         )
       )
-      .then(e => {
+      .then((e) => {
         log(type.toUpperCase(), url, data, e);
         return success(e);
       })
-      .catch(e => {
+      .catch((e) => {
         log('catch', e);
         log(type.toUpperCase() + '(catch)', url, data, e);
         return fail(e);
@@ -131,12 +131,12 @@ const api = async (
         data,
         Object.assign(
           {
-            method: type
+            method: type,
           },
           opt
         )
       )
-      .then(e => {
+      .then((e) => {
         log(type.toUpperCase(), url, data, e);
         return e;
       });
@@ -150,7 +150,7 @@ fly.config.timeout = cfg.apiTimeout;
 fly.config.headers = {};
 
 fly.interceptors.request.use(
-  request => {
+  (request) => {
     let token = store.getters.token;
     if (token) {
       request.headers['Authorization'] = token;
@@ -160,13 +160,13 @@ fly.interceptors.request.use(
 
     return request;
   },
-  err => {
+  (err) => {
     return Promise.reject(err);
   }
 );
 
 fly.interceptors.response.use(
-  async response => {
+  async (response) => {
     let data = response.data;
     const no = noJSON(data);
     let code = response.status;
@@ -179,7 +179,7 @@ fly.interceptors.response.use(
       if (!getTokenStatsu) {
         // apis["user"] && apis["user"]["getToken"]
         getTokenStatsu = true;
-        setTimeout(_ => {
+        setTimeout((_) => {
           getTokenStatsu = false;
         }, 20000);
         newFly.config = fly.config;
@@ -189,8 +189,8 @@ fly.interceptors.response.use(
         // #endif
 
         return (
-          (await getToken(_ => {
-            return fly.request(response.request).then(e => {
+          (await getToken((_) => {
+            return fly.request(response.request).then((e) => {
               return e;
             });
           })) || data
@@ -200,7 +200,7 @@ fly.interceptors.response.use(
     }
     return data;
   },
-  async err => {
+  async (err) => {
     let code = err.status;
     let response = err.response;
     let url = '';
@@ -213,7 +213,7 @@ fly.interceptors.response.use(
       log('NoLogin', getTokenStatsu, code);
       if (!getTokenStatsu) {
         getTokenStatsu = true;
-        setTimeout(_ => {
+        setTimeout((_) => {
           getTokenStatsu = false;
         }, 20000);
         newFly.config = fly.config;
@@ -221,13 +221,13 @@ fly.interceptors.response.use(
         log('不能预获取 Token');
         return data;
         // #endif
-        const newRes = await getToken(e => {
+        const newRes = await getToken((e) => {
           // if (process.env.NODE_ENV === 'development') {
           //   if (err.request.url === '/wx/users/by-token') {
           //     err.request.url = '/wx/users/by-tokenTest';
           //   }
           // }
-          return fly.request(err.request).then(e => {
+          return fly.request(err.request).then((e) => {
             log('retry', e);
             return e;
           });
@@ -236,7 +236,7 @@ fly.interceptors.response.use(
       }
       return Promise.reject('NoLogin');
     } else if (code === 400) {
-      util.$log('客服端错误', code, data.errorMsg);
+      util.$log('客户端错误', code, data.errorMsg);
       return Promise.reject(data.errorMsg);
     } else if (!!data.errorMsg) {
       return Promise.reject(data.errorMsg);
@@ -267,7 +267,7 @@ fly.interceptors.response.use(
   }
 );
 
-export const getToken = async (fn = _ => {}, errFn = e => {}) => {
+export const getToken = async (fn = (_) => {}, errFn = (e) => {}) => {
   fly.lock();
   let code = await appApi.getLoginCode();
   newFly.config = fly.config;
@@ -281,8 +281,8 @@ export const getToken = async (fn = _ => {}, errFn = e => {}) => {
     // #endif
     const e = await newFly.post(url, qs.stringify({ code: code }), {
       headers: {
-        'X-WX-Code': code
-      }
+        'X-WX-Code': code,
+      },
     });
     const data = e && e.data ? e.data : {};
     log('Login', data);

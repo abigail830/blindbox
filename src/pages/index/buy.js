@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-04-03 11:00:42
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-05-05 19:36:02
+ * @Last Modified time: 2020-05-26 15:28:04
  */
 
 import { CardDescription } from '@/config';
@@ -33,16 +33,13 @@ export const methods = (_) => {
       this.help = {};
     },
     getTipCard() {
-      this.$log('买提示');
-
       if (this.tipState) {
         this.$log('已购买过');
         return;
       }
-
       let done = this.$loading('获取提示中');
       this.$api((_) => {
-        return ['buy.tip', this.series.drawId];
+        return ['buy.tip', this.drawId];
       })
         .then((e) => {
           this.excludedProduct = e;
@@ -62,7 +59,7 @@ export const methods = (_) => {
 
       let done = this.$loading('兑换优惠卡中');
       this.$api((_) => {
-        return ['buy.discount', this.series.drawId];
+        return ['buy.discount', this.drawId];
       })
         .then((e) => {
           this.priceAfterDiscount = e.priceAfterDiscount;
@@ -74,8 +71,6 @@ export const methods = (_) => {
         });
     },
     getDisplayCard() {
-      this.$log('买显示');
-
       if (this.showState) {
         this.$log('已购买过');
         return;
@@ -83,14 +78,14 @@ export const methods = (_) => {
 
       let done = this.$loading('显示中');
       this.$api((_) => {
-        return ['buy.display', this.series.drawId];
+        return ['buy.display', this.drawId];
       })
         .then((e) => {
           this.$log('display', e);
           this.product = e;
           done();
         })
-        .catch((e) => {
+        .catch(() => {
           done();
           this.$alert('积分不足');
         });

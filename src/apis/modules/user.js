@@ -15,6 +15,12 @@ export default {
     'post',
     function(activityId = 0) {
       return `/wx/users/share-activity/${activityId}`;
-    }
-  ]
+    },
+  ],
+  shareCollection: [
+    'post',
+    function(seriesId = 0) {
+      return `/wx/users/share-collection/${seriesId}`;
+    },
+  ],
 };

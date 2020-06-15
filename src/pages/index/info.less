@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-02 15:31:00
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-19 12:44:00
+ * @Last Modified time: 2020-06-03 16:09:34
  */
 @import '../../common/var.less';
 @width: 580rpx;
@@ -16,7 +16,12 @@
   .info-header {
     font-size: 38.88rpx;
     color: #fff;
-    margin-bottom: 30rpx;
+    margin-bottom: 10rpx;
+  }
+  .info-header-timeout {
+    color: #fff;
+    font-size: 20rpx;
+    margin-bottom: 20rpx;
   }
   .info-view {
     width: @width;
@@ -44,6 +49,18 @@
     border-top: 0;
     color: @lightGreyBackground;
     // box-shadow: 0 0 1px @lightGreyBackground;
+    &.box-3 {
+      .box {
+        width: 160rpx;
+        height: 160rpx;
+        width: 100% / 3;
+        height: @width / 3;
+        .been-icon {
+          width: @width / 3;
+          height: @width / 3;
+        }
+      }
+    }
     .box {
       @borderColor: @lightGreyBackground;
       @borderSize: 1rpx;

@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-11 13:03:12
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-20 13:52:07
+ * @Last Modified time: 2020-05-20 11:31:18
  -->
 <template>
 	<view class="page page-order">
@@ -70,8 +70,8 @@
 			class="page-order-box"
 			v-show="isNot"
 		>
+			<view class="not-order-tip">满3个包邮（不包含 0 元商品、偏远地区除外）</view>
 			<view
-				@click="show(v,k)"
 				class="page-order-items"
 				v-for="(v,k) in itemsData3"
 				:key="k"

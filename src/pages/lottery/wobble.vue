@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-02 16:48:38
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-19 17:06:18
+ * @Last Modified time: 2020-06-03 17:30:31
  -->
 <template>
 	<view class="page wobble-view">
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+let show = true;
 import { $shake } from '@/common/util';
 import { mapState, mapGetters } from 'vuex';
 import zPoster from '@/components/util/zPoster';
@@ -69,6 +70,9 @@ export default {
 		// }
 		// this.poster();
 	},
+	beforeDestroy(){
+		show = false;
+	},
 	onLoad(opt) {
 		this.boxImage = opt.img;
 		this.getDrawProduct(opt.id);
@@ -89,13 +93,14 @@ export default {
 			})
 				.then(e => {
 					if (e.status === 404) {
+						if (!show) return;
 						// 继续请求
-						// setTimeout(_ => {
-						// 	// this.getDrawProduct(id);
-						// }, 500);
+						setTimeout(_ => {
+							this.getDrawProduct(id);
+						}, 500);
 					} else {
 						this.title = e.name;
-						this.image = e.productImage;
+						this.image = this.$websiteUrl + e.productImage;
 						// this.boxImage = e.productImage;
 					}
 					console.warn(e);
@@ -198,7 +203,8 @@ export default {
 			}
 		},
 		reStartGame() {
-			this.$go('index/info');
+			this.$back();
+			// this.$go('index/info');
 		},
 
 		wobbleEnd() {

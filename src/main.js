@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-16 19:22:33
+ * @Last Modified time: 2020-05-17 18:08:18
  */
 
 import Vue from 'vue';
@@ -36,9 +36,10 @@ Vue.prototype.$getuserinfo = async function(e) {
       {},
       { headers: { iv: iv, encryptedData: encryptedData } }
     );
+    let old = Store.getters.userInfo;
     this.$store.commit(
       'USER_SIGNIN',
-      Object.assign({ authState: true }, this.userInfo, userInfo)
+      Object.assign({ authState: true }, old, this.userInfo, userInfo)
     );
   }
 };
