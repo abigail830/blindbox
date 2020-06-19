@@ -4,7 +4,6 @@ import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderStatus;
 import com.github.tuding.blindbox.domain.order.OrderWithProductInfo;
 import com.github.tuding.blindbox.domain.order.TransportOrder;
-import com.github.tuding.blindbox.domain.product.Series;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -123,7 +122,7 @@ public class OrderRepository {
                         " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
                         " inner join draw_tbl d on p.ID = d.productId" +
                         " inner join order_tbl o on o.drawId = d.drawId" +
-                        " WHERE o.status in (?, ?, ?)  AND o.openId = ?",
+                        " WHERE o.status in (?, ?, ?)  AND o.openId = ? order by o.createTime desc",
                 rowMapperWithProduct,
                 OrderStatus.PAY_PRODUCT_SUCCESS.name(),
                 OrderStatus.NEW_TRANSPORT.name(),
@@ -137,7 +136,7 @@ public class OrderRepository {
                         " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
                         " inner join draw_tbl d on p.ID = d.productId" +
                         " inner join order_tbl o on o.drawId = d.drawId" +
-                        " WHERE o.status =? AND o.openId = ?",
+                        " WHERE o.status =? AND o.openId = ? order by o.createTime desc",
                 rowMapperWithProduct, OrderStatus.PAY_TRANSPORT_SUCCESS.name(), openId);
     }
 
@@ -147,7 +146,7 @@ public class OrderRepository {
                         " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion" +
                         " inner join draw_tbl d on p.ID = d.productId" +
                         " inner join order_tbl o on o.drawId = d.drawId" +
-                        " WHERE o.status =? AND o.openId = ?",
+                        " WHERE o.status =? AND o.openId = ? order by o.createTime desc",
                 rowMapperWithProduct, OrderStatus.DELIVERED.name(), openId);
     }
 
