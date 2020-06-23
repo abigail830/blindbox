@@ -242,7 +242,7 @@ public class WxProductController {
     public TipsCouponDTO getTipsByBonus(HttpServletRequest request,
                                         @PathVariable String drawId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_DISCOUNT_COUPON_CONSUME_BONUS);
+        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_TIPS_COUPON_CONSUME_BONUS);
         try {
             Product excludedProduct = drawService.getExcludedProduct(drawId);
             return new TipsCouponDTO(excludedProduct, remainBonus);
