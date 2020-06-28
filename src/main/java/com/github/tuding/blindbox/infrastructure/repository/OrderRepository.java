@@ -298,7 +298,7 @@ public class OrderRepository {
             if (!"*".equalsIgnoreCase(mobile)) {
                 stringBuilder.append(" and mobile = :mobile ");
             }
-            stringBuilder.append( " order by createTime ");
+            stringBuilder.append( " order by createTime limit 1000000");
         }
         return stringBuilder.toString();
     }
