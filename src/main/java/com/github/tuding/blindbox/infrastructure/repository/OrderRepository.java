@@ -4,6 +4,7 @@ import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderStatus;
 import com.github.tuding.blindbox.domain.order.OrderWithProductInfo;
 import com.github.tuding.blindbox.domain.order.TransportOrder;
+import com.github.tuding.blindbox.infrastructure.util.StreamingCsvResultSetExt;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -14,7 +15,12 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -216,6 +222,23 @@ public class OrderRepository {
         return parameters;
     }
 
+    public MapSqlParameterSource buildParam(List<String> status, String orderID, String receiver, String mobile) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        if (!"ALL".equalsIgnoreCase(status.get(0))) {
+            parameters.addValue("status", status);
+        }
+        if (!"*".equalsIgnoreCase(orderID)) {
+            parameters.addValue("orderId", "%" + orderID + "%");
+        }
+        if (!"*".equalsIgnoreCase(receiver)) {
+            parameters.addValue("receiver", receiver);
+        }
+        if (!"*".equalsIgnoreCase(mobile)) {
+            parameters.addValue("mobile", mobile);
+        }
+        return parameters;
+    }
+
     public String buildSql(List<String> status, String orderID, String receiver, String mobile) {
         StringBuilder stringBuilder = new StringBuilder("SELECT * FROM order_tbl");
 
@@ -248,6 +271,38 @@ public class OrderRepository {
         return stringBuilder.toString();
     }
 
+    public String buildSqlForCsv(List<String> status, String orderID, String receiver, String mobile) {
+        StringBuilder stringBuilder = new StringBuilder("SELECT * FROM order_tbl");
+
+        if ("ALL".equalsIgnoreCase(status.get(0))
+                && !StringUtils.isNotBlank(orderID)
+                && !StringUtils.isNotBlank(receiver)
+                && !StringUtils.isNotBlank(mobile)) {
+            stringBuilder.append(" order by createTime  ");
+        } else {
+            stringBuilder.append(" where ");
+            if (!"ALL".equalsIgnoreCase(status.get(0))) {
+                stringBuilder.append("  status in (:status) ");
+            } else {
+                stringBuilder.append("  status is not null ");
+            }
+
+            if (!"*".equalsIgnoreCase(orderID)) {
+                stringBuilder.append(" and orderID like :orderId ");
+            }
+
+            if (!"*".equalsIgnoreCase(receiver)) {
+                stringBuilder.append(" and receiver = :receiver ");
+            }
+
+            if (!"*".equalsIgnoreCase(mobile)) {
+                stringBuilder.append(" and mobile = :mobile ");
+            }
+            stringBuilder.append( " order by createTime ");
+        }
+        return stringBuilder.toString();
+    }
+
     public List<Order> queryOrderWithDetail(List<String> status, String orderID, String receiver, String mobile,
                                             Integer limitPerPage, Integer numOfPage) {
         log.info("Going to query order with status {} orderID {} receiver {} mobile {}", status, orderID, receiver, mobile);
@@ -256,6 +311,20 @@ public class OrderRepository {
         log.info("Going to run sql {}", sql);
 
         return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
+    }
+
+    public StreamingResponseBody queryOrderWithDetailAsCsv(List<String> status, String orderID, String receiver, String mobile) {
+        return new StreamingResponseBody() {
+            @Override
+            public void writeTo(OutputStream outputStream) throws IOException, WebApplicationException {
+                log.info("Going to query order with status {} orderID {} receiver {} mobile {}", status, orderID, receiver, mobile);
+                String sql = buildSqlForCsv(status, orderID, receiver, mobile);
+                MapSqlParameterSource mapSqlParameterSource = buildParam(status, orderID, receiver, mobile);
+                log.info("Going to run sql {}", sql);
+                namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, new StreamingCsvResultSetExt(outputStream));
+            }
+        };
+
     }
 
     public String buildSqlCount(List<String> status, String orderID, String receiver, String mobile) {

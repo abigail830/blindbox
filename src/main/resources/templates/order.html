@@ -19,10 +19,10 @@
             width: 40%;
             margin-top: 60px;
         }
+
         .margin-field {
             margin-top: 3px;
         }
-
 
 
     </style>
@@ -96,10 +96,15 @@
             <div class=" sixteen wide column">
             </div>
         </div>
-        <div class="ui bottom attached button margin-field" onclick="refreshFilter()">
-            <i class="search icon"></i>查找
-        </div>
+        <div class="ui two top attached buttons">
 
+            <div class="ui green basic button" onclick="refreshFilter()">
+                <i class="search icon"></i>查找
+            </div>
+            <div class="ui blue basic button" onclick="downloadWithFilter()">
+                <i class="download icon"></i>下载
+            </div>
+        </div>
 
         <div class="ui divider"></div>
         <table class="ui striped table" id="orderTable">
@@ -250,6 +255,13 @@
         );
     }
 
+    function downloadWithFilter() {
+        var status = $('#statusFilter').val();
+        var orderId = $('#orderId').val() || '*';
+        var receiver = $('#receiver').val() || '*';
+        var mobile = $('#mobile').val() || '*';
+        window.location = '/admin-ui/orders/v2/csv/' + status + '/' + orderId + '/' + receiver + '/' + mobile;
+    }
 
     function getOrderCount(status, orderId, receiver, mobile) {
         var res = null;
@@ -265,11 +277,6 @@
     }
 
     refresh('ALL');
-
-
-
-
-
 
 
 </script>

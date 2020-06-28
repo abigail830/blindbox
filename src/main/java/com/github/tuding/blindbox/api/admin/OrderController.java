@@ -7,12 +7,18 @@ import com.github.tuding.blindbox.infrastructure.repository.OrderRepository;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -82,6 +88,22 @@ public class OrderController {
                         .stream().map(OrderDTO::new).collect(Collectors.toList())));
     }
 
+
+    @GetMapping("/v2/csv/{status}/{orderId}/{receiver}/{mobile}")
+    public ResponseEntity<StreamingResponseBody> getItemsAsCsv(@PathVariable String status,
+                                                               @PathVariable String orderId,
+                                                               @PathVariable String receiver,
+                                                               @PathVariable String mobile,
+                                                               final HttpServletResponse response) {
+        log.info("query order csv for status {} orderId {} receiver {} mobile {}",
+                status, orderId, receiver, mobile);
+        response.setContentType("text/csv");
+        response.setHeader(
+                "Content-Disposition",
+                "attachment;filename=result.csv");
+        return new ResponseEntity(orderRepository.queryOrderWithDetailAsCsv(UI_STATUS_FILTER_MAP.get(status), orderId, receiver, mobile),
+                HttpStatus.OK);
+    }
 
     @GetMapping("/v2/count/{status}/{orderId}/{receiver}/{mobile}")
     public ResponseEntity<String> getCount(@PathVariable String status,
