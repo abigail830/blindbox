@@ -54,7 +54,7 @@
     {
       "path": "pages/lottery/wobble",
       "style": {
-        "navigationBarTitleText": "摇晃"
+        "navigationBarTitleText": "抽盒"
       }
     },
     {

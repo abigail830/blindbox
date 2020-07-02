@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-02 16:48:38
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-06-03 17:30:31
+ * @Last Modified time: 2020-07-02 13:18:40
  -->
 <template>
 	<view class="page wobble-view">
@@ -14,6 +14,7 @@
 			:boxImage="boxImage"
 			:name="name"
 			:image="image"
+			:music="shakeMusic"
 			@end="wobbleEnd"
 			ref="wobble"
 		/>
@@ -49,7 +50,9 @@ import { $shake } from '@/common/util';
 import { mapState, mapGetters } from 'vuex';
 import zPoster from '@/components/util/zPoster';
 import zWobble from '@/components/box/zWobble';
-import { posterCopywriting } from '@/config';
+import { posterCopywriting, shakeMusic, posterBottomHeight } from '@/config';
+console.log('shakeMusic', shakeMusic);
+
 export default {
 	components: { zWobble, zPoster },
 	data() {
@@ -57,25 +60,34 @@ export default {
 			posterImage: '',
 			posterConfig: {},
 			state: false,
+			shakeMusic: shakeMusic,
 			title: '',
 			// boxImage: 'http://res.paquapp.com/boxonline/newbox/398newbox.png',
 			boxImage: '',
 			// 	'https://blindbox.fancier.store/images/series/6c86ded6-1424-402f-a99e-2d49ee72d8ce-boxImage.png',
-			image: ''
+			image: '',
+			posterBgImage: '/static/p-bg.jpg'
 		};
 	},
 	mounted() {
-		// if (process.env.NODE_ENV === 'development') {
-		// 	this.$refs.wobble.wobbleStart();
-		// }
+		if (process.env.NODE_ENV === 'development') {
+			this.$refs.wobble.wobbleStart();
+			this.title = '超级用户';
+			this.image =
+				'https://blindbox.fancier.store/images/product/98f6f9f7-60a2-452b-a265-44695ad5d755gray.png';
+			setTimeout(() => {
+				this.poster();
+			});
+		}
 		// this.poster();
 	},
-	beforeDestroy(){
+	beforeDestroy() {
 		show = false;
 	},
 	onLoad(opt) {
 		this.boxImage = opt.img;
 		this.getDrawProduct(opt.id);
+		this.getPosterBgImage(opt.sid);
 	},
 	computed: {
 		nickName() {
@@ -87,6 +99,15 @@ export default {
 		...mapGetters(['userInfo'])
 	},
 	methods: {
+		async getPosterBgImage(id) {
+			// let posterBgImage = '';
+			this.$log('需要单独去获取海报背景');
+			let childSeries = await this.$api(_ => {
+				return ['products.childSeries', id];
+			});
+			this.$log('需要单独去获取海报背景', childSeries);
+			this.posterBgImage = this.$websiteUrl + childSeries.posterBgImage;
+		},
 		getDrawProduct(id) {
 			this.$api(_ => {
 				return ['order.drawProduct', id];
@@ -95,9 +116,10 @@ export default {
 					if (e.status === 404) {
 						if (!show) return;
 						// 继续请求
-						setTimeout(_ => {
-							this.getDrawProduct(id);
-						}, 500);
+						if (process.env.NODE_ENV !== 'development')
+							setTimeout(_ => {
+								this.getDrawProduct(id);
+							}, 500);
 					} else {
 						this.title = e.name;
 						this.image = this.$websiteUrl + e.productImage;
@@ -113,10 +135,11 @@ export default {
 			let config = {};
 			let width = this.$to.px2rpx(this.$systems.windowWidth);
 			let height = this.$to.px2rpx(this.$systems.windowHeight);
-			let padding = 94;
+			let padding = 63;
 
 			width = 750;
 			height = 1008;
+			height = 1600;
 
 			let views = [];
 			views.push({
@@ -125,12 +148,13 @@ export default {
 				y: padding,
 				radius: 20,
 				width: width - padding * 2,
-				height: height - padding * 2,
+				height: 1238,
+				// height: height - padding * 2,
 				background: '#fff'
 			});
 			views.push({
 				type: 'img',
-				src: this.avatarUrl,
+				src: this.avatarUrl || this.userInfo.avatarUrl,
 				width: 130,
 				height: 130,
 				x: '+40',
@@ -159,20 +183,34 @@ export default {
 				height: 100,
 				maxLine: 2
 			});
+			if (this.image)
+				views.push({
+					type: 'img',
+					src: this.image,
+					width: 314*2,
+					height: 397*2,
+					positionY: true,
+					x: (750 - 314*2) / 2,
+					y: '+40'
+				});
 			views.push({
-				type: 'img',
-				src: this.image,
-				width: 314,
-				height: 397,
+				type: 'text',
+				x: padding,
+				y: '+14',
+				text: this.title,
+				color: '#000',
+				center: true,
 				positionY: true,
-				x: (750 - 314) / 2,
-				y: '+40'
+				width: width - padding * 2,
+				fontSize: 32,
+				height: 100,
+				maxLine: 1
 			});
 			config = {
 				width: width,
 				backgroundColor: '#f7b52c',
 				backgroundColor: '#000',
-				backgroundImage: '/static/p-bg.jpg',
+				backgroundImage: this.posterBgImage,
 				height: height,
 				now: +new Date(),
 				views: views
@@ -185,7 +223,12 @@ export default {
 			this.getPosterConfig();
 			this.getPosterViewsConfig();
 			this.$refs['poster'].clear();
-			this.$nextTick(this.$refs['poster'].create);
+			// this.posterConfig.height = this.posterConfig.height + posterBottomHeight;
+			this.$nextTick(() => {
+				this.$refs['poster'].create();
+				// this.posterConfig.height =
+					// this.posterConfig.height - posterBottomHeight;
+			});
 			this.$log('createPoster', this.posterImage);
 		},
 		posterResult(e, state) {
@@ -206,7 +249,6 @@ export default {
 			this.$back();
 			// this.$go('index/info');
 		},
-
 		wobbleEnd() {
 			this.state = true;
 		},

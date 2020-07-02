@@ -15,6 +15,9 @@
     },
     "titleNView": {},
     "modules": {},
+    "networkTimeout": {
+      "downloadFile": 3500
+    },
     "distribute": {
       "android": {
         "permissions": [

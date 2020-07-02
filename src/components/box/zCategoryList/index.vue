@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-11 18:17:03
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-06-11 11:57:25
+ * @Last Modified time: 2020-07-02 13:26:04
  -->
 <template>
 	<view class="z-category-list-view-box">
@@ -76,13 +76,13 @@
 				<image class="close-image" src="/static/universal-icon.png" mode />
 		</view>-->
 		<!-- </view> -->
-		<image
+		<!-- <image
 			@click="posterImage=''"
 			v-if="debug&&posterImage"
 			:src="posterImage"
 			mode="widthFix"
 			class="demo"
-		/>
+		/> -->
 		<zRankingPreview
 			@buy="goBuy"
 			:data="preview"
@@ -97,7 +97,7 @@ import zPoster from '@/components/util/zPoster';
 import zLoginBtn from '@/components/util/zLoginBtn';
 import zRankingPreview from '@/components/box/zRankingPreview';
 import { all as $all } from '@/apis/index';
-import { posterCopywritingAll } from '@/config';
+import { posterCopywritingAll, posterBottomHeight } from '@/config';
 let padding = 94;
 let preview = {};
 // let width = this.$to.px2rpx(this.$systems.windowWidth);
@@ -106,8 +106,8 @@ let preview = {};
 let width = 750;
 let height = 1008;
 let posterBox = {
-	width: width - padding * 2,
-	height: height - padding * 2
+	width: width - 64 * 2,
+	height: height - 64 * 2
 };
 // if (process.env.NODE_ENV === 'development') {
 // 	preview = {
@@ -187,12 +187,12 @@ export default {
 		}
 	},
 	mounted() {
-		if (process.env.NODE_ENV === 'development') {
+		if (this.debug) {
 			setTimeout(this.createPoster, 2000);
 		}
 		this.$bottom =
 			this.$systems.safeArea.height - this.$systems.safeArea.bottom + 100;
-		// this.$log(this.$systems.safeArea);
+		// this.$log(this.nickName);
 	},
 	methods: {
 		closePreview() {
@@ -210,28 +210,31 @@ export default {
 			if (state) {
 				this.posterImage = e.path;
 				this.$refs.poster.save();
-				if (process.env.NODE_ENV !== 'development') {
+				// if (!this.debug) {
 					uni.previewImage({
 						urls: [this.posterImage],
 						longPressActions: {}
 					});
-				}
+				// }
+			} else {
+				this.$alert(e.errMsg);
 			}
 		},
 		getPosterConfig() {
 			let [config, views] = [{}, []];
 			views.push({
 				type: 'rect',
-				x: padding,
+				x: 64,
 				y: padding,
 				radius: 20,
 				width: posterBox.width,
 				height: posterBox.height,
 				background: '#fff'
 			});
+
 			views.push({
 				type: 'img',
-				src: this.avatarUrl,
+				src: this.avatarUrl || this.userInfo.avatarUrl,
 				width: 130,
 				height: 130,
 				x: '+40',
@@ -319,7 +322,9 @@ export default {
 					this.posterConfig.views[0].height + diffH;
 				this.posterConfig.height = this.posterConfig.height + diffH;
 			}
-			this.$log('y', y, diffH);
+
+			// this.$log('y', y, diffH);
+			// this.posterConfig.backgroundImage =
 			this.posterConfig.views.push(...views);
 		},
 		async createPoster(e) {
@@ -333,16 +338,22 @@ export default {
 			}
 			this.$loading('海报生成中...');
 			this.$nextTick(_ => {
-				this.$log('海报生成中...', this.nickName);
 				this.getPosterConfig();
 				this.getPosterViewsConfig();
+				this.$log('海报生成中...', this.nickName,this.posterConfig.height);
+				this.posterConfig.height =
+					this.posterConfig.height + posterBottomHeight;
 				this.$refs['poster'].clear();
+
+				this.$log('海报生成中...', this.nickName,this.posterConfig.height);
 				this.$api(_ => {
 					return ['user.shareCollection', this.seriesActive];
 				});
 				setTimeout(_ => {
 					console.time('poster');
 					this.$refs['poster'].create();
+					this.posterConfig.height =
+						this.posterConfig.height - posterBottomHeight;
 					// this.$nextTick();
 				}, 100);
 			});
@@ -363,7 +374,7 @@ export default {
 				let apis = [];
 				e.forEach((e, k) => {
 					left.push({ name: e.name, posterBgImage: e.posterBgImage });
-					console.log('获取数据', e.name);
+					console.log('获取数据', e);
 					let id = e.id;
 					apis[k] = this.$api(_ => {
 						return ['products.childProducts', id];
@@ -378,6 +389,12 @@ export default {
 							} catch (e) {
 								console.error('获取是否抽中过失败', e);
 							}
+							// let posterBgImage = '';
+							// let childSeries = await this.$api(_ => {
+							// 	return ['products.childSeries', id];
+							// });
+							// this.$log('需要单独去获取海报背景', childSeries);
+							// posterBgImage.childSeries = posterBgImage;
 							let data = e.map(e => {
 								const id = e.id;
 								let gray = true;
@@ -387,6 +404,8 @@ export default {
 										break;
 									}
 								}
+								// 需要单独去获取海报背景
+
 								return {
 									id: id,
 									title: `${e.name}`,

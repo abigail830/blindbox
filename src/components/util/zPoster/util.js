@@ -46,7 +46,6 @@ const downImg = (url, header) => {
   if (url.indexOf('data:image') === 0) {
     return base64src(url);
   }
-
   if (cache[url]) {
     return cache[url];
   }
@@ -55,8 +54,15 @@ const downImg = (url, header) => {
       url: url.replace('http:', 'https:'),
       header: header || {},
       success: (res) => {
+        if (res.statusCode !== 200) {
+          reject('素材下载失败');
+          return;
+        }
         resolve(res.tempFilePath);
         cache[url] = res.tempFilePath;
+      },
+      complete: () => {
+        // console.log('complete');
       },
       fail: (err) => {
         console.error(url, err);
@@ -95,19 +101,24 @@ class Image extends Sprite {
 
   async draw(ctx) {
     ctx.save();
-    this.Border();
-    let src = await downImg(this.src, this.header);
+    try {
+      let src = await downImg(this.src, this.header);
 
-    if (this.radius > 0) {
-      ctx.setGlobalAlpha(0);
-      this.r = this.width / 2;
-      ctx.beginPath();
-      ctx.arc(this.x + this.r, this.y + this.r, this.r, 0, 2 * Math.PI);
-      ctx.fill();
-      ctx.clip();
-      ctx.setGlobalAlpha(1);
+      this.Border();
+      if (this.radius > 0) {
+        ctx.setGlobalAlpha(0);
+        this.r = this.width / 2;
+        ctx.beginPath();
+        ctx.arc(this.x + this.r, this.y + this.r, this.r, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.clip();
+        ctx.setGlobalAlpha(1);
+      }
+      ctx.drawImage(src, this.x, this.y, this.width, this.height);
+    } catch (e) {
+      console.log('下载失败');
     }
-    ctx.drawImage(src, this.x, this.y, this.width, this.height);
+
     ctx.restore();
   }
 }
@@ -368,6 +379,7 @@ class Poster {
       this.ctx.fillRect(0, 0, config.width, config.height);
     }
     if (this.config.backgroundImage) {
+      // try{
       let src = await downImg(this.config.backgroundImage, this.header);
       let [err, resInfo] = await uni.getImageInfo({ src: src });
       console.log('设置背景', this.config.backgroundImage, err, resInfo);
@@ -378,7 +390,6 @@ class Poster {
         let iwProportion = $to.rpx2px(750) / resInfo.width;
         iHeight = resInfo.height * iwProportion;
       }
-
       if (iHeight >= config.height || !iHeight) {
         console.log('直接设置背景');
         config.height = iHeight;
@@ -404,8 +415,7 @@ class Poster {
           ).draw(this.ctx);
         }
       }
-
-      console.log(0, 0, this.width, this.height);
+      // }catch(e){}
     }
 
     this.ctx.restore();

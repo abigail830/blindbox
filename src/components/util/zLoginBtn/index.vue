@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-16 11:46:28
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-05-21 11:21:08
+ * @Last Modified time: 2020-07-02 12:08:12
  -->
 <template>
 	<button
@@ -39,6 +39,7 @@ export default {
 	},
 	methods: {
 		click() {
+			this.$log("btnOpenType",this.btnOpenType)
 			if (this.btnOpenType) {
 				return;
 			}

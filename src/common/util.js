@@ -2,18 +2,18 @@
  * @Author: seekwe
  * @Date: 2019-11-08 14:06:18
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-06-06 15:37:13
+ * @Last Modified time: 2020-06-16 11:38:01
  */
 
 let app;
-export const __setMp = mpObj => {
+export const __setMp = (mpObj) => {
   app = mpObj;
 };
 const $alert = (text, duration, success = null, opt = {}) => {
   let defOpt = {
     title: text,
     duration: duration || 3000,
-    icon: success === true ? 'success' : success === false ? 'loading' : 'none'
+    icon: success === true ? 'success' : success === false ? 'loading' : 'none',
   };
   if (typeof success === 'string') {
     defOpt.image = success;
@@ -24,7 +24,7 @@ const $alert = (text, duration, success = null, opt = {}) => {
 const $loading = (text = '加载中', mask = true) => {
   uni.showLoading({
     title: text,
-    mask: mask
+    mask: mask,
   });
   return uni.hideLoading;
 };
@@ -41,7 +41,7 @@ const $go = async function(page, goType = false) {
     path = '/pages/' + page;
   }
   let url = {
-    url: path
+    url: path,
   };
   let res;
   if (goType === true) {
@@ -71,7 +71,7 @@ export const $is = {
   },
   phone(phone) {
     return /^0?1\d{10}$/.test(phone);
-  }
+  },
 };
 
 function $log(...msg) {
@@ -89,10 +89,10 @@ export const $app = {
         },
         fail(err) {
           reject(err);
-        }
+        },
       });
     });
-  }
+  },
 };
 
 export const $systems = (() => {
@@ -181,33 +181,37 @@ export const $to = {
       res = value;
     }
     return res * zoom;
-  }
+  },
 };
-export const $awaitWrap = promise => {
-  return promise.then(data => [data, null]).catch(err => [null, err]);
+export const $awaitWrap = (promise) => {
+  return promise.then((data) => [data, null]).catch((err) => [null, err]);
 };
 
-export const $shake = (stopFn = stop => {}, intervalTime = 500, music = '') => {
+export const $shake = (
+  stopFn = (stop) => {},
+  intervalTime = 500,
+  music = ''
+) => {
   let audioCtx,
     stop,
+    play,
     global = {
       state: false,
       lastTime: 0,
       lastX: 0,
       lastY: 0,
       lastZ: 0,
-      shakeSpeed: 70
+      shakeSpeed: 70,
     };
 
   if (music) {
     audioCtx = uni.createInnerAudioContext();
     audioCtx.src = music;
-    // audioCtx.onPlay(_ => {});
-    audioCtx.onError(res => {
+    audioCtx.onPlay((_) => {});
+    audioCtx.onError((res) => {
       $log('audioCtx error:', res.errMsg, res.errCode);
     });
   }
-
   const fn = function(acceleration) {
     if (global.state) {
       return;
@@ -225,21 +229,24 @@ export const $shake = (stopFn = stop => {}, intervalTime = 500, music = '') => {
         10000;
 
       if (speed > global.shakeSpeed) {
-        global.state = true;
-        setTimeout(_ => {
-          global.state = false;
-        }, intervalTime);
-        if (audioCtx) {
-          audioCtx.play();
-        }
-        $is.func(stop) && stopFn(stop);
+        play();
       }
       global.lastX = x;
       global.lastY = y;
       global.lastZ = z;
     }
   };
-  stop = _ => {
+  play = () => {
+    global.state = true;
+    setTimeout((_) => {
+      global.state = false;
+    }, intervalTime);
+    if (audioCtx) {
+      audioCtx.play();
+    }
+    $is.func(stop) && stopFn(stop);
+  };
+  stop = (_) => {
     if (audioCtx) {
       audioCtx.destroy();
       audioCtx = null;
@@ -249,7 +256,7 @@ export const $shake = (stopFn = stop => {}, intervalTime = 500, music = '') => {
   wx.onAccelerometerChange(fn);
 
   console.log('开始', global);
-  return stop;
+  return [stop, play];
 };
 export const $util = {
   throttle: function(fn, gapTime = 1500) {
@@ -261,7 +268,7 @@ export const $util = {
         _lastTime = _nowTime;
       }
     };
-  }
+  },
 };
 export default {
   $util,
@@ -275,10 +282,10 @@ export default {
   $app,
   $awaitWrap,
   $systems,
-  $PLATFORM: process.env.VUE_APP_PLATFORM
+  $PLATFORM: process.env.VUE_APP_PLATFORM,
 };
 
-export const shuffle = arr => {
+export const shuffle = (arr) => {
   for (let i = arr.length - 1; i >= 0; i--) {
     let rIndex = Math.floor(Math.random() * (i + 1));
     let temp = arr[rIndex];

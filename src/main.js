@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-05-17 18:08:18
+ * @Last Modified time: 2020-06-19 12:42:31
  */
 
 import Vue from 'vue';
@@ -12,6 +12,12 @@ import cfg from './config';
 import { ajax as Api } from './apis';
 import util from './common/util';
 import { __setMp } from './common/util';
+// import * as Sentry from './common/sentry';
+
+// Sentry.init({
+//   dsn:
+//     'https://305cce999f6944e881b6e01596413035@o408543.ingest.sentry.io/5282481',
+// });
 
 Object.assign(Vue.prototype, util);
 

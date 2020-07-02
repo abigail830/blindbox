@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-06-11 12:04:48
+ * @Last Modified time: 2020-07-02 13:11:17
  */
 
 let apiHost, websiteUrl;
@@ -12,11 +12,12 @@ export const soldOut = 2;
 
 // 抽盒超时时间
 export const boxExtractionTimeout = 600*3;
-
+export const posterBottomHeight = 284;
 export const posterCopywriting = '看我在王牌化身抽盒机化身成了哪位巨星';
 export const posterCopywritingAll = '来看看我的王牌阵容都有谁';
 
 export const music = 'https://blindbox.fancier.store/images/Dribble2much.mp3';
+export const shakeMusic = 'https://blindbox.fancier.store/images/shake.mp3';
 
 let [appName, apiTimeout, autoTimeout] = ['王牌化身福盒机', 20000, 60]; //小程序默认名称, 接口超时时间ms, 重新授权获取用户信息间隔时间ms(0不会过期)
 

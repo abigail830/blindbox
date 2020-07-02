@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-04-03 11:00:42
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-05-26 15:28:04
+ * @Last Modified time: 2020-06-16 11:46:01
  */
 
 import { CardDescription } from '@/config';
@@ -46,8 +46,13 @@ export const methods = (_) => {
           done();
         })
         .catch((e) => {
+          this.$log('err', e);
+          let msg = '积分不足';
+          if (e == 'NO_TIPS_AVAILABLE') {
+            msg = '唯一商品不支持提示卡';
+          }
           done();
-          this.$alert('积分不足');
+          this.$alert(msg);
         });
     },
     getDiscountCard() {

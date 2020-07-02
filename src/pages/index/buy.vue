@@ -313,10 +313,12 @@ export default {
 				this.$go(
 					'lottery/wobble?id=' +
 						this.drawId +
+						'&sid=' +
+						this.id +
 						'&img=' +
 						this.$websiteUrl +
 						this.series.boxImage,
-				true	// null
+					true // null
 				);
 			}
 		},
