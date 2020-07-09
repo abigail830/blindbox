@@ -71,9 +71,9 @@ export const methods = (_) => {
     },
     setSeriesActive(id) {
       this.seriesActive = id;
+      this.itemsDataPage = 0;
       if (id != 'all') {
         this.$log('加载指定系列:', id);
-        this.itemsDataPage = 1;
         this.$api((_) => {
           return ['products.series', id];
         }).then((e) => {

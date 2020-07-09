@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 11:53:51
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-11 20:05:46
+ * @Last Modified time: 2020-07-09 12:47:29
  -->
 <template>
 	<view class="help-view" v-show="showHelp">
@@ -59,6 +59,7 @@ export default {
 	padding: 0;
 	height: 720rpx;
 	margin-top: 10% !important;
+	background: none;
 	.help-center {
 		height: 720rpx;
 	}
