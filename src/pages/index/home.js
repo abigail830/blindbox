@@ -51,6 +51,9 @@ export const data = (_) => {
 
 export const methods = (_) => {
   return {
+    // getShareAppMessageConfig() {
+    //   return { title: '来个福盒，发现你的「王牌化身」' };
+    // },
     setBarrage() {
       if (!this.system.barrage) return;
 
@@ -134,6 +137,15 @@ export const methods = (_) => {
         });
     },
     goInfo(data, id) {
+      uni.request({
+        url: this.$websiteUrl + data.matrixCellImage,
+        header: {
+          'content-type': 'image/jpeg'
+        },
+        success: res => {
+          this.$log('格子图片');
+        }
+      });
       this.$store.commit('current/setSeriesData', data);
       this.$go('./info?id=' + data.id);
     },

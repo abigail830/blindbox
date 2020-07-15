@@ -2,11 +2,13 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-26 11:31:23
+ * @Last Modified time: 2020-07-14 11:35:21
  -->
 <script>
-import { music } from './config';
+import { music, shakeMusic } from './config';
+import { $alert } from '@/common/util';
 const innerAudioContext = uni.createInnerAudioContext();
+// const innerAudioContext = uni.getBackgroundAudioManager();
 innerAudioContext.autoplay = true;
 innerAudioContext.loop = true;
 // innerAudioContext.src = '/static/music.mp3';
@@ -18,9 +20,18 @@ innerAudioContext.onPause(() => {
 	console.log('暂停播放');
 });
 innerAudioContext.onError(res => {
-	console.error(res.errMsg);
-	console.error(res.errCode);
+	console.error(res.errMsg, res.errCode);
+	uni.showModal({
+		title: '背景音乐播放失败',
+		content: res.errCode + ': ' + res.errMsg,
+		success: function(res) {
+			if (res.confirm) {
+			} else if (res.cancel) {
+			}
+		}
+	});
 });
+
 import cfg from './config';
 import appApi from './apis/util';
 import { mapState, mapGetters } from 'vuex';
@@ -28,6 +39,7 @@ export default {
 	onLaunch() {},
 	onShow() {
 		this.musciPlay();
+		this.getProductsRoles();
 	},
 	onHide() {
 		this.musciPause();
@@ -36,7 +48,23 @@ export default {
 		console.warn('全部播放音乐');
 		this.musci();
 		await this.checkAuth();
-		this.getProductsRoles();
+		uni.downloadFile({
+			url: shakeMusic,
+			success: res => {
+				if (res.statusCode === 200) {
+					this.$store.commit('system/setShakeMusic', res.tempFilePath);
+				}
+			}
+		});
+		// uni.request({
+		// 	header: {
+		//   'content-type': 'audio/mpeg'
+		// },
+		// 	url: shakeMusic,
+		// 	success: res => {
+		// 		this.$log('摇一摇音乐加载成功');
+		// 	}
+		// });
 	},
 	watch: {
 		soundEffects: {

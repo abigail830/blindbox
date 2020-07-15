@@ -2,14 +2,15 @@
  * @Author: seekwe
  * @Date: 2019-11-08 14:06:18
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-06-16 11:38:01
+ * @Last Modified time: 2020-07-13 14:17:18
  */
 
+import Store from '@/store';
 let app;
 export const __setMp = (mpObj) => {
   app = mpObj;
 };
-const $alert = (text, duration, success = null, opt = {}) => {
+export const $alert = (text, duration, success = null, opt = {}) => {
   let defOpt = {
     title: text,
     duration: duration || 3000,
@@ -29,7 +30,7 @@ const $loading = (text = '加载中', mask = true) => {
   return uni.hideLoading;
 };
 
-const $go = async function(page, goType = false) {
+const $go = async function (page, goType = false) {
   let path = '';
   if (page.indexOf('.') === 0) {
     let tmp = this.$mp.page.route.split('/');
@@ -55,7 +56,7 @@ const $go = async function(page, goType = false) {
   }
   return res;
 };
-export const $back = function(delta = 1) {
+export const $back = function (delta = 1) {
   if (getCurrentPages().length <= 1) {
     this.$go('index/home', 'reLaunch');
     return;
@@ -188,7 +189,7 @@ export const $awaitWrap = (promise) => {
 };
 
 export const $shake = (
-  stopFn = (stop) => {},
+  stopFn = (stop) => { },
   intervalTime = 500,
   music = ''
 ) => {
@@ -203,16 +204,24 @@ export const $shake = (
       lastZ: 0,
       shakeSpeed: 70,
     };
-
+  let soundEffects = Store.state.system.soundEffects
   if (music) {
+    if (soundEffects) {
+      Store.commit('system/changeSoundEffects', false);
+    }
     audioCtx = uni.createInnerAudioContext();
     audioCtx.src = music;
-    audioCtx.onPlay((_) => {});
+    audioCtx.onPlay((_) => { });
+    audioCtx.onEnded((_) => {
+      if (soundEffects) {
+        Store.commit('system/changeSoundEffects', true);
+      }
+    });
     audioCtx.onError((res) => {
       $log('audioCtx error:', res.errMsg, res.errCode);
     });
   }
-  const fn = function(acceleration) {
+  const fn = function (acceleration) {
     if (global.state) {
       return;
     }
@@ -259,9 +268,9 @@ export const $shake = (
   return [stop, play];
 };
 export const $util = {
-  throttle: function(fn, gapTime = 1500) {
+  throttle: function (fn, gapTime = 1500) {
     let _lastTime = null;
-    return function() {
+    return function () {
       let _nowTime = +new Date();
       if (_nowTime - _lastTime > gapTime || !_lastTime) {
         fn.apply(this, arguments);

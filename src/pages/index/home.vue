@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-09 22:13:51
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-19 17:09:15
+ * @Last Modified time: 2020-07-14 16:23:57
  -->
 <template>
 	<view class="page home-page">
@@ -218,16 +218,20 @@ export default {
 	onHide() {
 		this.isShowBottom = false;
 	},
-	computed: computed(),
-	mounted() {
+	onShow() {
 		this.getItems();
 		this.setSeriesActive('all');
+	},
+	computed: computed(),
+	mounted() {
+		// this.getItems();
+		// this.setSeriesActive('all');
 		// this.setSeriesActive('28b0242a-bc6a-4bda-89fa-dc6fa5290156');
 		this.$log('设置弹幕');
 		this.setBarrage();
 		setInterval(_ => {
 			this.setBarrage();
-		}, 6000);
+		}, 7000);
 	},
 	data: data,
 	methods: methods()

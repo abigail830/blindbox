@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-02 16:48:38
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-07-02 13:18:40
+ * @Last Modified time: 2020-07-14 14:10:13
  -->
 <template>
 	<view class="page wobble-view">
@@ -50,8 +50,7 @@ import { $shake } from '@/common/util';
 import { mapState, mapGetters } from 'vuex';
 import zPoster from '@/components/util/zPoster';
 import zWobble from '@/components/box/zWobble';
-import { posterCopywriting, shakeMusic, posterBottomHeight } from '@/config';
-console.log('shakeMusic', shakeMusic);
+import { posterCopywriting, posterBottomHeight } from '@/config';
 
 export default {
 	components: { zWobble, zPoster },
@@ -60,7 +59,7 @@ export default {
 			posterImage: '',
 			posterConfig: {},
 			state: false,
-			shakeMusic: shakeMusic,
+			// shakeMusic: shakeMusic,
 			title: '',
 			// boxImage: 'http://res.paquapp.com/boxonline/newbox/398newbox.png',
 			boxImage: '',
@@ -86,8 +85,8 @@ export default {
 	},
 	onLoad(opt) {
 		this.boxImage = opt.img;
-		this.getDrawProduct(opt.id);
 		this.getPosterBgImage(opt.sid);
+		this.getDrawProduct(opt.id);
 	},
 	computed: {
 		nickName() {
@@ -96,6 +95,10 @@ export default {
 		avatarUrl() {
 			return this.userInfo.avatarUrl || '';
 		},
+		shakeMusic() {
+			return this.system.shakeMusic;
+		},
+		...mapState(['system']),
 		...mapGetters(['userInfo'])
 	},
 	methods: {
@@ -187,10 +190,10 @@ export default {
 				views.push({
 					type: 'img',
 					src: this.image,
-					width: 314*2,
-					height: 397*2,
+					width: 314 * 2,
+					height: 397 * 2,
 					positionY: true,
-					x: (750 - 314*2) / 2,
+					x: (750 - 314 * 2) / 2,
 					y: '+40'
 				});
 			views.push({
@@ -227,7 +230,7 @@ export default {
 			this.$nextTick(() => {
 				this.$refs['poster'].create();
 				// this.posterConfig.height =
-					// this.posterConfig.height - posterBottomHeight;
+				// this.posterConfig.height - posterBottomHeight;
 			});
 			this.$log('createPoster', this.posterImage);
 		},

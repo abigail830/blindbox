@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-07-02 13:11:17
+ * @Last Modified time: 2020-07-14 16:31:58
  */
 
 let apiHost, websiteUrl;
@@ -13,10 +13,12 @@ export const soldOut = 2;
 // 抽盒超时时间
 export const boxExtractionTimeout = 600*3;
 export const posterBottomHeight = 284;
-export const posterCopywriting = '看我在王牌化身抽盒机化身成了哪位巨星';
+export const posterCopywriting = '厉害了！竟然得到了他的化身！';
 export const posterCopywritingAll = '来看看我的王牌阵容都有谁';
+export const shareTitle = '来个福盒，发现你的「王牌化身」！';
 
-export const music = 'https://blindbox.fancier.store/images/Dribble2much.mp3';
+export const music = '/static/Dribble2much.mp3';
+// export const music = 'https://blindbox.fancier.store/images/Dribble2much.mp3';
 export const shakeMusic = 'https://blindbox.fancier.store/images/shake.mp3';
 
 let [appName, apiTimeout, autoTimeout] = ['王牌化身福盒机', 20000, 60]; //小程序默认名称, 接口超时时间ms, 重新授权获取用户信息间隔时间ms(0不会过期)
@@ -41,19 +43,19 @@ export const CardDescription = {
            title: '提示卡说明',
            type: 'tip',
            content:
-             '<div style="text-align: center;">使用本卡可以获得一次排出提示。<br><br>（即福盒内不会抽到上方划掉的款式）</div>',
+             '<div style="text-align: center1;">使用此卡您将获取一次提示，提示中的款式将不会出现在此次被您选中的福盒中。</div>',
          },
          display: {
            type: 'display',
            title: '显示卡说明',
            content:
-             '使用本卡可以直接显示福盒内的款式。',
+             '使用此卡您将直接看到福盒中的准确款式。',
          },
          discount: {
            type: 'discount',
            title: '优惠卡说明',
            content:
-             '使用本卡可以在付款结算时以直接抵扣的方式获得优惠。',
+             '使用此卡，在结算时您的订单将享有九折优惠。',
          },
        };
 
@@ -217,12 +219,9 @@ export const RuleDescription = {
   },
   service: {
     title: '联系客服',
-    content: `<p style="text-align: center;">
-QQ: 378223838<br><br>
-电话: 15976566645<br><br>
-微信: seekwe<br><br>
+    content: `<p style="text-align: center1;">您可以根据以下集中联系方式找到我们，将会有专属的王牌客服人员及时为您解决问题！
 <br>
-<img style="max-width:100%;" src="https://wx.qlogo.cn/mmopen/vi_32/icXdI0QO7eV1m1T5dUHofNTfBShe30JXriaKTQUPLh0uz6q5xFERee9I65VCaxibIVGAm9xvsRAY4LUJL82L7fdibg/132" />
+<br>工作时间：09：30~18：00
 </p>`,
   },
   rule: {
@@ -268,7 +267,7 @@ QQ: 378223838<br><br>
 <br>九、发货
 <br>1.购买后的福盒若超过保留期将自动发货至您的默认地址，您可以到"我的盒柜"手动申请发货。
 <br>2.您需要填写准确的默认收货地址，我们将以该地址信息作为向您提供服务时所依凭据。
-<br>3.为保证您购买的商品质量，购买的商品在盒柜内的保留时间为20天，20天内未手动发货的，系统将在保留期到达之日第二天起15天内，自动将到期商品发送到您的默认地址。自动发货的订单包含3件及以上的产品则剔红包邮服务，不足3件的产品将使用快递费到付的形式发出。
+<br>3.为保证您购买的商品质量，购买的商品在盒柜内的保留时间为20天，20天内未手动发货的，系统将在保留期到达之日第二天起15天内，自动将到期商品发送到您的默认地址。自动发货的订单包含3件及以上的产品我们将提供包邮服务，不足3件的产品将使用快递费到付的形式发出。
 <br>4.请确保您的默认地址栏真实有效的，因您地址错误或其他个人原因导致的任何损失由您自行承担
 <br>5.自动发货的订单，您因各种理由拒收造成的损失由您个人承担。
 <br>6.保留时间20天说明：从您下单当日起计算，只计算自然日期，不足1天按照1天计算。预售商品从开放发货当日起计算，只计算自然日期，不足1天按照1天计算。

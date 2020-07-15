@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 11:53:51
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-05-25 15:18:11
+ * @Last Modified time: 2020-07-14 11:24:27
  -->
 <template>
 	<view class="z-home-info-box">

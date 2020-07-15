@@ -104,7 +104,8 @@ export default {
 		},
 		itemData(text, top, time, color) {
 			id++;
-			let style = `animation: first ${time}s linear forwards;top:${top};color:${color}`;
+			let style = `animation: first ${time}s linear forwards;top:${top};color:${color};right:0;`;
+			 style += `-webkit-animation: first ${time}s linear forwards;top:${top};color:${color};`;
 			return {
 				id,
 				text,

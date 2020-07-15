@@ -5,8 +5,8 @@
  * @Last Modified time: 2020-03-17 10:19:16
  */
 
+import { shakeMusic } from '@/config';
 let data = uni.getStorageSync('system') || {};
-
 let soundEffects =
   typeof data.soundEffects === 'boolean' ? data.soundEffects : true;
 let barrage = typeof data.barrage === 'boolean' ? data.barrage : true;
@@ -17,10 +17,14 @@ export default {
     // 音效
     soundEffects: soundEffects,
     // 弹幕
-    barrage: barrage
+    barrage: barrage,
+    shakeMusic: shakeMusic
   },
   getters: {},
   mutations: {
+    setShakeMusic(state, value) {
+      state.shakeMusic = value;
+    },
     changeSoundEffects(state, value) {
       state.soundEffects = value;
       uni.setStorage({

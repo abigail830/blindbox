@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-01 20:59:35
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-05-23 14:03:17
+ * @Last Modified time: 2020-07-14 17:03:26
  -->
 <template>
 	<view class="page page-me">
@@ -156,6 +156,7 @@ import appApi from '@/apis/util';
 import { RuleDescription as help } from '@/config';
 
 export default {
+	onShareAppMessage: onShareAppMessage,
 	components: { zParser, zLoginBtn },
 	data() {
 		return {
@@ -188,12 +189,12 @@ export default {
 		...mapGetters(['userInfo', 'authState', 'banState'])
 	},
 	mounted() {
-		setTimeout(_ => {
-			this.$log('page-me', this.userInfo);
-		}, 2000);
-		setTimeout(_ => {
-			this.$log('page-me', this.userInfo, this.system, mapState(['system']));
-		}, 15000);
+		// setTimeout(_ => {
+		// 	this.$log('page-me', this.userInfo);
+		// }, 2000);
+		// setTimeout(_ => {
+		// 	this.$log('page-me', this.userInfo, this.system, mapState(['system']));
+		// }, 15000);
 	},
 	methods: {
 		clickLoginBtn(e) {

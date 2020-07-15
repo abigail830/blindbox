@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-02 15:30:29
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-06-05 13:37:44
+ * @Last Modified time: 2020-07-14 11:26:36
  -->
 <template>
 	<view class="page page-info">

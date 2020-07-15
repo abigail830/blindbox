@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-01 17:14:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-03-30 12:51:19
+ * @Last Modified time: 2020-07-14 16:41:02
  -->
 <template>
 	<view class="category-view">
@@ -36,7 +36,9 @@
 import { mapState, mapGetters } from 'vuex';
 import zHomeAll from '@/components/box/zHomeAll';
 import zCategoryList from '@/components/box/zCategoryList/index';
+import { onShareAppMessage } from '@/common/mixins';
 export default {
+	onShareAppMessage: onShareAppMessage,
 	components: { zCategoryList, zHomeAll },
 	data() {
 		return {
