@@ -5,8 +5,8 @@ spring:
     url: jdbc:h2:mem:RealH2InUserd;DB_CLOSE_DELAY=-1;MODE=MYSQL
   servlet:
     multipart:
-      max-file-size: 2MB
-      max-request-size: 2MB
+      max-file-size: 3MB
+      max-request-size: 3MB
 
 server:
   port: 8080
