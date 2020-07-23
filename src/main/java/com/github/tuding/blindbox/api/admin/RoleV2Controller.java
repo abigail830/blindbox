@@ -73,6 +73,9 @@ public class RoleV2Controller {
                 log.info("change role image url");
                 String image = imageRepository.saveImage(roleDTO.getId(), ImageCategory.ROLE, roleDTO.getRoleImageFile());
                 roleDTO.setRoleImage(image + "?ts=" + System.currentTimeMillis()/1000);
+            } else {
+                roleDTO.setRoleImage(imageRepository.getPath(roleDTO.getId(), ImageCategory.ROLE));
+
             }
             rolesRepository.updateRole(roleDTO.toDomainObject());
             return new RedirectView("/admin-ui/role/v2/");

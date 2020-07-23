@@ -146,21 +146,32 @@ public class SeriesV2Controller {
         if (seriesDTO.getSeriesImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
             seriesDTO.setSeriesImage(image + "?ts=" + System.currentTimeMillis()/1000);
+        } else {
+            seriesDTO.setSeriesImage(imageRepository.getPath(seriesDTO.getId(), ImageCategory.SERIES));
+
         }
 
         if (seriesDTO.getMatrixHeaderImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
             seriesDTO.setMatrixHeaderImage(image + "?ts=" + System.currentTimeMillis()/1000);
+        } else {
+            seriesDTO.setMatrixHeaderImage(imageRepository.getPath(seriesDTO.getId() + "-matrixHeaderImage", ImageCategory.SERIES));
+
         }
 
         if (seriesDTO.getMatrixCellImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
             seriesDTO.setMatrixCellImage(image + "?ts=" + System.currentTimeMillis()/1000);
+        } else {
+            seriesDTO.setMatrixCellImage(imageRepository.getPath(seriesDTO.getId() + "-matrixCellImage", ImageCategory.SERIES));
+
         }
 
         if (seriesDTO.getLongImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
             seriesDTO.setLongImage(image + "?ts=" + System.currentTimeMillis()/1000);
+        } else {
+            seriesDTO.setLongImage(imageRepository.getPath(seriesDTO.getId() + "-longImage", ImageCategory.SERIES));
         }
 
         if (seriesDTO.getBoxImageFile().getSize() > 0) {
@@ -169,9 +180,12 @@ public class SeriesV2Controller {
         } else {
             seriesDTO.setBoxImage(imageRepository.getPath(seriesDTO.getId() + "-boxImage", ImageCategory.SERIES));
         }
+
         if (seriesDTO.getPosterBgImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-posterBgImage", ImageCategory.SERIES, seriesDTO.getPosterBgImageFile());
             seriesDTO.setPosterBgImage(image + "?ts=" + System.currentTimeMillis()/1000);
+        } else {
+            seriesDTO.setPosterBgImage(imageRepository.getPath(seriesDTO.getId() + "-posterBgImage", ImageCategory.SERIES));
         }
     }
 
