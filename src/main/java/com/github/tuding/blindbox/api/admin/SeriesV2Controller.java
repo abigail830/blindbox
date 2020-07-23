@@ -106,17 +106,17 @@ public class SeriesV2Controller {
         log.info("handle series creation as {} id {}", seriesDTO, seriesID.toString());
 
         String image = imageRepository.saveImage(seriesID.toString(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
-        seriesDTO.setSeriesImage(image);
+        seriesDTO.setSeriesImage(image + "?ts=" + System.currentTimeMillis()/1000);
         image = imageRepository.saveImage(seriesID.toString() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
-        seriesDTO.setMatrixHeaderImage(image);
+        seriesDTO.setMatrixHeaderImage(image + "?ts=" + System.currentTimeMillis()/1000);
         image = imageRepository.saveImage(seriesID.toString() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
-        seriesDTO.setMatrixCellImage(image);
+        seriesDTO.setMatrixCellImage(image + "?ts=" + System.currentTimeMillis()/1000);
         image = imageRepository.saveImage(seriesID.toString() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
-        seriesDTO.setLongImage(image);
+        seriesDTO.setLongImage(image + "?ts=" + System.currentTimeMillis()/1000);
         image = imageRepository.saveImage(seriesID.toString() + "-boxImage", ImageCategory.SERIES, seriesDTO.getBoxImageFile());
-        seriesDTO.setBoxImage(image);
+        seriesDTO.setBoxImage(image + "?ts=" + System.currentTimeMillis()/1000);
         image = imageRepository.saveImage(seriesID.toString() + "-posterBgImage", ImageCategory.SERIES, seriesDTO.getPosterBgImageFile());
-        seriesDTO.setPosterBgImage(image);
+        seriesDTO.setPosterBgImage(image + "?ts=" + System.currentTimeMillis()/1000);
 
         seriesDTO.setId(seriesID.toString());
         seriesRepository.createSeriesV2(seriesDTO.toDomainObject());
@@ -145,33 +145,33 @@ public class SeriesV2Controller {
     private void updateSeriesImages(@ModelAttribute("series") SeriesV2DTO seriesDTO) {
         if (seriesDTO.getSeriesImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId(), ImageCategory.SERIES, seriesDTO.getSeriesImageFile());
-            seriesDTO.setSeriesImage(image);
+            seriesDTO.setSeriesImage(image + "?ts=" + System.currentTimeMillis()/1000);
         }
 
         if (seriesDTO.getMatrixHeaderImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixHeaderImage", ImageCategory.SERIES, seriesDTO.getMatrixHeaderImageFile());
-            seriesDTO.setMatrixHeaderImage(image);
+            seriesDTO.setMatrixHeaderImage(image + "?ts=" + System.currentTimeMillis()/1000);
         }
 
         if (seriesDTO.getMatrixCellImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-matrixCellImage", ImageCategory.SERIES, seriesDTO.getMatrixCellImageFile());
-            seriesDTO.setMatrixCellImage(image);
+            seriesDTO.setMatrixCellImage(image + "?ts=" + System.currentTimeMillis()/1000);
         }
 
         if (seriesDTO.getLongImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-longImage", ImageCategory.SERIES, seriesDTO.getLongImageFile());
-            seriesDTO.setLongImage(image);
+            seriesDTO.setLongImage(image + "?ts=" + System.currentTimeMillis()/1000);
         }
 
         if (seriesDTO.getBoxImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-boxImage", ImageCategory.SERIES, seriesDTO.getBoxImageFile());
-            seriesDTO.setBoxImage(image);
+            seriesDTO.setBoxImage(image + "?ts=" + System.currentTimeMillis()/1000);
         } else {
             seriesDTO.setBoxImage(imageRepository.getPath(seriesDTO.getId() + "-boxImage", ImageCategory.SERIES));
         }
         if (seriesDTO.getPosterBgImageFile().getSize() > 0) {
             String image = imageRepository.saveImage(seriesDTO.getId() + "-posterBgImage", ImageCategory.SERIES, seriesDTO.getPosterBgImageFile());
-            seriesDTO.setPosterBgImage(image);
+            seriesDTO.setPosterBgImage(image + "?ts=" + System.currentTimeMillis()/1000);
         }
     }
 

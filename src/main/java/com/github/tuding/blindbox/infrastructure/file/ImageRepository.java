@@ -40,7 +40,7 @@ public class ImageRepository {
     }
 
     public File getImage(String fileName) {
-        return new File(imagePath + "/" + fileName);
+        return new File(imagePath + "/" + fileName.split("\\?")[0]);
     }
 
 

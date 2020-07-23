@@ -86,17 +86,17 @@ public class ProductController {
 
                 if (productDTO.getProductImageFile().getSize() > 0) {
                     String image = imageRepository.saveImage(productDTO.getId(), ImageCategory.PRODUCT, productDTO.getProductImageFile());
-                    productDTO.setProductImage(image);
+                    productDTO.setProductImage(image + "?ts=" + System.currentTimeMillis()/1000);
                 } else {
-                    productDTO.setProductImage(imageRepository.getPath(productDTO.getId(), ImageCategory.PRODUCT));
+                    productDTO.setProductImage(imageRepository.getPath(productDTO.getId(), ImageCategory.PRODUCT) + "?ts=" + System.currentTimeMillis()/1000);
                 }
 
 
                 if (productDTO.getProductGrayImageFile().getSize() > 0) {
                     String image = imageRepository.saveImage(productDTO.getId() + "gray", ImageCategory.PRODUCT, productDTO.getProductGrayImageFile());
-                    productDTO.setProductGrayImage(image);
+                    productDTO.setProductGrayImage(image + "?ts=" + System.currentTimeMillis()/1000);
                 } else {
-                    productDTO.setProductGrayImage(imageRepository.getPath(productDTO.getId() + "gray", ImageCategory.PRODUCT));
+                    productDTO.setProductGrayImage(imageRepository.getPath(productDTO.getId() + "gray", ImageCategory.PRODUCT) + "?ts=" + System.currentTimeMillis()/1000);
                 }
                 Product product = productDTO.toDomainObject();
                 product.setVersion(product.getVersion() + 1);
@@ -107,10 +107,10 @@ public class ProductController {
                 log.info("handle product creation as {} id {}", productDTO, productID.toString());
 
                 String image = imageRepository.saveImage(productID.toString(), ImageCategory.PRODUCT, productDTO.getProductImageFile());
-                productDTO.setProductImage(image);
+                productDTO.setProductImage(image + "?ts=" + System.currentTimeMillis()/1000);
 
                 image = imageRepository.saveImage(productID.toString() + "gray", ImageCategory.PRODUCT, productDTO.getProductGrayImageFile());
-                productDTO.setProductGrayImage(image);
+                productDTO.setProductGrayImage(image + "?ts=" + System.currentTimeMillis()/1000);
 
                 productDTO.setId(productID.toString());
                 productDTO.setSeriesID(seriesID);

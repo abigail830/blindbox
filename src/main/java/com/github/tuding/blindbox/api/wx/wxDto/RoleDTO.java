@@ -18,6 +18,6 @@ public class RoleDTO {
     public RoleDTO(Role role) {
         this.id = role.getId();
         this.name = role.getName();
-        this.roleImage = Constant.WX_UI_IMAGE_PATH + role.getRoleImage() + "?ts=" + System.currentTimeMillis()/1000;
+        this.roleImage = Constant.WX_UI_IMAGE_PATH + role.getRoleImage();
     }
 }

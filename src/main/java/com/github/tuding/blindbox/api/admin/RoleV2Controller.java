@@ -70,8 +70,9 @@ public class RoleV2Controller {
             log.info("handle role update as {}, with image size {}", roleDTO, roleDTO.getRoleImageFile().getSize());
 
             if (roleDTO.getRoleImageFile().getSize() > 0) {
+                log.info("change role image url");
                 String image = imageRepository.saveImage(roleDTO.getId(), ImageCategory.ROLE, roleDTO.getRoleImageFile());
-                roleDTO.setRoleImage(image);
+                roleDTO.setRoleImage(image + "?ts=" + System.currentTimeMillis()/1000);
             }
             rolesRepository.updateRole(roleDTO.toDomainObject());
             return new RedirectView("/admin-ui/role/v2/");
@@ -79,7 +80,7 @@ public class RoleV2Controller {
             UUID roleID = UUID.randomUUID();
             log.info("handle role creation as {} id {}", roleDTO, roleID.toString());
             String image = imageRepository.saveImage(roleID.toString(), ImageCategory.ROLE, roleDTO.getRoleImageFile());
-            roleDTO.setRoleImage(image);
+            roleDTO.setRoleImage(image + "?ts=" + System.currentTimeMillis()/1000);
             roleDTO.setId(roleID.toString());
             rolesRepository.saveRole(roleDTO.toDomainObject());
             return new RedirectView("/admin-ui/role/v2/");

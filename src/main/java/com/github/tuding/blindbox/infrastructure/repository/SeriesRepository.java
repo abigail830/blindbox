@@ -224,10 +224,11 @@ public class SeriesRepository {
     }
 
     public void updateSeriesV2(Series series) {
+        log.info("update series {}", series);
         if (StringUtils.isNotBlank(series.getReleaseDate())) {
             String updateSql = "UPDATE series_v2_tbl " +
                     " SET name = ?, releaseDate = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?," +
-                    " totalSize = ?, boxImage = ?" +
+                    " totalSize = ?, boxImage = ?, seriesImage = ?, matrixHeaderImage = ?, matrixCellImage = ?, longImage = ?, posterBgImage = ? " +
                     " WHERE id = ? ";
             int update = jdbcTemplate.update(updateSql,
                     series.getName(),
@@ -238,11 +239,16 @@ public class SeriesRepository {
                     series.getColumnSize(),
                     series.getTotalSize(),
                     series.getBoxImage(),
+                    series.getSeriesImage(),
+                    series.getMatrixHeaderImage(),
+                    series.getMatrixCellImage(),
+                    series.getLongImage(),
+                    series.getPosterBgImage(),
                     series.getId());
             log.info("update row {} ", update);
         } else {
             String updateSql = "UPDATE series_v2_tbl " +
-                    " SET name = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?, totalSize = ?, boxImage = ?" +
+                    " SET name = ?, isNewSeries = ?, isPresale = ?, price = ?, columnSize = ?, totalSize = ?, boxImage = ?, seriesImage = ?, matrixHeaderImage = ?, matrixCellImage = ?, longImage = ?, posterBgImage = ? " +
                     " WHERE id = ? ";
             int update = jdbcTemplate.update(updateSql,
                     series.getName(),
@@ -252,6 +258,11 @@ public class SeriesRepository {
                     series.getColumnSize(),
                     series.getTotalSize(),
                     series.getBoxImage(),
+                    series.getSeriesImage(),
+                    series.getMatrixHeaderImage(),
+                    series.getMatrixCellImage(),
+                    series.getLongImage(),
+                    series.getPosterBgImage(),
                     series.getId());
             log.info("update row {} ", update);
         }

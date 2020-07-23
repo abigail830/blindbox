@@ -29,8 +29,8 @@ public class ProductDTO {
         this.seriesID = product.getSeriesID();
         this.name = product.getName();
         this.price = product.getPrice();
-        this.productImage = Constant.WX_UI_IMAGE_PATH + product.getProductImage() + "?ts=" + System.currentTimeMillis()/1000;
-        this.productGrayImage = Constant.WX_UI_IMAGE_PATH + product.getProductGrayImage() + "?ts=" + System.currentTimeMillis()/1000;
+        this.productImage = Constant.WX_UI_IMAGE_PATH + product.getProductImage();
+        this.productGrayImage = Constant.WX_UI_IMAGE_PATH + product.getProductGrayImage();
 
     }
 }

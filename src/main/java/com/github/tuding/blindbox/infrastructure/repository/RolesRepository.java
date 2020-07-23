@@ -67,8 +67,8 @@ public class RolesRepository {
 
     public void updateRole(Role role) {
         log.info("Going to update role {}", role);
-        String insertSql = "UPDATE roles_tbl SET name = ? WHERE id = ? ";
-        int update = jdbcTemplate.update(insertSql, role.getName(), role.getId());
+        String insertSql = "UPDATE roles_tbl SET name = ?, role_image=? WHERE id = ? ";
+        int update = jdbcTemplate.update(insertSql, role.getName(), role.getRoleImage(), role.getId());
         log.info("update row {} ", update);
     }
 }
