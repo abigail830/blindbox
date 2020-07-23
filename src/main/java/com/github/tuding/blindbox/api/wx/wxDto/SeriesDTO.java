@@ -57,12 +57,12 @@ public class SeriesDTO {
         this.price = series.getPrice();
         this.columnSize = series.getColumnSize();
         this.totalSize = series.getTotalSize();
-        this.seriesImage = Constant.WX_UI_IMAGE_PATH + series.getSeriesImage();
-        this.matrixHeaderImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixHeaderImage();
-        this.matrixCellImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixCellImage();
-        this.longImage = Constant.WX_UI_IMAGE_PATH + series.getLongImage();
-        this.boxImage = Constant.WX_UI_IMAGE_PATH + series.getBoxImage();
-        this.posterBgImage = Constant.WX_UI_IMAGE_PATH + series.getPosterBgImage();
+        this.seriesImage = Constant.WX_UI_IMAGE_PATH + series.getSeriesImage()  + "?ts=" + System.currentTimeMillis()/1000;
+        this.matrixHeaderImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixHeaderImage()  + "?ts=" + System.currentTimeMillis()/1000;
+        this.matrixCellImage = Constant.WX_UI_IMAGE_PATH + series.getMatrixCellImage()  + "?ts=" + System.currentTimeMillis()/1000;
+        this.longImage = Constant.WX_UI_IMAGE_PATH + series.getLongImage()  + "?ts=" + System.currentTimeMillis()/1000;
+        this.boxImage = Constant.WX_UI_IMAGE_PATH + series.getBoxImage()  + "?ts=" + System.currentTimeMillis()/1000;
+        this.posterBgImage = Constant.WX_UI_IMAGE_PATH + series.getPosterBgImage() + "?ts=" + System.currentTimeMillis()/1000;
         this.productVolume = productList.size();
         this.linkedRoleIds = series.getLinkedRoleIds();
     }
