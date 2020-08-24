@@ -12,13 +12,15 @@ import java.util.List;
 @Setter
 @Getter
 public class ProductWithBuyFlagDTO extends ProductDTO {
-    Boolean buy;
+    private Boolean buy;
+    private Boolean isSpecial;
 
     public ProductWithBuyFlagDTO(Product product, List<String> buyedIds) {
         this.id = product.getId();
         this.seriesID = product.getSeriesID();
         this.name = product.getName();
         this.price = product.getPrice();
+        this.isSpecial = product.getIsSpecial();
         this.productImage = Constant.WX_UI_IMAGE_PATH + product.getProductImage();
         this.productGrayImage = Constant.WX_UI_IMAGE_PATH + product.getProductGrayImage();
         if (buyedIds != null && !buyedIds.isEmpty() && buyedIds.contains(this.id)) {

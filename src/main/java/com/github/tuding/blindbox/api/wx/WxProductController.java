@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -112,6 +113,7 @@ public class WxProductController {
             List<String> boughtProductId = productService.getBoughtProductIds(products, openId);
             return products.stream()
                     .map(p -> new ProductWithBuyFlagDTO(p, boughtProductId))
+                    .sorted(Comparator.comparing(ProductWithBuyFlagDTO::getIsSpecial))
                     .collect(Collectors.toList());
         }
 
