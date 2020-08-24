@@ -10,10 +10,10 @@ public class Constant {
 
     public static final String WX_UI_IMAGE_PATH = "/images";
 
-    public static final int FIRST_LOGIN_BONUS = 10;
-    public static final int SHARE_COLLECTION = 15;
+    public static final int FIRST_LOGIN_BONUS = 5;
+    public static final int SHARE_COLLECTION = 10;
     public static final int LIGHT_UP_COLLECTION = 500;
-    public static final int SHARE_ACTIVITY = 15;
+    public static final int SHARE_ACTIVITY = 10;
     public static final int BUY_PRODUCT = 20;
 
     public static final int GET_DISCOUNT_COUPON_CONSUME_BONUS = 400;
