@@ -6,7 +6,6 @@ import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.exception.OrderNotFoundException;
 import com.github.tuding.blindbox.exception.ProductNotFoundException;
-import com.github.tuding.blindbox.infrastructure.Constant;
 import com.github.tuding.blindbox.infrastructure.client.payment.WxPayment;
 import com.github.tuding.blindbox.infrastructure.repository.DrawRepository;
 import com.github.tuding.blindbox.infrastructure.repository.OrderRepository;
@@ -100,20 +99,6 @@ public class OrderService {
 
     public Order getOrder(String orderId) {
         return orderRepository.getOrder(orderId).orElseThrow(OrderNotFoundException::new);
-    }
-
-    @Transactional
-    @Deprecated
-    public void updateOrderToPaySuccess(String orderId) {
-        log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
-        orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
-
-        final int rowUpdated = userRepository.addBonusByOrderId(orderId, Constant.BUY_PRODUCT);
-        if (rowUpdated == 1) {
-            log.info("{} bonus added for purchase order {}", Constant.BUY_PRODUCT, orderId);
-        } else {
-            log.warn("Fail to add bonus for order {}", orderId);
-        }
     }
 
     public void updateOrderToPayFail(String orderId) {

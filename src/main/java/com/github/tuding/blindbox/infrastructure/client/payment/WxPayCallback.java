@@ -65,7 +65,6 @@ public class WxPayCallback {
 
         String orderId = wxPayCallbackReq.getOutTradeNo();
         if (wxPayCallbackReq.isSuccessPay()) {
-//            orderService.updateOrderToPaySuccess(orderId);
             wxCallbackApplService.paySucess(orderId);
             log.info("Updated Pay success for order {}", orderId);
         } else {
