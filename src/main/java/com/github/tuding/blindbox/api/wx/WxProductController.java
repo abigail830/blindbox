@@ -97,7 +97,10 @@ public class WxProductController {
     @NeedWxVerifyToken
     @ApiOperation("根据产品系列ID，获取产品列表(需要带token) - 接口没变，从新表获取")
     public List<ProductDTO> getProductBySeriesId(@PathVariable("seriesId") String seriesId) {
-        return productService.getProductWithPrice(seriesId).stream().map(ProductDTO::new).collect(Collectors.toList());
+        return productService.getProductWithPrice(seriesId).stream()
+                .sorted(Comparator.comparing(Product::getIsSpecial))
+                .map(ProductDTO::new)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/v2/series/{seriesId}/products-with-buy-flag")
