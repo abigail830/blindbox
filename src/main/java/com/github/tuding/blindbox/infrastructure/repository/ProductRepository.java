@@ -117,7 +117,7 @@ public class ProductRepository {
         return jdbcTemplate.query(" SELECT p.id, p.seriesId, p.name, p.productImage, p.productGrayImage, price, p.isSpecial, p.weight FROM product_v2_tbl p " +
                 " inner join (select id, max(version) as mversion from product_v2_tbl group by id) latest  on p.id = latest.id and p.version = latest.mversion " +
                 " inner join series_v2_tbl as series on p.seriesId = series.id " +
-                " WHERE p.seriesID = ? order by p.update_time asc", rowMapper, id);
+                " WHERE p.seriesID = ? order by p.update_time desc", rowMapper, id);
     }
 
     public Optional<Product> getProductWithPriceByDrawID(String drawId) {
