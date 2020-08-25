@@ -97,6 +97,7 @@ public class OrderRepository {
     }
 
     public List<OrderSimpleInfo> getOrderInfoByOpenIdAndDrawId(String openId, String drawId) {
+
         final List<String> status = Arrays.asList(OrderStatus.NEW.name(),
                 OrderStatus.PAY_PRODUCT_EXPIRY.name(), OrderStatus.PAY_PRODUCT_FAIL.name());
 

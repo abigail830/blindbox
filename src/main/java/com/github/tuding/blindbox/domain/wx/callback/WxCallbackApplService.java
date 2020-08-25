@@ -38,10 +38,13 @@ public class WxCallbackApplService {
 
         if (orderInfo.isEmpty()) {
             log.info("No order found when searching by OpenId {} and drawId {}", openId, drawId);
+        } else {
+            log.info("getOrderInfoByOpenIdAndDrawId got {} for openId({})", orderInfo, openId);
         }
 
         String lastProductId = orderInfo.get(orderInfo.size() - 1).getProductId();
         if (lastProductBoughtBefore(orderInfo, lastProductId)) {
+            log.info("Product {} bought before, so will not fall into light_up_collection check", lastProductId);
             updateBonusForBuyProduct(openId, orderId, Constant.BUY_PRODUCT);
         } else {
             if (isFullLightUp(orderInfo)) {
@@ -55,8 +58,10 @@ public class WxCallbackApplService {
     private Boolean isFullLightUp(List<OrderSimpleInfo> orderInfo) {
         List<String> productIdsBySeries = productRepository.getProductIdsBySeries(
                 orderInfo.get(0).getSeriesId());
+        log.info("Full series info {}", productIdsBySeries);
         List<String> boughtIds = orderInfo.stream()
                 .map(OrderSimpleInfo::getProductId).collect(Collectors.toList());
+        log.info("Bought product info {}", productIdsBySeries);
         return boughtIds.containsAll(productIdsBySeries);
     }
 
