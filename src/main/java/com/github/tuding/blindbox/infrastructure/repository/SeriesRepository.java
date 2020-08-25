@@ -63,7 +63,6 @@ public class SeriesRepository {
         final Map<Series, List<String>> collect = seriesEntities.stream().collect(Collectors.groupingBy(
                 SeriesEntity::toSeries,
                 Collectors.mapping(SeriesEntity::getRoleId, Collectors.toList())));
-        log.info("----- {}", collect);
 
         List<Series> series = new ArrayList<>();
         collect.keySet().forEach(c -> {
