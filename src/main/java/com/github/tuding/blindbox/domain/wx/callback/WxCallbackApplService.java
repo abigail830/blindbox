@@ -72,10 +72,9 @@ public class WxCallbackApplService {
     }
 
     private void updateBonusForBuyProduct(String openId, String orderId, Integer bonus) {
-//Update user Bonus
         final int rowUpdated = userRepository.addBonus(openId, bonus);
         if (rowUpdated == 1) {
-            log.info("{} bonus added for user {} purchase order {}", Constant.BUY_PRODUCT, openId, orderId);
+            log.info("{} bonus added for user {} purchase order {}", bonus, openId, orderId);
         } else {
             log.warn("Fail to add bonus for order {}", orderId);
         }
