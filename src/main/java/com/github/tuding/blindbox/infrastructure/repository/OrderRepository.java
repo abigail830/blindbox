@@ -4,6 +4,9 @@ import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderStatus;
 import com.github.tuding.blindbox.domain.order.OrderWithProductInfo;
 import com.github.tuding.blindbox.domain.order.TransportOrder;
+import com.github.tuding.blindbox.domain.wx.callback.OrderSimpleInfo;
+import com.github.tuding.blindbox.exception.BizException;
+import com.github.tuding.blindbox.exception.ErrorCode;
 import com.github.tuding.blindbox.infrastructure.util.StreamingCsvResultSetExt;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +21,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
@@ -36,6 +38,8 @@ public class OrderRepository {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private RowMapper<Order> rowMapper = new BeanPropertyRowMapper<>(Order.class);
+
+    private RowMapper<OrderSimpleInfo> orderSimpleInfoRowMapper = new BeanPropertyRowMapper<>(OrderSimpleInfo.class);
 
     private RowMapper<OrderWithProductInfo> rowMapperWithProduct = new BeanPropertyRowMapper<>(OrderWithProductInfo.class);
 
@@ -84,7 +88,28 @@ public class OrderRepository {
     public void updateOrderStatus(String orderId, String status) {
         log.info("Update order id {} status to {}", orderId, status);
         jdbcTemplate.update("UPDATE order_tbl SET status = ? WHERE orderId = ?", status, orderId);
+    }
 
+    public Order updateOrderStatusAndQueryBack(String orderId, String status) {
+        log.info("Update order id {} status to {}", orderId, status);
+        jdbcTemplate.update("UPDATE order_tbl SET status = ? WHERE orderId = ?", status, orderId);
+        return getOrder(orderId).orElseThrow(() -> new BizException(ErrorCode.FAIL_TO_GET_ORDER));
+    }
+
+    public List<OrderSimpleInfo> getOrderInfoByOpenIdAndDrawId(String openId, String drawId) {
+        final List<String> status = Arrays.asList(OrderStatus.NEW.name(),
+                OrderStatus.PAY_PRODUCT_EXPIRY.name(), OrderStatus.PAY_PRODUCT_FAIL.name());
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("openId", openId);
+        parameters.addValue("drawId", drawId);
+        parameters.addValue("status", status);
+
+        String sql = "select productId, createTime, draw_tbl.seriesId from order_tbl join draw_tbl\n" +
+                "    where order_tbl.drawId = draw_tbl.drawId and order_tbl.openId = (:openId) and draw_tbl.seriesId in " +
+                "(select seriesId from draw_tbl where drawId = (:drawId)) \n" +
+                "    and order_tbl.status not in (:status) order by createTime asc";
+        return namedParameterJdbcTemplate.query(sql, parameters, orderSimpleInfoRowMapper);
     }
 
     public void updateOrderDeliveryStatus(String orderId, String status, String shippingCompany, String shippingTicket) {

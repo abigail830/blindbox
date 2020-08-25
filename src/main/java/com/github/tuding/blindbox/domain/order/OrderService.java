@@ -103,6 +103,7 @@ public class OrderService {
     }
 
     @Transactional
+    @Deprecated
     public void updateOrderToPaySuccess(String orderId) {
         log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());
         orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_SUCCESS.name());

@@ -62,6 +62,11 @@ public class ProductRepository {
         return products.stream().findFirst();
     }
 
+    public List<String> getProductIdsBySeries(String seriesId) {
+        String sql = "select distinct id from product_v2_tbl where seriesId =?";
+        return jdbcTemplate.queryForList(sql, String.class, seriesId);
+    }
+
     public List<Product> getProductBySeries(String id) {
         log.info("Going to query product with product series: {}", id);
         return jdbcTemplate.query("SELECT * FROM product_v2_tbl p " +

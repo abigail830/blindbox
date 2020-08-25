@@ -36,4 +36,5 @@ public enum ErrorCode {
 
     //Order
     INVALID_STATUS,
+    FAIL_TO_GET_ORDER,
 }

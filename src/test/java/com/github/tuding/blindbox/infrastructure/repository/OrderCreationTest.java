@@ -5,6 +5,7 @@ import com.github.database.rider.spring.api.DBRider;
 import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderStatus;
 import com.github.tuding.blindbox.domain.product.Draw;
+import com.github.tuding.blindbox.domain.wx.callback.OrderSimpleInfo;
 import com.github.tuding.blindbox.infrastructure.util.Toggle;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,11 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @DBRider
@@ -30,6 +33,17 @@ public class OrderCreationTest {
     @Autowired
     DrawRepository drawRepository;
 
+    @Test
+    @DataSet("test-data/get-order-simple-info.yml")
+    public void getOrderInfoByOpenIdAndDrawId() {
+        List<OrderSimpleInfo> result = orderRepository.getOrderInfoByOpenIdAndDrawId("test", "d7493a65-1b22-479e-b3fe-decd80abe326");
+        System.out.println(result);
+        assertEquals(result.size(), 2);
+        assertEquals(result.stream().map(r -> r.getProductId())
+                .filter(id -> id.equals("4340f163-f26d-4847-9d05-c33ff4134d76")).count(), 1);
+        assertEquals(result.stream().map(r -> r.getProductId())
+                .filter(id -> id.equals("4340f163-f26d-4847-9d05-c33ff4134d77")).count(), 1);
+    }
 
     @Test
     @DataSet("test-data/empty-order.yml")

@@ -3,6 +3,7 @@ package com.github.tuding.blindbox.infrastructure.client.payment;
 import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderService;
 import com.github.tuding.blindbox.domain.product.DrawService;
+import com.github.tuding.blindbox.domain.wx.callback.WxCallbackApplService;
 import com.github.tuding.blindbox.exception.BizException;
 import com.github.tuding.blindbox.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +40,9 @@ public class WxPayCallback {
     DrawService drawService;
 
     @Autowired
+    WxCallbackApplService wxCallbackApplService;
+
+    @Autowired
     OrderService orderService;
     @Value("${app.mchSecret}")
     private String merchantSecret;
@@ -61,7 +65,8 @@ public class WxPayCallback {
 
         String orderId = wxPayCallbackReq.getOutTradeNo();
         if (wxPayCallbackReq.isSuccessPay()) {
-            orderService.updateOrderToPaySuccess(orderId);
+//            orderService.updateOrderToPaySuccess(orderId);
+            wxCallbackApplService.paySucess(orderId);
             log.info("Updated Pay success for order {}", orderId);
         } else {
             orderService.updateOrderToPayFail(orderId);
