@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-02 16:48:38
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-07-14 14:10:13
+ * @Last Modified time: 2020-07-20 17:18:55
  -->
 <template>
 	<view class="page wobble-view">
@@ -73,10 +73,10 @@ export default {
 			this.$refs.wobble.wobbleStart();
 			this.title = '超级用户';
 			this.image =
-				'https://blindbox.fancier.store/images/product/98f6f9f7-60a2-452b-a265-44695ad5d755gray.png';
+				'https://blindbox.fancier.store/images/product/71dec534-c2a0-405c-b597-88f7ba7b8a16gray.png';
 			setTimeout(() => {
 				this.poster();
-			});
+			}, 1000);
 		}
 		// this.poster();
 	},
@@ -181,10 +181,10 @@ export default {
 				y: 280,
 				text: posterCopywriting,
 				color: '#000',
-				width: 480,
+				width: 520,
 				fontSize: 36,
 				height: 100,
-				maxLine: 2
+				maxLine: 1
 			});
 			if (this.image)
 				views.push({
@@ -194,12 +194,12 @@ export default {
 					height: 397 * 2,
 					positionY: true,
 					x: (750 - 314 * 2) / 2,
-					y: '+40'
+					y: '+20'
 				});
 			views.push({
 				type: 'text',
 				x: padding,
-				y: '+14',
+				y: '+10',
 				text: this.title,
 				color: '#000',
 				center: true,
@@ -207,6 +207,17 @@ export default {
 				width: width - padding * 2,
 				fontSize: 32,
 				height: 100,
+				maxLine: 1
+			});
+			views.push({
+				type: 'text',
+				text: '长按图片保存至本地，即可分享给朋友或分享至朋友圈',
+				width: width - padding * 2,
+				x: padding,
+				center: true,
+				fontSize: 14,
+				color: '#999',
+				y: 1264,
 				maxLine: 1
 			});
 			config = {
@@ -228,9 +239,11 @@ export default {
 			this.$refs['poster'].clear();
 			// this.posterConfig.height = this.posterConfig.height + posterBottomHeight;
 			this.$nextTick(() => {
-				this.$refs['poster'].create();
-				// this.posterConfig.height =
-				// this.posterConfig.height - posterBottomHeight;
+				setTimeout(_ => {
+					this.$refs['poster'].create();
+					// this.posterConfig.height =
+					// this.posterConfig.height - posterBottomHeight;
+				}, 200);
 			});
 			this.$log('createPoster', this.posterImage);
 		},
@@ -267,14 +280,17 @@ export default {
 
 .page {
 	background-color: #fff;
+	// background-color: @themeColor;
 }
 .wobble-view {
-	padding: 160rpx 60rpx;
+	padding: 140rpx 60rpx 10rpx;
 	position: relative;
 }
 .wobble-btn {
 	background: @themeColor;
+	// background: #fff;
 	color: #fff;
+	// color: #000;
 	font-size: 36rpx;
 	margin-top: 50rpx;
 }

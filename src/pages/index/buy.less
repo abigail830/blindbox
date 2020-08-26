@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 15:46:24
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-06-11 12:03:49
+ * @Last Modified time: 2020-07-24 18:34:48
  */
 @import '../../common/var.less';
 @width: 580rpx;
@@ -34,7 +34,7 @@
     height: 630rpx;
     border-radius: 10rpx;
     overflow: hidden;
-    background-color: #fff;
+    // background-color: #fff;
   }
   .buy-code {
     font-size: 18rpx;
@@ -95,12 +95,20 @@
 .help-view;
 
 .help-box {
-      width: 750rpx - (90rpx * 2);
+  width: 750rpx - (90rpx * 2);
   .help-center {
     text-align: left;
     height: calc(50vh - 80rpx) !important;
   }
+
+  &.no-title {
+  // padding:10rpx 0 0;
+    & .help-center {
+      min-height: 620rpx !important;
+    }
+  }
 }
+
 .ok-btn {
   margin-top: 20rpx;
   color: #fff;

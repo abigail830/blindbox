@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-17 15:35:11
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-06-03 17:25:24
+ * @Last Modified time: 2020-07-26 18:12:58
  -->
 <template>
 	<view class="page page-buy">
@@ -89,13 +89,19 @@
 			class="help-view"
 			v-show="showHelp"
 		>
-			<view class="help-box">
-				<view class="help-title">{{help.title}}</view>
+			<view class="help-box" :class="{'no-title':!help.title}">
+				<view class="help-title" v-if="help.title">{{help.title}}</view>
 				<scroll-view
 					:scroll-y="true"
 					class="help-center"
 				>
-					<zParser :html="help.content" />
+				<image
+						v-if="!help.title&&help.type"
+						:src="'/static/card-'+help.type+'.png'"
+						mode="widthFix"
+						style="width:442rpx"
+					/>
+					<zParser v-else :html="help.content" />
 				</scroll-view>
 				<button
 					class="ok-btn"

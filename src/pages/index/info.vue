@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-02 15:30:29
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-07-14 11:26:36
+ * @Last Modified time: 2020-07-17 15:54:49
  -->
 <template>
 	<view class="page page-info">
@@ -26,7 +26,7 @@
 					/>
 					<view :class='["boxs","box-"+columnSize]'>
 						<view
-							:class="{'on':k,'box':true}"
+							:class="{'on':k,'box':true,'yes':drawId===v.drawId}"
 							v-for="(v,k) in items"
 							:key="k"
 							@click="select(v,k)"
@@ -36,7 +36,7 @@
 								:src="v.image"
 								mode="aspectFill"
 								class="been-icon"
-								:class="{'off':!v.state}"
+								:class="{'off':!v.state,'yes':drawId===v.drawId}"
 							/>
 						</view>
 						<!-- <view class="box placeholder" v-for="i in (4-(items.length) %4)" :key="i">
@@ -88,6 +88,8 @@ export default {
 	data() {
 		return {
 			loading: true,
+			drawId: '',
+			// drawId: "2da908c2-087f-4e08-a592-d65a2b890d04",
 			// items: [],
 			// drawGroup: [],
 			showInfoView: false,
@@ -183,17 +185,20 @@ export default {
 			this.cancelBox(index, draw);
 		},
 		cancelBox(index, draw) {
+			this.drawId = draw.drawId;
 			// this.drawGroup = drawGroup;
 			// this.$store.commit('current/setDraws', drawGroup);
-			this.$store.commit('current/setDraw', draw);
-			this.$go(
-				'./buy?id=' +
-					this.series.id +
-					'&drawId=' +
-					draw.drawId +
-					'&index=' +
-					index
-			);
+			this.$nextTick(() => {
+				this.$store.commit('current/setDraw', draw);
+				this.$go(
+					'./buy?id=' +
+						this.series.id +
+						'&drawId=' +
+						draw.drawId +
+						'&index=' +
+						index
+				);
+			});
 		},
 		closeInfo() {
 			this.showInfoView = false;
@@ -287,6 +292,7 @@ export default {
 		}
 	},
 	onShow() {
+		this.drawId = '';
 		show = true;
 		// 检查是否有库存
 		if (boxExtractionTimeout - 2 > this.countDown) {

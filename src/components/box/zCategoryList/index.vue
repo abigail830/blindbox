@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-11 18:17:03
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-07-02 13:26:04
+ * @Last Modified time: 2020-07-20 17:10:42
  -->
 <template>
 	<view class="z-category-list-view-box">
@@ -105,6 +105,8 @@ let preview = {};
 
 let width = 750;
 let height = 1008;
+
+// height = 1600;
 let posterBox = {
 	width: width - 64 * 2,
 	height: height - 64 * 2
@@ -211,10 +213,10 @@ export default {
 				this.posterImage = e.path;
 				this.$refs.poster.save();
 				// if (!this.debug) {
-					uni.previewImage({
-						urls: [this.posterImage],
-						longPressActions: {}
-					});
+				uni.previewImage({
+					urls: [this.posterImage],
+					longPressActions: {}
+				});
 				// }
 			} else {
 				this.$alert(e.errMsg);
@@ -264,6 +266,7 @@ export default {
 				height: 100,
 				maxLine: 2
 			});
+			// if(height<1600)height=1600
 			this.posterConfig = {
 				width: width,
 				backgroundColor: '#f7b52c',
@@ -285,7 +288,7 @@ export default {
 				// for (let i = 0; i < 17; i++) {
 				let index = i % 4;
 				if (i >= 4 && index === 0) {
-					y = y + 397 / proportion;
+					y = y + 397 / proportion + 60;
 				}
 
 				if (index === 0) {
@@ -316,7 +319,18 @@ export default {
 					maxLine: 1
 				});
 			}
-			let diffH = y - (posterBox.height - 120);
+			views.push({
+				type: 'text',
+				text: '长按图片保存至本地，即可分享给朋友或分享至朋友圈',
+				width: posterBox.width,
+				x: 64,
+				center: true,
+				fontSize: 14,
+				color:"#999",
+				y: y + 90 + 331.52 / proportion,
+				maxLine: 1
+			});
+			let diffH = y + 80 - (posterBox.height - 120);
 			if (diffH > 0) {
 				this.posterConfig.views[0].height =
 					this.posterConfig.views[0].height + diffH;
@@ -340,22 +354,31 @@ export default {
 			this.$nextTick(_ => {
 				this.getPosterConfig();
 				this.getPosterViewsConfig();
-				this.$log('海报生成中...', this.nickName,this.posterConfig.height);
+				this.$log('海报生成中...', this.nickName, this.posterConfig.height);
 				this.posterConfig.height =
 					this.posterConfig.height + posterBottomHeight;
+
+				if (this.posterConfig.height < 1600) {
+					this.posterConfig.height = 1600;
+				}
 				this.$refs['poster'].clear();
 
-				this.$log('海报生成中...', this.nickName,this.posterConfig.height);
+				this.$log('海报生成中...', this.nickName, this.posterConfig.height);
 				this.$api(_ => {
 					return ['user.shareCollection', this.seriesActive];
 				});
-				setTimeout(_ => {
+				this.$nextTick(()=>{
+					setTimeout(_ => {
 					console.time('poster');
 					this.$refs['poster'].create();
 					this.posterConfig.height =
 						this.posterConfig.height - posterBottomHeight;
+					if (this.posterConfig.height < 1600) {
+						this.posterConfig.height = 1600;
+					}
 					// this.$nextTick();
-				}, 100);
+				}, 200);
+				})
 			});
 		},
 		tapItem(v, i) {

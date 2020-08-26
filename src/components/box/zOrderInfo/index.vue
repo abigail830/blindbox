@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-11 13:39:45
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-19 16:08:41
+ * @Last Modified time: 2020-07-20 15:45:00
  -->
 <template>
 	<view class="order-info-view-box">
@@ -28,6 +28,13 @@
 				<view class="box-line box-line-mini">
 					<view class="box-info-title">收货地址：</view>
 					<view class="box-info-value">{{info.area}} {{info.detailAddress}}</view>
+				</view>
+				<view class="box-line box-line-mini">
+					<view class="box-info-title">物流信息：</view>
+					<view
+						class="box-info-value"
+						@click="copy"
+					>{{info.shippingTicket}} - {{info.shippingCompany}}</view>
 				</view>
 			</view>
 		</scroll-view>
@@ -55,7 +62,22 @@ export default {
 		closeDraw() {
 			this.$emit('close');
 		},
-		moveHandle() {}
+		moveHandle() {},
+		copy() {
+			console.log(this.info);
+			uni.setClipboardData({
+				data: this.info.shippingCompany,
+				success: function(res) {
+					uni.getClipboardData({
+						success: function(res) {
+							uni.showToast({
+								title: '复制成功'
+							});
+						}
+					});
+				}
+			});
+		}
 	}
 };
 </script>

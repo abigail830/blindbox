@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2019-12-27 15:47:48
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-07-14 16:31:58
+ * @Last Modified time: 2020-08-24 20:07:15
  */
 
 let apiHost, websiteUrl;
@@ -11,8 +11,8 @@ let apiHost, websiteUrl;
 export const soldOut = 2;
 
 // 抽盒超时时间
-export const boxExtractionTimeout = 600*3;
-export const posterBottomHeight = 284;
+export const boxExtractionTimeout = 600 * 3;
+export const posterBottomHeight = 142;
 export const posterCopywriting = '厉害了！竟然得到了他的化身！';
 export const posterCopywritingAll = '来看看我的王牌阵容都有谁';
 export const shareTitle = '来个福盒，发现你的「王牌化身」！';
@@ -39,32 +39,34 @@ export const buyBootomTips = '';
 
 // 卡券说明文案 content 支持 html
 export const CardDescription = {
-         tips: {
-           title: '提示卡说明',
-           type: 'tip',
-           content:
-             '<div style="text-align: center1;">使用此卡您将获取一次提示，提示中的款式将不会出现在此次被您选中的福盒中。</div>',
-         },
-         display: {
-           type: 'display',
-           title: '显示卡说明',
-           content:
-             '使用此卡您将直接看到福盒中的准确款式。',
-         },
-         discount: {
-           type: 'discount',
-           title: '优惠卡说明',
-           content:
-             '使用此卡，在结算时您的订单将享有九折优惠。',
-         },
-       };
+  tips: {
+    title: '',
+    type: 'tip',
+    content:
+      //  '<div style="text-align: center1;">使用此卡您将获取一次提示，提示中的款式将不会出现在此次被您选中的福盒中。</div>',
+      `<img src="/static/card-tip.png" mode="widthFix" width="500rpx" height="782rpx">`,
+  },
+  display: {
+    type: 'display',
+    title: '',
+    content:
+      // '使用此卡您将直接看到福盒中的准确款式。',
+      `<img src="/static/card-display.png" mode="widthFix" width="500rpx" height="782rpx">`,
+  },
+  discount: {
+    type: 'discount',
+    title: '',
+    content:
+      // '使用此卡，在结算时您的订单将享有九折优惠。',
+      `<img src="/static/card-discount.png" mode="widthFix" width="500rpx" height="782rpx">`,
+  },
+};
 
 // 我的页面规则文案 content 支持 html
 export const RuleDescription = {
   agreement: {
     title: '王牌化身福盒机服务协议',
     content: `
-<br>
 <br>提示条款
 <br>欢迎您与各王牌化身福盒机经营者(详见定义条款)共同签署本《王牌化身福盒机服务协议》(下称“本协议”)并使用王牌化身福盒机服务!
 <br>各服务条款前所列索引关键词仅为帮助您理解该条款表达的主旨之用,不影响或限制本协议条款的含义或解释。为维护您自身权益,建议您仔细阅读各条款具体表述。
@@ -218,15 +220,13 @@ export const RuleDescription = {
 `,
   },
   service: {
-    title: '联系客服',
-    content: `<p style="text-align: center1;">您可以根据以下集中联系方式找到我们，将会有专属的王牌客服人员及时为您解决问题！
-<br>
-<br>工作时间：09：30~18：00
-</p>`,
+    title: '',
+    content: `<img src="/static/kf.png" mode="widthFix" width="500rpx" height="782rpx">`,
   },
   rule: {
     title: '王牌化身福盒机使用说明',
-    content: `一、关于王牌化身福盒机(以下简称福盒机)
+    content: ` 
+<br>一、关于王牌化身福盒机(以下简称福盒机)
 <br>1.福盒机包含一个或多个不同系列的玩具，每个系列中一整盒对应的初始福盒数量可能因玩具种类而有所不同。
 <br>2.整盒中每个福盒都是不重复款，如内含隐藏款则随机替换其中一款。
 <br>3.福盒被抽走后不会自动补充，当整盒全部被抽完时，该福盒场结束。
@@ -254,7 +254,7 @@ export const RuleDescription = {
 <br>
 <br>六、积分值
 <br>1积分值是王牌化身福盒机里的一种数值，可以用于日常道具卡的购买和参与特殊活动，兑换奖品等多种功能。
-<br>2.积分值的获取：您可通过签到、完成任务、分享福盒、分享图鉴等行为来获取积分值
+<br>2.积分值的获取规则：您可通过签到、完成任务、分享福盒、分享图鉴等行为来获取积分值，登陆小程序5分/天；抽盒20分/次；分享图鉴或者活动资讯10分/次（每天可获得一次）；全图鉴点亮（不包含大隐藏）500分。
 <br>
 <br>七、支付
 <br>1.您可以使用微信支付来购买福盒。
@@ -267,7 +267,7 @@ export const RuleDescription = {
 <br>九、发货
 <br>1.购买后的福盒若超过保留期将自动发货至您的默认地址，您可以到"我的盒柜"手动申请发货。
 <br>2.您需要填写准确的默认收货地址，我们将以该地址信息作为向您提供服务时所依凭据。
-<br>3.为保证您购买的商品质量，购买的商品在盒柜内的保留时间为20天，20天内未手动发货的，系统将在保留期到达之日第二天起15天内，自动将到期商品发送到您的默认地址。自动发货的订单包含3件及以上的产品我们将提供包邮服务，不足3件的产品将使用快递费到付的形式发出。
+<br>3.为保证您购买的商品质量，购买的商品在盒柜内的保留时间为20天，20天内未手动发货的，系统将在保留期到达之日第二天起15天内，自动将到期商品发送到您的默认地址。自动发货的订单包含3件及以上的产品则剔红包邮服务，不足3件的产品将使用快递费到付的形式发出。
 <br>4.请确保您的默认地址栏真实有效的，因您地址错误或其他个人原因导致的任何损失由您自行承担
 <br>5.自动发货的订单，您因各种理由拒收造成的损失由您个人承担。
 <br>6.保留时间20天说明：从您下单当日起计算，只计算自然日期，不足1天按照1天计算。预售商品从开放发货当日起计算，只计算自然日期，不足1天按照1天计算。

@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-04-11 21:15:07
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-04-20 13:50:23
+ * @Last Modified time: 2020-07-20 15:45:43
  */
 export default {
   get: ['get', '/wx/orders'],
@@ -22,4 +22,5 @@ export default {
   pendingPay: ['get', '/wx/orders?status=PENDING_PAY_TRANSPORT'],
   pendingDeliver: ['get', '/wx/orders?status=PENDING_DELIVER'],
   delivered: ['get', '/wx/orders?status=DELIVERED'],
+  // delivered: ['get', '/wx/orders?status=PENDING_PAY_TRANSPORT'],
 };

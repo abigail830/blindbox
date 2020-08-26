@@ -2,7 +2,7 @@
  * @Author: seekwe
  * @Date: 2020-03-01 20:59:35
  * @Last Modified by:: seekwe
- * @Last Modified time: 2020-07-14 17:03:26
+ * @Last Modified time: 2020-07-24 18:30:01
  -->
 <template>
 	<view class="page page-me">
@@ -124,17 +124,32 @@
 			class="help-view"
 			v-show="showHelp"
 		>
-			<view class="help-box">
-				<view class="help-title">{{help.title}}</view>
+			<view
+				class="help-box"
+				:class="{'no-title':!help.title}"
+			>
+				<view
+					class="help-title"
+					v-if="help.title"
+				>{{help.title}}</view>
 				<scroll-view
 					:scroll-y="true"
 					class="help-center"
 				>
-					<zParser :html="help.content" />
+					<image
+						v-if="!help.title"
+						src="/static/kf.png"
+						mode="widthFix"
+						style="width:558rpx"
+					/>
+					<zParser
+						v-if="help.title"
+						:html="help.content"
+					/>
 				</scroll-view>
 				<view
 					class="close-icon-box"
-					@click="help={}"
+					@click="help={}"	
 				>
 					<image
 						class="close-image"
@@ -160,7 +175,7 @@ export default {
 	components: { zParser, zLoginBtn },
 	data() {
 		return {
-			help: {}
+			help: {},
 		};
 	},
 	async onShow() {
@@ -174,7 +189,7 @@ export default {
 	},
 	computed: {
 		showHelp() {
-			return typeof this.help === 'object' && !!this.help.title;
+			return typeof this.help === 'object' && !!this.help.content;
 		},
 		nickName() {
 			return this.userInfo.nickName || '';
@@ -186,7 +201,7 @@ export default {
 			return this.userInfo.bonus || 0;
 		},
 		...mapState(['system']),
-		...mapGetters(['userInfo', 'authState', 'banState'])
+		...mapGetters(['userInfo', 'authState', 'banState']),
 	},
 	mounted() {
 		// setTimeout(_ => {
@@ -228,8 +243,8 @@ export default {
 		},
 		changeBarrage({ detail }) {
 			this.$store.commit('system/changeBarrage', detail.value);
-		}
-	}
+		},
+	},
 };
 </script>
 
