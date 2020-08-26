@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n
-            </Pattern>
-        </layout>
+        <!--        <layout class="ch.qos.logback.classic.PatternLayout">-->
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <charset>UTF-8</charset>
+            <outputPatternAsHeader>true</outputPatternAsHeader>
+            <pattern>[%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+        <!--            <encoder>-->
+        <!--                <charset>UTF-8</charset>-->
+        <!--                <Pattern>-->
+        <!--                    %d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n-->
+        <!--                </Pattern>-->
+        <!--            </encoder>-->
+        <!--        </layout>-->
     </appender>
 
     <logger name="com.github.tuding.blindbox" level="debug" additivity="false">

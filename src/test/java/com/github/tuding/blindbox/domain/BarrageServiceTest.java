@@ -19,7 +19,7 @@ class BarrageServiceTest {
     @DataSet("expect-data/save-product.yml")
     void getRandomBarrage() {
 
-        final List<String> randomBarrage = barrageService.getRandomBarrage();
+        final List<String> randomBarrage = barrageService.getBarrage();
         System.out.println(randomBarrage);
 //        assertEquals(3, randomBarrage.size());
     }

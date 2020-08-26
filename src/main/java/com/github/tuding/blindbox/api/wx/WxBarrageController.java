@@ -23,6 +23,6 @@ public class WxBarrageController {
     @NeedWxVerifyToken
     @ApiOperation("获取三个随机弹幕内容")
     public List<String> getThreeRandomBarrage() {
-        return barrageService.getRandomBarrage();
+        return barrageService.getBarrage();
     }
 }

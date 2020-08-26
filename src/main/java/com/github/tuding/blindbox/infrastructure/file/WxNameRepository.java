@@ -28,6 +28,7 @@ public class WxNameRepository {
             nameList = br.lines().map(String::new).collect(Collectors.toList());
             br.close();
             log.info("wx_naming loaded with {} records. ", nameList.size());
+            log.info("{}", nameList);
         } catch (IOException e) {
             log.error("Fatal error met and fail to read wx_naming.csv {}", e);
             System.exit(1);
