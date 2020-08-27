@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,9 +36,13 @@ public class BarrageService {
 
     private List<String> getDummyRandomBarrage(Integer size) {
         final List<String> threeRandomProductName = productRepository.getThreeRandomProductName();
-        return threeRandomProductName.stream().map(product -> {
-            final String firstName = barrageRepository.getRandomWxName();
-            return firstName + "成功抽中" + product;
-        }).limit(size).collect(Collectors.toList());
+        if (threeRandomProductName.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return threeRandomProductName.stream().map(product -> {
+                final String firstName = barrageRepository.getRandomWxName();
+                return firstName + "成功抽中" + product;
+            }).limit(size).collect(Collectors.toList());
+        }
     }
 }
