@@ -57,7 +57,6 @@ public class OrderDTO {
         return order.getReceiver()
                 + ", " + order.getMobile()
                 + ", " + order.getArea()
-                + ", " + order.getDetailAddress()
-                + ", " + order.getAssociateCode();
+                + ", " + order.getDetailAddress();
     }
 }
