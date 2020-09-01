@@ -2,7 +2,11 @@ package com.github.tuding.blindbox.api.admin.dto;
 
 import com.github.tuding.blindbox.domain.order.Order;
 import com.github.tuding.blindbox.domain.order.OrderStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -36,7 +40,6 @@ public class OrderDTO {
         this.createTime = order.getCreateTime();
         this.shippingCompany = order.getShippingCompany();
         this.shippingTicket = order.getShippingTicket();
-
         this.combineAddr = buildAddress(order);
         this.status = remapStatus(order);
     }
@@ -51,6 +54,10 @@ public class OrderDTO {
     }
 
     private String buildAddress(Order order) {
-        return order.getReceiver() + ", " + order.getMobile() + ", " + order.getDetailAddress();
+        return order.getReceiver()
+                + ", " + order.getMobile()
+                + ", " + order.getArea()
+                + ", " + order.getDetailAddress()
+                + ", " + order.getAssociateCode();
     }
 }

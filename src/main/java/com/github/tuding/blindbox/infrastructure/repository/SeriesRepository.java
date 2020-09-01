@@ -67,7 +67,6 @@ public class SeriesRepository {
         List<Series> series = new ArrayList<>();
         collect.keySet().forEach(c -> {
             c.setLinkedRoleIds(collect.get(c));
-            log.info("----- {}", c);
         });
         return new ArrayList<>(collect.keySet());
     }
