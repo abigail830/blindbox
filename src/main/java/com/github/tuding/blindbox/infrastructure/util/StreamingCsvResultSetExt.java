@@ -41,6 +41,7 @@ public class StreamingCsvResultSetExt implements ResultSetExtractor<Void> {
                 String createTime = resultSet.getString("createTime");
                 String receiver = resultSet.getString("receiver");
                 String mobile = resultSet.getString("mobile");
+                String area = resultSet.getString("area");
                 String detailAddress = resultSet.getString("detailAddress");
                 String shippingCompany = resultSet.getString("shippingCompany");
                 String shippingTicket = resultSet.getString("shippingTicket");
@@ -55,6 +56,8 @@ public class StreamingCsvResultSetExt implements ResultSetExtractor<Void> {
                 printWriter.write(receiver != null ? receiver : "");
                 printWriter.append(DELIMITER);
                 printWriter.write(mobile != null ? mobile : "");
+                printWriter.append(DELIMITER);
+                printWriter.write(mobile != null ? area : "");
                 printWriter.append(DELIMITER);
                 printWriter.write(detailAddress != null ? detailAddress : "");
                 printWriter.append(DELIMITER);
