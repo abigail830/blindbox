@@ -89,7 +89,9 @@ public class StreamingCsvResultSetExt implements ResultSetExtractor<Void> {
         printWriter.append(DELIMITER);
         printWriter.write("收件人电话");
         printWriter.append(DELIMITER);
-        printWriter.write("收件人地址");
+        printWriter.write("收件省市");
+        printWriter.append(DELIMITER);
+        printWriter.write("收件具体地址");
         printWriter.append(DELIMITER);
         printWriter.write("快递公司");
         printWriter.append(DELIMITER);
