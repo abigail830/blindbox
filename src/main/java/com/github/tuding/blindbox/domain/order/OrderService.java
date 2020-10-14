@@ -127,7 +127,7 @@ public class OrderService {
         if (isAllOrderPayed(productOrders)) {
             return payTransportOrder(orders, ipAddr);
         } else {
-            log.warn("Order not pay yet [{}]", productOrders);
+            log.warn("Order [{}] not pay yet or pay transport in progress", productOrders);
             throw new BizException(ErrorCode.INVALID_STATUS);
         }
     }

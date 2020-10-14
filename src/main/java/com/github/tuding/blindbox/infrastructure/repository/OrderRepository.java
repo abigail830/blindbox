@@ -186,7 +186,7 @@ public class OrderRepository {
         log.info("Valid order status if ready for pay transport fee: [{}].", productOrders);
 
         List<String> status = Arrays.asList(OrderStatus.PAY_PRODUCT_SUCCESS.name(),
-                OrderStatus.NEW_TRANSPORT.name(), OrderStatus.PAY_TRANSPORT_FAIL.name());
+                OrderStatus.PAY_TRANSPORT_FAIL.name());
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("orders", productOrders);
@@ -292,7 +292,7 @@ public class OrderRepository {
             if (!"*".equalsIgnoreCase(mobile)) {
                 stringBuilder.append(" and mobile = :mobile ");
             }
-            stringBuilder.append( " order by createTime LIMIT :limit OFFSET :offset");
+            stringBuilder.append(" order by createTime LIMIT :limit OFFSET :offset");
         }
         return stringBuilder.toString();
     }
@@ -324,7 +324,7 @@ public class OrderRepository {
             if (!"*".equalsIgnoreCase(mobile)) {
                 stringBuilder.append(" and mobile = :mobile ");
             }
-            stringBuilder.append( " order by createTime limit 1000000");
+            stringBuilder.append(" order by createTime limit 1000000");
         }
         return stringBuilder.toString();
     }
