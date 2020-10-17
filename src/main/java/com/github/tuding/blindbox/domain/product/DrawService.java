@@ -93,7 +93,7 @@ public class DrawService {
 
     public void cancelADrawByDrawId(String drawId) {
         log.info("Cancel a draw for draw Id {}", drawId);
-        Optional<Draw> drawOptional = drawRepository.getDrawByDrawID(drawId);
+        Optional<Draw> drawOptional = drawRepository.getOutstandingDrawByDrawID(drawId);
         if (drawOptional.isPresent()) {
             cancelADraw(drawOptional.get());
         } else {

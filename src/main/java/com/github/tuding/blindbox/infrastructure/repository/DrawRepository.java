@@ -61,6 +61,12 @@ public class DrawRepository {
         return draws.stream().findFirst();
     }
 
+    public Optional<Draw> getOutstandingDrawByDrawID(String drawId) {
+        log.info("Going to query outstanding draws with id: {}", drawId);
+        List<Draw> draws = jdbcTemplate.query("SELECT * FROM draw_tbl WHERE drawId = ? and drawStatus != 'CANCELLED'", rowMapper, drawId);
+        return draws.stream().findFirst();
+    }
+
     public Optional<Draw> getDrawByOpenID(String openID) {
         log.info("Going to query draws with openID: {}", openID);
         List<Draw> draws = jdbcTemplate.query("SELECT * FROM draw_tbl WHERE drawStatus = 'NEW' AND openId = ?", rowMapper, openID);
