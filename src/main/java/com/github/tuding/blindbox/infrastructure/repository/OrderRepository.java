@@ -186,7 +186,8 @@ public class OrderRepository {
         log.info("Valid order status if ready for pay transport fee: [{}].", productOrders);
 
         List<String> status = Arrays.asList(OrderStatus.PAY_PRODUCT_SUCCESS.name(),
-                OrderStatus.PAY_TRANSPORT_FAIL.name());
+                OrderStatus.PAY_TRANSPORT_FAIL.name(),
+                OrderStatus.PAY_TRANSPORT_EXPIRY.name());
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("orders", productOrders);
