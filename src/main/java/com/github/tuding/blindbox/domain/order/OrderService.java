@@ -107,8 +107,14 @@ public class OrderService {
     }
 
     public void updateOrderToPayExpired(String orderId) {
-        log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_EXPIRY.name());
-        orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_EXPIRY.name());
+        final Order order = orderRepository.getOrder(orderId).orElseThrow(OrderNotFoundException::new);
+        if (OrderStatus.NEW_TRANSPORT.name().equals(order.getStatus())) {
+            log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_TRANSPORT_EXPIRY.name());
+            orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_TRANSPORT_EXPIRY.name());
+        } else {
+            log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_EXPIRY.name());
+            orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_EXPIRY.name());
+        }
     }
 
     private TransportOrder payTransportOrder(TransportOrder transportOrder, String ipAddr) {
