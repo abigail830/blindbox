@@ -61,7 +61,8 @@ public class OrderService {
             log.info("Start to scan timeout order. ");
             List<Order> orders = orderRepository.getAllOutstandingOrder();
             List<Order> timeoutOrders = orders.stream()
-                    .filter(item -> item.getStatus().equalsIgnoreCase(OrderStatus.NEW.name()))
+                    .filter(item -> item.getStatus().equalsIgnoreCase(OrderStatus.NEW.name())
+                            || item.getStatus().equalsIgnoreCase(OrderStatus.NEW_TRANSPORT.name()))
                     .filter(item -> System.currentTimeMillis() - item.getCreateTime().getTime() > ORDER_TIMEOUT)
                     .collect(Collectors.toList());
             for (Order order : timeoutOrders) {
@@ -74,8 +75,14 @@ public class OrderService {
     }
 
     public void handleExpiredOrder(Order order) {
-        updateOrderToPayExpired(order.getOrderId());
-        drawService.cancelADrawByDrawId(order.getDrawId());
+        if (OrderStatus.NEW_TRANSPORT.name().equals(order.getStatus())) {
+            log.info("Going to update order[{}] to {}", order.getOrderId(), OrderStatus.PAY_TRANSPORT_EXPIRY.name());
+            orderRepository.updateOrderStatus(order.getOrderId(), OrderStatus.PAY_TRANSPORT_EXPIRY.name());
+        } else {
+            log.info("Going to update order[{}] to {}", order.getOrderId(), OrderStatus.PAY_PRODUCT_EXPIRY.name());
+            orderRepository.updateOrderStatus(order.getOrderId(), OrderStatus.PAY_PRODUCT_EXPIRY.name());
+            drawService.cancelADrawByDrawId(order.getDrawId());
+        }
     }
 
 
@@ -104,17 +111,6 @@ public class OrderService {
     public void updateOrderToPayFail(String orderId) {
         log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_FAIL.name());
         orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_FAIL.name());
-    }
-
-    public void updateOrderToPayExpired(String orderId) {
-        final Order order = orderRepository.getOrder(orderId).orElseThrow(OrderNotFoundException::new);
-        if (OrderStatus.NEW_TRANSPORT.name().equals(order.getStatus())) {
-            log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_TRANSPORT_EXPIRY.name());
-            orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_TRANSPORT_EXPIRY.name());
-        } else {
-            log.info("Going to update order[{}] to {}", orderId, OrderStatus.PAY_PRODUCT_EXPIRY.name());
-            orderRepository.updateOrderStatus(orderId, OrderStatus.PAY_PRODUCT_EXPIRY.name());
-        }
     }
 
     private TransportOrder payTransportOrder(TransportOrder transportOrder, String ipAddr) {
