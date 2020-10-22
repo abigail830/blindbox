@@ -73,10 +73,17 @@ public class OrderRepository {
         return jdbcTemplate.query("SELECT * FROM order_tbl", rowMapper);
     }
 
-    public List<Order> getAllOutstandingOrder() {
-        log.info("Get all outstanding order ");
+    public List<Order> getAllPayInProgressOrder() {
+        log.info("Get all pay-in-progress order ");
         return jdbcTemplate.query("SELECT * FROM order_tbl WHERE status = ?", rowMapper,
                 OrderStatus.NEW.name());
+    }
+
+    public List<Order> getAllTransportPayInProgressOrder() {
+        final List<Order> result = jdbcTemplate.query("SELECT * FROM order_tbl WHERE status = ?", rowMapper,
+                OrderStatus.NEW_TRANSPORT.name());
+        log.info("Get {} transport pay-in-progress order", result.size());
+        return result;
     }
 
     public List<Order> getAllOutstandingOrderByOpenId(String openId) {
@@ -159,6 +166,7 @@ public class OrderRepository {
                 OrderStatus.PAY_PRODUCT_SUCCESS.name(),
                 OrderStatus.NEW_TRANSPORT.name(),
                 OrderStatus.PAY_TRANSPORT_FAIL.name(),
+                OrderStatus.PAY_TRANSPORT_EXPIRY.name(),
                 openId);
     }
 

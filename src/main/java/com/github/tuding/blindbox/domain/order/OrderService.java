@@ -31,6 +31,9 @@ public class OrderService {
     //2 hours
     public static long ORDER_TIMEOUT = 7200000;
 
+    //5 mins
+    public static long PAY_TRANSPORT_TIMEOUT = 300000;
+
     @Autowired
     WxPayment wxPayment;
 
@@ -52,21 +55,23 @@ public class OrderService {
     private final ScheduledExecutorService scheduledExecutorService
             = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("order-auto-scan-thread-%d").build());
 
+    private final ScheduledExecutorService transportScheduledExecutorService
+            = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder().setNameFormat("transport-auto-scan-thread-%d").build());
+
     public OrderService() {
         scheduledExecutorService.scheduleWithFixedDelay(this::scanExpiredOrder, 1, 2, TimeUnit.HOURS);
+        transportScheduledExecutorService.scheduleWithFixedDelay(this::scanExpiredTransportOrder, 1, 5, TimeUnit.MINUTES);
     }
 
     public void scanExpiredOrder() {
         try {
-            log.info("Start to scan timeout order. ");
-            List<Order> orders = orderRepository.getAllOutstandingOrder();
+            log.info("Scan pay timeout order. ");
+            List<Order> orders = orderRepository.getAllPayInProgressOrder();
             List<Order> timeoutOrders = orders.stream()
-                    .filter(item -> item.getStatus().equalsIgnoreCase(OrderStatus.NEW.name())
-                            || item.getStatus().equalsIgnoreCase(OrderStatus.NEW_TRANSPORT.name()))
                     .filter(item -> System.currentTimeMillis() - item.getCreateTime().getTime() > ORDER_TIMEOUT)
                     .collect(Collectors.toList());
             for (Order order : timeoutOrders) {
-                log.info("Handler expired order {}", order);
+                log.info("Handler expired order with Id {}", order.getOrderId());
                 handleExpiredOrder(order);
             }
         } catch (Exception ex) {
@@ -74,17 +79,33 @@ public class OrderService {
         }
     }
 
-    public void handleExpiredOrder(Order order) {
-        if (OrderStatus.NEW_TRANSPORT.name().equals(order.getStatus())) {
-            log.info("Going to update order[{}] to {}", order.getOrderId(), OrderStatus.PAY_TRANSPORT_EXPIRY.name());
-            orderRepository.updateOrderStatus(order.getOrderId(), OrderStatus.PAY_TRANSPORT_EXPIRY.name());
-        } else {
-            log.info("Going to update order[{}] to {}", order.getOrderId(), OrderStatus.PAY_PRODUCT_EXPIRY.name());
-            orderRepository.updateOrderStatus(order.getOrderId(), OrderStatus.PAY_PRODUCT_EXPIRY.name());
-            drawService.cancelADrawByDrawId(order.getDrawId());
+    public void scanExpiredTransportOrder() {
+        try {
+            log.info("Scan transport pay timeout order. ");
+            List<Order> orders = orderRepository.getAllTransportPayInProgressOrder();
+            List<Order> timeoutTransportOrders = orders.stream()
+                    .filter(item -> System.currentTimeMillis() - item.getUpdatedTime().getTime() > PAY_TRANSPORT_TIMEOUT)
+                    .collect(Collectors.toList());
+            for (Order order : timeoutTransportOrders) {
+                log.info("Handler expired transport pay with orderId {}", order.getOrderId());
+                handleExpiredTransportOrder(order);
+            }
+        } catch (Exception ex) {
+            log.error("Failed to handle transport pay order scan job. ", ex);
         }
     }
 
+    public void handleExpiredOrder(Order order) {
+        orderRepository.updateOrderStatus(order.getOrderId(), OrderStatus.PAY_PRODUCT_EXPIRY.name());
+        drawService.cancelADrawByDrawId(order.getDrawId());
+        log.info("Updated order[{}] to {} and cancel draw by Id {}",
+                order.getOrderId(), OrderStatus.PAY_PRODUCT_EXPIRY.name(), order.getDrawId());
+    }
+
+    public void handleExpiredTransportOrder(Order order) {
+        orderRepository.updateOrderStatus(order.getOrderId(), OrderStatus.PAY_TRANSPORT_EXPIRY.name());
+        log.info("Updated order[{}] to {}", order.getOrderId(), OrderStatus.PAY_TRANSPORT_EXPIRY.name());
+    }
 
     @Transactional
     public Order createProductOrder(String openId, String drawId, String ipAddress) {

@@ -41,7 +41,7 @@ app:
   imagePath: "/opt/apps/blindbox"
 
 server:
-  port: 8080
+  port: 8090
 
 management:
   endpoints:

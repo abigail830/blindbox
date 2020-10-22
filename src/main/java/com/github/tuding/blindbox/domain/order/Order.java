@@ -1,7 +1,11 @@
 package com.github.tuding.blindbox.domain.order;
 
 import com.github.tuding.blindbox.infrastructure.client.payment.SignUtil;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
@@ -36,6 +40,7 @@ public class Order {
 
     protected String status;
     protected Date createTime;
+    protected Date updatedTime;
 
     protected String shippingCompany;
     protected String shippingTicket;
