@@ -228,11 +228,11 @@
                     row$.append($('<td/>').html(data[i].status));
                     if (data[i].status === '运费已付') {
                         row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper plane outline icon" onclick="showModal\(\''
-                            + data[i].orderId + '\',\'' + data[i].productName + '\',\'' + data[i].combineAddr + '\', \'顺丰\', \'\')"/></a>'));
+                            + data[i].orderId + '\',\'' + data[i].productName + '\',\'' + data[i].combineAddr.trim() + '\', \'顺丰\', \'\')"/></a>'));
                     } else if (data[i].status === '已发货') {
                         row$.append($('<td/>').html('<a href="#" title="发货"><i class="paper edit outline icon" onclick="showModal\(\''
                             + data[i].orderId + '\',\'' + data[i].productName + '\',\''
-                            + data[i].combineAddr + '\', \'' + data[i].shippingCompany + '\', \'' + data[i].shippingTicket + '\')"/></a>'));
+                            + data[i].combineAddr.trim() + '\', \'' + data[i].shippingCompany + '\', \'' + data[i].shippingTicket + '\')"/></a>'));
                     } else {
                         row$.append($('<td/>').html(''));
                     }
