@@ -12,7 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -281,6 +289,7 @@ public class DrawService {
         log.info("Draw a list product for {} with drawList ID {}", seriesId, drawListID);
         Optional<Series> series = seriesRepository.querySeriesByIDWithoutRoleIds(seriesId);
         List<Draw> draws = handleExclusiveDrawing(openIdFromToken, seriesId, series.get(), drawListID);
+        Collections.shuffle(draws);
         Map<Integer, Draw> drawGroup = new HashMap<>();
         for (int index = 0; index < draws.size(); index++) {
             drawGroup.put(index, draws.get(index));
