@@ -171,6 +171,7 @@ public class DrawService {
         Random random = new Random();
         Product excludedProduct = excludedList.get(random.nextInt(excludedList.size()));
         excludedProduct.setPrice(draw.getPrice());
+        log.info("excluded product is {}", excludedProduct);
         return excludedProduct;
     }
 
