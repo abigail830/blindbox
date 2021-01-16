@@ -90,7 +90,7 @@ public class User {
     }
 
     private Boolean isFirstShareActivityToday() {
-        return null == lastShareCollectionDate || isToday(this.lastShareCollectionDate);
+        return null == lastShareActivityDate || isToday(this.lastShareActivityDate);
     }
 
     private Boolean isToday(Timestamp lastShareCollectionDate2) {
