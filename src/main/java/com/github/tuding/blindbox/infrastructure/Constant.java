@@ -19,10 +19,10 @@ public class Constant {
     public static final int GET_DISCOUNT_COUPON_CONSUME_BONUS = 400;
     public static final int GET_TIPS_COUPON_CONSUME_BONUS = 100;
     public static final int GET_DISPLAY_COUPON_CONSUME_BONUS = 300;
-    public static final String COUPON_DESC = "这是您尊享的7折优惠券，仅需2点积分就可以换取啦！";
+    public static final String COUPON_DESC = "这是您尊享的9折优惠券，仅需2点积分就可以换取啦！";
     public static final String TIPS_COUPON_DESC = "这是您尊享的提示卡，仅需2点积分就可以换取啦！";
     public static final String DISPLAY_COUPON_DESC = "这是您尊享的显示卡，仅需2点积分就可以换取啦！";
-    public static final BigDecimal DISCOUNT = new BigDecimal("0.7");
+    public static final BigDecimal DISCOUNT = new BigDecimal("0.9");
 
 
     public static final String DRAW_INIT_STATUS = "NEW";

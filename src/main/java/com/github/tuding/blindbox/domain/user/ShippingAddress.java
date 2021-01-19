@@ -1,6 +1,10 @@
 package com.github.tuding.blindbox.domain.user;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +47,9 @@ public class ShippingAddress {
         this.mobile = mobile;
         this.area = area;
         this.associateCode = associateCode;
-        this.detailAddress = detailAddress;
+        if (detailAddress != null) {
+            this.detailAddress = detailAddress.replaceAll(System.lineSeparator(), "");
+        }
         this.isDefaultAddress = isDefaultAddress;
         this.province = province;
     }
