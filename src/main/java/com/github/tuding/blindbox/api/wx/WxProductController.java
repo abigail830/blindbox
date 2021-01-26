@@ -1,6 +1,14 @@
 package com.github.tuding.blindbox.api.wx;
 
-import com.github.tuding.blindbox.api.wx.wxDto.*;
+import com.github.tuding.blindbox.api.wx.wxDto.DiscountCouponDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.DisplayCouponDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.DrawDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.DrawListDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.ProductDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.ProductWithBuyFlagDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.RoleDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.SeriesDTO;
+import com.github.tuding.blindbox.api.wx.wxDto.TipsCouponDTO;
 import com.github.tuding.blindbox.domain.product.DrawService;
 import com.github.tuding.blindbox.domain.product.Product;
 import com.github.tuding.blindbox.domain.product.ProductService;
@@ -17,7 +25,14 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -263,7 +278,7 @@ public class WxProductController {
     public DisplayCouponDTO getDisplayByBonus(HttpServletRequest request,
                                               @PathVariable String drawId) {
         String token = request.getHeader(Constant.HEADER_AUTHORIZATION);
-        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_DISCOUNT_COUPON_CONSUME_BONUS);
+        Integer remainBonus = userService.consumeBonusForCoupon(token, Constant.GET_DISPLAY_COUPON_CONSUME_BONUS);
         Product excludedProduct = drawService.getDrawProduct(drawId);
         return new DisplayCouponDTO(excludedProduct, remainBonus);
     }
