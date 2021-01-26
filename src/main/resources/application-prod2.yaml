@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: blindbox2
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://rm-m5ea3hl71812628z090130.mysql.rds.aliyuncs.com:3306/box_game?allowMultiQueries=true&useUnicode=true&useSSL=false&&zeroDateTimeBehavior=convertToNull&rewriteBatchedStatements=true&serverTimezone=Asia/Shanghai
+    username: box_game
+    password: ENC(pl3QmGys+EYeFm1wxWJBC2cwufAwi229)
+  druid:
+    initial-size: 10
+    max-active: 100
+    min-idle: 10
+    max-wait: 60000
+    pool-prepared-statements: true
+    max-pool-prepared-statement-per-connection-size: 20
+    time-between-eviction-runs-millis: 60000
+    min-evictable-idle-time-millis: 300000
+    validation-query: SELECT 1 FROM DUAL
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    filter:
+      stat:
+        log-slow-sql: true
+        slow-sql-millis: 1000
+        merge-sql: true
+        enabled: true
+      wall:
+        config:
+          multi-statement-allow: true
+
+swagger:
+  enable: true
+
+app:
+  appId: "wx6603c6d1c018bfd1"
+  appSecret: "39ee24b5832f4f68649df87f1bcb0110"
+  mchId: "1586641511"
+  mchSecret: "Udol1029384756102938475610293847"
+  imagePath: "/opt/apps/blindbox"
+
+server:
+  port: 8082
+
+management:
+  endpoints:
+    health:
+      show-details: 'always'
+    web:
+      exposure:
+        include: 'prometheus'
+  metrics:
+    tags:
+      application: ${spring.application.name}
