@@ -58,12 +58,12 @@ public class WxCallbackApplService {
     }
 
     private Boolean isFullLightUp(List<OrderSimpleInfo> orderInfo) {
-        List<String> productIdsBySeries = productRepository.getProductIdsBySeries(
+        List<String> productIdsBySeries = productRepository.getProductIdsBySeriesWithoutSpecial(
                 orderInfo.get(0).getSeriesId());
-        log.info("Full series info {}", productIdsBySeries);
+        log.info("isFullLightUp - Full series productId without special {}", productIdsBySeries);
         List<String> boughtIds = orderInfo.stream()
                 .map(OrderSimpleInfo::getProductId).collect(Collectors.toList());
-        log.info("Bought product info {}", productIdsBySeries);
+        log.info("isFullLightUp - Bought product info {}", productIdsBySeries);
         return boughtIds.containsAll(productIdsBySeries);
     }
 
