@@ -1,0 +1,42 @@
+version: "3.1"
+services:
+  loki:
+    image: grafana/loki:2.0.0
+    ports:
+      - "3100:3100"
+    volumes:
+      - /var/www/blindbox/loki:/etc/loki
+    command: -config.file=/etc/loki/loki-config.yaml
+    networks:
+      - monitoring
+  promtail:
+    image: grafana/promtail:2.0.0
+    volumes:
+      - /var/www/blindbox/logs:/var/log
+      - /var/www/blindbox/loki:/etc/promtail
+    command: -config.file=/etc/promtail/promtail-config.yaml
+    networks:
+      - monitoring
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SERVER_DOMAIN=dashboard.fancier.store
+      - GF_SERVER_ROOT_URL=https://dashboard.fancier.store
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    networks:
+      - monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - /var/www/blindbox/monitor/prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml 
+    networks:
+      - monitoring
+networks:
+  monitoring:
+
