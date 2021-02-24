@@ -134,10 +134,6 @@ var provinceData = [{
   {
     "label": "澳门",
     "value": "68"
-  },
-  {
-    "label": "钓鱼岛",
-    "value": "69"
   }
 ]
 export default provinceData;
